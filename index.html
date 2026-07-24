@@ -1586,12 +1586,18 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     toggleLoader(true);
 
     try {
-      const { data, error } = await supabaseClient
+      let loginQuery = supabaseClient
         .from("stores")
         .select("id, password")
-        .eq("id", usernameInput)
-        .eq("password", passwordInput)
-        .single();
+        .eq("password", passwordInput);
+
+      if (usernameInput === 'contato@linksvi.com.br') {
+        loginQuery = loginQuery.or('id.eq.contato@linksvi.com.br,id.eq.contato@linkvi.com.br');
+      } else {
+        loginQuery = loginQuery.eq("id", usernameInput);
+      }
+
+      const { data, error } = await loginQuery.single();
 
       if (error || !data) {
         if (error && (error.message.includes("relation") || error.message.includes("does not exist"))) {
