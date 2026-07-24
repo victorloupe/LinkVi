@@ -489,7 +489,13 @@
   .logo-dropped-preview {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: var(--panel-white);
+    background-color: #f1f5f9;
+    background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%), 
+                      linear-gradient(-45deg, #e2e8f0 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #e2e8f0 75%), 
+                      linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -524,7 +530,7 @@
 
   /* Links panel */
   .links-panel {
-    flex: 1.3;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -853,7 +859,7 @@
   /* Icons selector */
   .icon-selector-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 6px;
     margin-top: 2px;
   }
@@ -1101,8 +1107,19 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
             <input type="file" id="logo-file-input" accept="image/*" style="display: none;" onchange="handleLogoUpload(event)">
           </div>
-          <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
-            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px; align-self: flex-start; font-weight: 600;" onclick="document.getElementById('logo-file-input').click()">Carregar Imagem</button>
+          <div style="display: flex; flex-direction: column; gap: 6px; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px; font-weight: 600; margin: 0;" onclick="document.getElementById('logo-file-input').click()">Carregar Imagem</button>
+              <!-- Logo size dropdown -->
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <label for="store-logo-size" style="font-size: 10px; font-weight: 750; color: var(--text-muted); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: 0.5px;">Tamanho:</label>
+                <select id="store-logo-size" onchange="triggerAutosave()" style="padding: 4px 8px; font-size: 11.5px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600;">
+                  <option value="small">Pequeno</option>
+                  <option value="medium" selected>Médio</option>
+                  <option value="large">Grande</option>
+                </select>
+              </div>
+            </div>
             <span style="font-size: 11px; color: var(--text-muted)">Arraste o arquivo ou clique para selecionar.</span>
           </div>
         </div>
@@ -1112,13 +1129,55 @@
         <input type="text" id="store-logo-url" placeholder="Ou cole a URL do logotipo aqui..." oninput="previewLogo(); triggerAutosave();" style="font-size: 11.5px; padding: 6px 10px;">
       </div>
 
-      <div class="form-group" style="margin-bottom: 12px;">
-        <label for="store-theme-color">Cor de Destaque da Loja</label>
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <input type="color" id="store-theme-color" value="#7c3aed" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-theme-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
-          <input type="text" id="store-theme-color-hex" value="#7C3AED" placeholder="#7C3AED" style="width: 100px; padding: 6px 10px; font-family: monospace; font-size: 13px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-theme-color').value = val; triggerAutosave(); }">
-          <span style="font-size: 11px; color: var(--text-muted)">Selecione a cor ou digite o código hexadecimal.</span>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 12px;">
+        <!-- Column 1: Highlight Color -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="store-theme-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor de Destaque</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-theme-color" value="#7c3aed" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-theme-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+            <input type="text" id="store-theme-color-hex" value="#7C3AED" placeholder="#7C3AED" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-theme-color').value = val; triggerAutosave(); }">
+          </div>
         </div>
+
+        <!-- Column 2: Text Color -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="store-text-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor dos Escritos</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-text-color" value="#0f172a" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-text-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+            <input type="text" id="store-text-color-hex" value="#0F172A" placeholder="#0F172A" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-text-color').value = val; triggerAutosave(); }">
+          </div>
+        </div>
+
+        <!-- Column 3: Background Color -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="store-bg-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor do Fundo</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-bg-color" value="#ffffff" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-bg-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+            <input type="text" id="store-bg-color-hex" value="#FFFFFF" placeholder="#FFFFFF" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-bg-color').value = val; triggerAutosave(); }">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Second row of color customizer -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 12px; margin-top: 8px;">
+        <!-- Column 1: Button background color -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="store-btn-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor do Balão</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-btn-color" value="#ffffff" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-btn-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+            <input type="text" id="store-btn-color-hex" value="#FFFFFF" placeholder="#FFFFFF" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-btn-color').value = val; triggerAutosave(); }">
+          </div>
+        </div>
+
+        <!-- Column 2: Button text color -->
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="store-btn-text-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Escrito do Balão</label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-btn-text-color" value="#0f172a" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-btn-text-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+            <input type="text" id="store-btn-text-color-hex" value="#0F172A" placeholder="#0F172A" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-btn-text-color').value = val; triggerAutosave(); }">
+          </div>
+        </div>
+        <div></div>
       </div>
       
       <div class="form-group">
@@ -1253,6 +1312,21 @@
           <div class="icon-option" data-icon="mapa" onclick="selectIcon('mapa')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </div>
+          <div class="icon-option" data-icon="comida" onclick="selectIcon('comida')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>
+          </div>
+          <div class="icon-option" data-icon="ifood" onclick="selectIcon('ifood')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M18 18h-6v-5h3l2-3V7M6 18h6M12 13V8H8M3 8h5"/></svg>
+          </div>
+          <div class="icon-option" data-icon="coleta" onclick="selectIcon('coleta')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="descarga" onclick="selectIcon('descarga')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 2v6M12 8l-3-3M12 8l3-3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="retirada" onclick="selectIcon('retirada')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>
+          </div>
           <div class="icon-option" data-icon="web" onclick="selectIcon('web')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
           </div>
@@ -1383,8 +1457,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     tiktok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>`,
     shopee: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>`,
     whatsapp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
-    web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
     mapa: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    comida: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>`,
+    ifood: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M18 18h-6v-5h3l2-3V7M6 18h6M12 13V8H8M3 8h5"/></svg>`,
+    coleta: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>`,
+    descarga: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 2v6M12 8l-3-3M12 8l3-3"/></svg>`,
+    retirada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>`,
+    web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
     fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
   };
 
@@ -1722,8 +1801,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function clearDashboardForm() {
     document.getElementById('store-id-display').value = "";
     document.getElementById('store-logo-url').value = "";
+    document.getElementById('store-logo-size').value = "medium";
     document.getElementById('store-theme-color').value = "#7c3aed";
     document.getElementById('store-theme-color-hex').value = "#7C3AED";
+    document.getElementById('store-text-color').value = "#0f172a";
+    document.getElementById('store-text-color-hex').value = "#0F172A";
+    document.getElementById('store-bg-color').value = "#ffffff";
+    document.getElementById('store-bg-color-hex').value = "#FFFFFF";
+    document.getElementById('store-btn-color').value = "#ffffff";
+    document.getElementById('store-btn-color-hex').value = "#FFFFFF";
+    document.getElementById('store-btn-text-color').value = "#0f172a";
+    document.getElementById('store-btn-text-color-hex').value = "#0F172A";
     document.getElementById('store-pill-text').value = "";
     document.getElementById('store-title-text').value = "";
     document.getElementById('store-desc-text').value = "";
@@ -1768,7 +1856,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
         storeConfig = {
           logoUrl: parsed.logoUrl || "",
+          logoSize: parsed.logoSize || "medium",
           themeColor: parsed.themeColor || "#7c3aed",
+          textColor: parsed.textColor || "#0f172a",
+          bgColor: parsed.bgColor || "#ffffff",
+          btnColor: parsed.btnColor || "#ffffff",
+          btnTextColor: parsed.btnTextColor || "#0f172a",
           pillText: parsed.pillText || "",
           title: parsed.title || "",
           description: parsed.description || "",
@@ -1780,8 +1873,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         // Populate fields
         document.getElementById('store-id-display').value = storeKey;
         document.getElementById('store-logo-url').value = storeConfig.logoUrl;
+        document.getElementById('store-logo-size').value = storeConfig.logoSize;
         document.getElementById('store-theme-color').value = storeConfig.themeColor;
         document.getElementById('store-theme-color-hex').value = (storeConfig.themeColor || "#7c3aed").toUpperCase();
+        document.getElementById('store-text-color').value = storeConfig.textColor;
+        document.getElementById('store-text-color-hex').value = (storeConfig.textColor || "#0f172a").toUpperCase();
+        document.getElementById('store-bg-color').value = storeConfig.bgColor;
+        document.getElementById('store-bg-color-hex').value = (storeConfig.bgColor || "#ffffff").toUpperCase();
+        document.getElementById('store-btn-color').value = storeConfig.btnColor || "#ffffff";
+        document.getElementById('store-btn-color-hex').value = (storeConfig.btnColor || "#ffffff").toUpperCase();
+        document.getElementById('store-btn-text-color').value = storeConfig.btnTextColor || "#0f172a";
+        document.getElementById('store-btn-text-color-hex').value = (storeConfig.btnTextColor || "#0f172a").toUpperCase();
         document.getElementById('store-pill-text').value = storeConfig.pillText;
         document.getElementById('store-title-text').value = storeConfig.title;
         document.getElementById('store-desc-text').value = storeConfig.description;
@@ -1865,9 +1967,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const url = document.getElementById('store-logo-url').value.trim();
     const dropzone = document.getElementById('logo-dropzone');
     
-    // Remove previous previews
-    const oldPreview = dropzone.querySelector('.logo-dropped-preview');
-    if (oldPreview) oldPreview.remove();
+    // Remove all previous previews and loaders
+    const oldPreviews = dropzone.querySelectorAll('.logo-dropped-preview');
+    oldPreviews.forEach(p => p.remove());
 
     if (url) {
       // Render beautiful image preview in the center of the dropzone
@@ -1968,14 +2070,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       if (urlData && urlData.publicUrl) {
         document.getElementById('store-logo-url').value = urlData.publicUrl;
         previewLogo();
-        showToast("Logotipo carregado! Salve para confirmar.");
+        triggerAutosave(true); // Save instantly to supabase database
+        showToast("Logotipo carregado e salvo!");
       }
     } catch (e) {
       console.error(e);
       showAlert("Erro no Upload", "Não foi possível enviar a imagem. Verifique se o bucket 'logos' está criado no Supabase e configurado como Público.");
       showToast("Erro no envio do logotipo.", "error");
-      // Remove loading overlay
-      loadingDiv.remove();
+      // Remove loader and restore previous preview
+      previewLogo();
     } finally {
       dropzone.style.pointerEvents = 'auto';
     }
@@ -2086,7 +2189,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (!activeStore) return;
 
     storeConfig.logoUrl = document.getElementById('store-logo-url').value.trim();
+    storeConfig.logoSize = document.getElementById('store-logo-size').value;
     storeConfig.themeColor = document.getElementById('store-theme-color').value;
+    storeConfig.textColor = document.getElementById('store-text-color').value;
+    storeConfig.bgColor = document.getElementById('store-bg-color').value;
+    storeConfig.btnColor = document.getElementById('store-btn-color').value;
+    storeConfig.btnTextColor = document.getElementById('store-btn-text-color').value;
     storeConfig.pillText = document.getElementById('store-pill-text').value.trim();
     storeConfig.title = document.getElementById('store-title-text').value.trim();
     storeConfig.description = document.getElementById('store-desc-text').value.trim();
@@ -2262,11 +2370,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     try {
       const defaultConf = {
         logoUrl: "",
+        logoSize: "medium",
         pillText: "Nossos Links",
         title: storeId.toUpperCase(),
         description: "Confira nossos links úteis abaixo.",
         ctaTitle: "Onde você quer nos encontrar?",
         subText: "Selecione uma das opções abaixo.",
+        themeColor: "#7c3aed",
+        textColor: "#0f172a",
+        bgColor: "#ffffff",
+        btnColor: "#ffffff",
+        btnTextColor: "#0f172a",
         links: []
       };
 
@@ -2342,7 +2456,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     // Auto-populate link text based on icon clicked
     const labelInput = document.getElementById('modal-link-label');
     const currentVal = labelInput.value.trim().toLowerCase();
-    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar"].includes(currentVal);
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "retirada"].includes(currentVal);
 
     if (isDefault) {
       if (iconName === 'instagram') labelInput.value = "Instagram";
@@ -2350,6 +2464,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'shopee') labelInput.value = "Shopee";
       else if (iconName === 'whatsapp') labelInput.value = "WhatsApp";
       else if (iconName === 'mapa') labelInput.value = "Nossa Localização";
+      else if (iconName === 'comida') labelInput.value = "Cardápio";
+      else if (iconName === 'ifood') labelInput.value = "iFood";
+      else if (iconName === 'coleta') labelInput.value = "Coleta";
+      else if (iconName === 'descarga') labelInput.value = "Descarga";
+      else if (iconName === 'retirada') labelInput.value = "Retirada";
       else if (iconName === 'web') labelInput.value = "Website";
       else if (iconName === 'fallback') labelInput.value = "Link";
     }
