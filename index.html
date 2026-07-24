@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LinkVi — Painel Gerenciador</title>
+<title>LinksVi — Painel Gerenciador</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1016,8 +1016,8 @@
 <div id="login-container">
   <div class="login-card">
     <div class="login-header">
-      <img src="LogoSite.png" alt="LinkVi">
-      <h2>Bem-vindo ao painel Link<span class="purple-vi-login">Vi</span></h2>
+      <img src="LogoSite.png" alt="LinksVi">
+      <h2>Bem-vindo ao painel Links<span class="purple-vi-login">Vi</span></h2>
       <p>Gerencie seus links com praticidade e elegância</p>
     </div>
     
@@ -1049,7 +1049,7 @@
   <!-- Header -->
   <header>
     <div class="logo-area">
-      <img src="LogoSite.png" alt="LinkVi">
+      <img src="LogoSite.png" alt="LinksVi">
     </div>
     
     <div class="header-actions">
@@ -1270,7 +1270,7 @@
         </div>
         <div class="form-group">
           <label for="wa-message" style="font-size: 11px; font-weight: 700;">Mensagem Inicial (Opcional)</label>
-          <input type="text" id="wa-message" placeholder="Ex: Olá! Vim pelo LinkVi" oninput="generateWhatsAppUrl()">
+          <input type="text" id="wa-message" placeholder="Ex: Olá! Vim pelo LinksVi" oninput="generateWhatsAppUrl()">
         </div>
       </div>
       
@@ -1337,7 +1337,7 @@ create table if not exists stores (
 
 -- Inserir o Admin Inicial
 insert into stores (id, password, config)
-values ('contato@linkvi.com.br', 'admin123', '{}'::jsonb)
+values ('contato@linksvi.com.br', 'admin123', '{}'::jsonb)
 on conflict (id) do nothing;
 
 -- Políticas de RLS Públicas
@@ -1405,12 +1405,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   document.addEventListener('DOMContentLoaded', () => {
     // Domain setting setup
-    if (!localStorage.getItem('linkvi_domain')) {
-      localStorage.setItem('linkvi_domain', window.location.origin);
+    if (!localStorage.getItem('linksvi_domain')) {
+      localStorage.setItem('linksvi_domain', window.location.origin);
     }
     
     // Check session
-    const sessionUser = sessionStorage.getItem('linkvi_user');
+    const sessionUser = sessionStorage.getItem('linksvi_user');
     if (sessionUser) {
       currentUser = JSON.parse(sessionUser);
       enterDashboard();
@@ -1606,10 +1606,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       // Login success
       currentUser = {
         id: data.id,
-        role: data.id === 'contato@linkvi.com.br' ? 'admin' : 'store'
+        role: (data.id === 'contato@linksvi.com.br' || data.id === 'contato@linkvi.com.br') ? 'admin' : 'store'
       };
 
-      sessionStorage.setItem('linkvi_user', JSON.stringify(currentUser));
+      sessionStorage.setItem('linksvi_user', JSON.stringify(currentUser));
       enterDashboard();
       showToast("Acesso concedido!");
     } catch (e) {
@@ -1637,7 +1637,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // LOGOUT
   function handleLogout() {
-    sessionStorage.removeItem('linkvi_user');
+    sessionStorage.removeItem('linksvi_user');
     currentUser = null;
     activeStore = "";
     document.getElementById('app-container').style.display = 'none';
@@ -1659,7 +1659,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       const dropdown = document.getElementById('store-select');
       dropdown.innerHTML = "";
 
-      const stores = allStoresList.filter(s => s.id !== 'contato@linkvi.com.br');
+      const stores = allStoresList.filter(s => s.id !== 'contato@linksvi.com.br' && s.id !== 'contato@linkvi.com.br');
 
       if (stores.length > 0) {
         stores.forEach(store => {
@@ -1771,7 +1771,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // CONFIG PUBLIC LINK DISPLAY
   function updatePublicLinkDisplay() {
-    const domain = localStorage.getItem('linkvi_domain') || window.location.origin;
+    const domain = localStorage.getItem('linksvi_domain') || window.location.origin;
     const urlInput = document.getElementById('public-link-url');
     if (!activeStore) {
       urlInput.value = "";
@@ -1817,12 +1817,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   }
 
   function configureDomain() {
-    const current = localStorage.getItem('linkvi_domain') || window.location.origin;
+    const current = localStorage.getItem('linksvi_domain') || window.location.origin;
     const domain = prompt("Digite o domínio principal da sua Vercel (ex: https://vitrinelinks.vercel.app):", current);
     if (domain !== null) {
       const formattedDomain = domain.trim().replace(/\/$/, "");
       if (formattedDomain) {
-        localStorage.setItem('linkvi_domain', formattedDomain);
+        localStorage.setItem('linksvi_domain', formattedDomain);
         updatePublicLinkDisplay();
         showToast("Domínio principal atualizado com sucesso!");
       }
@@ -2107,7 +2107,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     
     allStoresList.forEach(store => {
       const row = document.createElement('tr');
-      const isSuper = store.id === 'contato@linkvi.com.br';
+      const isSuper = store.id === 'contato@linksvi.com.br' || store.id === 'contato@linkvi.com.br';
       
       row.innerHTML = `
         <td style="font-weight: 600; color: var(--text-main);">
@@ -2220,7 +2220,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    if (storeId === 'contato@linkvi.com.br' || storeId === 'admin') {
+    if (storeId === 'contato@linksvi.com.br' || storeId === 'contato@linkvi.com.br' || storeId === 'admin') {
       showAlert("Identificador Inválido", "Este identificador é reservado do sistema e não pode ser criado.");
       return;
     }
