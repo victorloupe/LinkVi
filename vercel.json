@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/:store([^\\.]+)",
+      "source": "/:store",
       "destination": "/cliente.html?store=:store"
     }
   ]
