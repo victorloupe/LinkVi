@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/:store((?!index|cliente|LogoSite|favicon)[^/\\.]+)",
+      "source": "/:store([^\\.]+)",
       "destination": "/cliente.html?store=:store"
     }
   ]
