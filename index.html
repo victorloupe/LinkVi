@@ -2254,7 +2254,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         </td>
         <td>
           <input type="password" readonly value="${store.password}" style="border:none; outline:none; background:none; font-family:monospace; width: 100px; color:var(--text-main);" id="pwd-${store.id}">
-          <button style="border:none; background:none; font-size:11px; color:var(--brand-indigo); cursor:pointer; font-weight:600;" onclick="togglePasswordVisibility('${store.id}')">Exibir</button>
+          <button style="border:none; background:none; font-size:11px; color:var(--brand-indigo); cursor:pointer; font-weight:600;" onclick="toggleStorePasswordVisibility('${store.id}', this)">Exibir</button>
         </td>
         <td style="text-align: right; padding-right: 24px;">
           <button class="btn-control" style="display:inline-flex;" onclick="adminResetPassword('${store.id}')" title="Alterar Senha">
@@ -2271,12 +2271,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     });
   }
 
-  function togglePasswordVisibility(storeId) {
+  function toggleStorePasswordVisibility(storeId, btn) {
     const input = document.getElementById(`pwd-${storeId}`);
+    if (!input) return;
     if (input.type === 'password') {
       input.type = 'text';
+      btn.textContent = 'Ocultar';
     } else {
       input.type = 'password';
+      btn.textContent = 'Exibir';
     }
   }
 
