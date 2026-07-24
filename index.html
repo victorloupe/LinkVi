@@ -1649,7 +1649,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   async function enterDashboard() {
     document.getElementById('login-container').style.display = 'none';
     document.getElementById('app-container').style.display = 'flex';
-    document.getElementById('welcome-badge').textContent = currentUser.id.toUpperCase();
+    if (currentUser.role === 'admin') {
+      document.getElementById('welcome-badge').textContent = 'ADMIN';
+    } else {
+      document.getElementById('welcome-badge').textContent = currentUser.id.toUpperCase();
+    }
 
     if (currentUser.role === 'admin') {
       document.getElementById('admin-selector-area').style.display = 'flex';
