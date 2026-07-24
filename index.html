@@ -35,28 +35,55 @@
     overflow-x: hidden;
   }
 
-  /* Section: Login (Minimalist White Card) */
+  /* Section: Login (Premium Minimalist) */
   #login-container {
     display: flex;
     flex: 1;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    background-color: #f1f5f9;
+    padding: 24px;
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  #login-container::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.05) 0%, rgba(124, 58, 237, 0) 70%);
+    top: 10%;
+    left: 10%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  #login-container::after {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 70%);
+    bottom: 10%;
+    right: 10%;
+    z-index: 1;
+    pointer-events: none;
   }
 
   .login-card {
     background-color: var(--panel-white);
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(226, 232, 240, 0.8);
     padding: 48px 40px;
-    border-radius: 12px;
+    border-radius: 16px;
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+    max-width: 410px;
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    animation: fadeInUp 0.4s ease-out;
+    gap: 24px;
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    z-index: 10;
   }
 
   .login-header {
@@ -67,7 +94,7 @@
   }
 
   .login-header img {
-    height: 64px;
+    height: 120px;
     width: auto;
     display: block;
     margin-bottom: 16px;
@@ -75,37 +102,131 @@
 
   .login-header h2 {
     font-family: 'Poppins', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text-main);
+    font-size: 22px;
+    font-weight: 750;
+    color: #0f172a;
     letter-spacing: -0.5px;
+    line-height: 1.3;
+  }
+
+  .purple-vi-login {
+    color: #7C3AED;
+  }
+
+  /* Custom modern scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
   }
 
   .login-header p {
-    font-size: 13px;
+    font-size: 13.5px;
     color: var(--text-muted);
-    margin-top: 4px;
+    margin-top: 12px;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  .password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .password-input-wrapper input {
+    padding-right: 40px !important;
+  }
+
+  .btn-toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    transition: color 0.15s ease;
+  }
+
+  .btn-toggle-password:hover {
+    color: var(--text-main);
+  }
+
+  .login-card .form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #64748b;
+    margin-bottom: 6px;
+  }
+
+  .login-card input[type="text"],
+  .login-card input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.4px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-main);
+    background-color: var(--panel-white);
+    outline: none;
+    transition: all 0.15s ease-in-out;
+  }
+
+  .login-card input[type="text"]:focus,
+  .login-card input[type="password"]:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
   }
 
   .btn-login {
-    background-color: var(--text-main);
+    background-color: #7C3AED;
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 6px;
+    padding: 13px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 14.5px;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.15);
   }
 
   .btn-login:hover {
-    background-color: #1e293b;
+    background-color: #6d28d9;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.25), 0 4px 6px -4px rgba(124, 58, 237, 0.15);
+  }
+
+  .btn-login:active {
+    transform: translateY(0);
   }
 
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -896,20 +1017,29 @@
   <div class="login-card">
     <div class="login-header">
       <img src="LogoSite.png" alt="LinkVi">
-      <h2>Painel LinkVi</h2>
-      <p>Gerencie seus links com facilidade</p>
+      <h2>Bem-vindo ao painel Link<span class="purple-vi-login">Vi</span></h2>
+      <p>Gerencie seus links com praticidade e elegância</p>
     </div>
     
     <div class="form-body" style="display: flex; flex-direction: column; gap: 16px;">
       <div class="form-group">
         <label for="login-username">Identificador da Loja (ou admin)</label>
-        <input type="text" id="login-username" placeholder="ex: eprajapa">
+        <input type="text" id="login-username" placeholder="ex: sualoja">
       </div>
       <div class="form-group">
         <label for="login-password">Senha de Acesso</label>
-        <input type="password" id="login-password" placeholder="••••••••">
+        <div class="password-input-wrapper">
+          <input type="password" id="login-password" placeholder="••••••••">
+          <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility()" title="Mostrar/ocultar senha">
+            <svg id="eye-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            <svg id="eye-icon-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+          </button>
+        </div>
       </div>
-      <button class="btn-login" onclick="handleLogin()">Entrar no Painel</button>
+      <button class="btn-login" onclick="handleLogin()">
+        <span>Entrar no Painel</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -1526,6 +1656,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     input.select();
     navigator.clipboard.writeText(input.value);
     showToast("Link copiado para a área de transferência!");
+
+    // Visual feedback on the button
+    const btn = document.querySelector('.btn-copy');
+    if (btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = `
+        <span>Copiado!</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      `;
+      btn.style.borderColor = '#22c55e';
+      btn.style.color = '#22c55e';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    }
   }
 
   function configureDomain() {
@@ -2128,6 +2276,23 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       console.error("Error parsing WhatsApp URL:", e);
     }
     return { phone, message };
+  }
+
+  function togglePasswordVisibility() {
+    const pwdInput = document.getElementById('login-password');
+    const openEye = document.getElementById('eye-icon-open');
+    const closedEye = document.getElementById('eye-icon-closed');
+    if (!pwdInput || !openEye || !closedEye) return;
+    
+    if (pwdInput.type === 'password') {
+      pwdInput.type = 'text';
+      openEye.style.display = 'none';
+      closedEye.style.display = 'block';
+    } else {
+      pwdInput.type = 'password';
+      openEye.style.display = 'block';
+      closedEye.style.display = 'none';
+    }
   }
 
   function submitLinkModal() {
