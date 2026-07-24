@@ -22,7 +22,7 @@
     },
     {
       "src": "/([^/\\.]+)",
-      "dest": "/cliente.html?store=$1"
+      "dest": "/api/share?store=$1"
     }
   ]
 }
