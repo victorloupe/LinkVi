@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/((?!index\\.html|index|cliente\\.html|cliente|assets|LogoSite\\.png|.*\\.js|.*\\.css|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.gif|.*\\.svg|.*\\.ico).*)$",
+      "destination": "/cliente.html?store=$1"
+    }
+  ]
+}

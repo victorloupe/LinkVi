@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkVi — Painel Gerenciador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-light: #f8fafc;
+    --panel-white: #ffffff;
+    --border-color: #e2e8f0;
+    --border-focus: #0f172a;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --brand-indigo: #6366f1;
+    --brand-purple: #7c3aed;
+    --gradient-brand: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    --success: #10b981;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* Section: Login (Minimalist White Card) */
+  #login-container {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f1f5f9;
+  }
+
+  .login-card {
+    background-color: var(--panel-white);
+    border: 1px solid var(--border-color);
+    padding: 48px 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    animation: fadeInUp 0.4s ease-out;
+  }
+
+  .login-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .login-header img {
+    height: 42px;
+    width: auto;
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  .login-header h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+  }
+
+  .login-header p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .btn-login {
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-top: 10px;
+  }
+
+  .btn-login:hover {
+    background-color: #1e293b;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* App Dashboard View */
+  #app-container {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Header */
+  header {
+    background: var(--panel-white);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-area img {
+    height: 52px;
+    width: auto;
+    display: block;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .store-selector-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  select.store-dropdown {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+    min-width: 150px;
+    transition: border-color 0.15s ease;
+  }
+
+  select.store-dropdown:focus {
+    border-color: var(--border-focus);
+  }
+
+  .btn-admin-manage {
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-admin-manage:hover {
+    background-color: #1e293b;
+  }
+
+  .user-tag {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 3px 4px 3px 12px;
+    gap: 8px;
+  }
+
+  .user-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .user-avatar svg {
+    width: 11px;
+    height: 11px;
+    color: #475569;
+  }
+
+  .user-name {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-logout-icon {
+    background: none;
+    border: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+
+  .btn-logout-icon:hover {
+    background-color: var(--danger-light);
+    color: var(--danger);
+  }
+
+  .btn-logout-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Layout Container */
+  .dashboard-container {
+    display: flex;
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 16px;
+    gap: 20px;
+  }
+
+  /* Cards in clean design */
+  .panel-card {
+    background: var(--panel-white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+  }
+
+  .profile-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    height: fit-content;
+  }
+
+  .section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-group label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-group input, .form-group textarea {
+    background-color: var(--panel-white);
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-main);
+    outline: none;
+    transition: all 0.15s ease;
+  }
+
+  .form-group input:focus, .form-group textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  /* Logo Upload dropzone */
+  #logo-dropzone {
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    width: 72px;
+    height: 72px;
+    background-color: var(--bg-light);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #logo-dropzone:hover {
+    border-color: var(--border-focus);
+    background-color: #f1f5f9;
+  }
+
+  #logo-dropzone svg {
+    color: var(--text-muted);
+  }
+
+  /* Color picker swatch customizations */
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+  }
+  input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 50%;
+  }
+
+  /* preview of logo replacement */
+  .logo-dropped-preview {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--panel-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    z-index: 5;
+  }
+
+  .logo-dropped-preview img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  .logo-change-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 6;
+    color: white;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  #logo-dropzone:hover .logo-change-overlay {
+    opacity: 1;
+  }
+
+  /* Links panel */
+  .links-panel {
+    flex: 1.3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* URL Copier clean box */
+  .url-copier-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .url-input-wrap {
+    display: flex;
+    gap: 8px;
+  }
+
+  .url-input-wrap input {
+    flex: 1;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 600;
+    outline: none;
+  }
+
+  .btn-copy {
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0 16px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-copy:hover {
+    background-color: #1e293b;
+  }
+
+  /* Links List */
+  .links-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .links-header h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .btn-add-link {
+    background-color: var(--text-main);
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .btn-add-link:hover {
+    background-color: #1e293b;
+  }
+
+  .links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Minimalist Link Card (No boxed borders on controls) */
+  .link-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: var(--panel-white);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .link-item:hover {
+    border-color: #cbd5e1;
+    background-color: var(--bg-light);
+  }
+
+  .link-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+  }
+
+  .link-item:hover .link-item-icon {
+    border-color: #cbd5e1;
+  }
+
+  .link-item-icon[data-platform="instagram"] { color: #e1306c; }
+  .link-item-icon[data-platform="whatsapp"] { color: #25d366; }
+  .link-item-icon[data-platform="shopee"] { color: #ee4d2d; }
+  .link-item-icon[data-platform="tiktok"] { color: #000000; }
+  .link-item-icon[data-platform="web"] { color: #3b82f6; }
+  .link-item-icon[data-platform="fallback"] { color: var(--text-muted); }
+
+  .link-item-icon svg, .link-item-icon img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .link-item-details {
+    flex: 1;
+    min-width: 0;
+    width: 0;
+  }
+
+  .link-item-title {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--text-main);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .link-item-url {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .link-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+  }
+
+  .btn-control {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    color: var(--text-muted);
+  }
+
+  .btn-control:hover {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+  }
+
+  .btn-control.delete {
+    color: var(--danger);
+  }
+
+  .btn-control.delete:hover {
+    background-color: var(--danger-light);
+    color: var(--danger);
+  }
+
+  /* Bottom Save Bar (Clean white bar) */
+  .save-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--panel-white);
+    border-top: 1px solid var(--border-color);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    z-index: 90;
+  }
+
+  .btn-save-all {
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+
+  .btn-save-all:hover {
+    background-color: #1e293b;
+  }
+
+  /* Modals */
+  .modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(15, 23, 42, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .modal-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .modal {
+    background-color: var(--panel-white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    transform: scale(0.97);
+    transition: transform 0.2s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-backdrop.open .modal {
+    transform: scale(1);
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .modal-header h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn-secondary {
+    background-color: var(--panel-white);
+    border: 1px solid var(--border-color);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-main);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--bg-light);
+  }
+
+  .btn-primary-modal {
+    background-color: var(--text-main);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .btn-primary-modal:hover {
+    background-color: #1e293b;
+  }
+
+  /* Icons selector */
+  .icon-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .icon-option {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--text-muted);
+    background-color: var(--bg-light);
+  }
+
+  .icon-option:hover {
+    border-color: var(--border-focus);
+    color: var(--text-main);
+  }
+
+  .icon-option.selected {
+    border-color: var(--border-focus);
+    background-color: rgba(15, 23, 42, 0.05);
+    color: var(--text-main);
+  }
+
+  .icon-option svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Admin table */
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .admin-table th, .admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 12.5px;
+  }
+
+  .admin-table th {
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2000;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .toast.success { background-color: var(--text-main); }
+  .toast.error { background-color: var(--danger); }
+
+  /* Loader */
+  #main-loader {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--text-main);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 10px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* SQL instructions in modal */
+  .sql-hint-container {
+    background-color: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #b45309;
+  }
+
+  .sql-hint-container pre {
+    background-color: #ffffff;
+    border: 1px solid #fde68a;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    margin-top: 6px;
+    overflow-x: auto;
+    color: #78350f;
+    font-family: monospace;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--text-muted);
+  }
+
+  .empty-state p {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 968px) {
+    .dashboard-container {
+      flex-direction: column;
+      padding: 16px;
+    }
+    .profile-panel { order: 2; }
+    .links-panel { order: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="main-loader" style="display: none;">
+  <div class="spinner"></div>
+  <p style="font-weight: 600; color: var(--text-main)">Processando...</p>
+</div>
+
+<!-- SECTION 1: LOGIN -->
+<div id="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <img src="LogoSite.png" alt="LinkVi">
+      <h2>Painel LinkVi</h2>
+      <p>Gerencie seus links com facilidade</p>
+    </div>
+    
+    <div class="form-body" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-group">
+        <label for="login-username">Identificador da Loja (ou admin)</label>
+        <input type="text" id="login-username" placeholder="ex: eprajapa">
+      </div>
+      <div class="form-group">
+        <label for="login-password">Senha de Acesso</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-login" onclick="handleLogin()">Entrar no Painel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: APP DASHBOARD -->
+<div id="app-container">
+  <!-- Header -->
+  <header>
+    <div class="logo-area">
+      <img src="LogoSite.png" alt="LinkVi">
+    </div>
+    
+    <div class="header-actions">
+      <!-- Autosave Status Indicator -->
+      <div id="save-status" style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-muted); font-weight: 600; margin-right: 8px;">
+        <span id="save-status-dot" style="width: 7px; height: 7px; border-radius: 50%; background-color: var(--success); display: inline-block; transition: background-color 0.2s;"></span>
+        <span id="save-status-text">Salvo</span>
+      </div>
+
+      <!-- Admin Only features -->
+      <div id="admin-selector-area" class="store-selector-container" style="display: none;">
+        <select class="store-dropdown" id="store-select" onchange="onStoreSelectChange()">
+          <!-- Populated dynamically -->
+        </select>
+        <button class="btn-admin-manage" onclick="openAdminManageModal()">
+          <span>⚙️ Gerenciar Lojas</span>
+        </button>
+      </div>
+
+      <!-- User capsule tag -->
+      <div class="user-tag">
+        <div class="user-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <span id="welcome-badge" class="user-name">eprajapa</span>
+        <button class="btn-logout-icon" onclick="handleLogout()" title="Sair do Painel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout -->
+  <div class="dashboard-container">
+    
+    <!-- Profile Info Editor -->
+    <aside class="panel-card profile-panel">
+      <h3 class="section-title">Perfil da Página</h3>
+      
+      <div class="form-group">
+        <label for="store-id-display">Identificador da Loja (URL)</label>
+        <input type="text" id="store-id-display" disabled style="background-color: var(--bg-light); cursor: not-allowed; opacity: 0.7; font-weight: 600;">
+      </div>
+      
+      <div class="form-group">
+        <label>Logotipo da Loja</label>
+        <div style="display: flex; gap: 16px; align-items: center;">
+          <div id="logo-dropzone">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <input type="file" id="logo-file-input" accept="image/*" style="display: none;" onchange="handleLogoUpload(event)">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+            <button class="btn-secondary" style="padding: 6px 12px; font-size: 12px; align-self: flex-start; font-weight: 600;" onclick="document.getElementById('logo-file-input').click()">Carregar Imagem</button>
+            <span style="font-size: 11px; color: var(--text-muted)">Arraste o arquivo ou clique para selecionar.</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group" style="margin-top: -6px; margin-bottom: 6px;">
+        <input type="text" id="store-logo-url" placeholder="Ou cole a URL do logotipo aqui..." oninput="previewLogo(); triggerAutosave();" style="font-size: 11.5px; padding: 6px 10px;">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label for="store-theme-color">Cor de Destaque da Loja</label>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <input type="color" id="store-theme-color" value="#7c3aed" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-theme-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
+          <input type="text" id="store-theme-color-hex" value="#7C3AED" placeholder="#7C3AED" style="width: 100px; padding: 6px 10px; font-family: monospace; font-size: 13px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-theme-color').value = val; triggerAutosave(); }">
+          <span style="font-size: 11px; color: var(--text-muted)">Selecione a cor ou digite o código hexadecimal.</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="store-pill-text">Texto da Tag (Pill superior)</label>
+        <input type="text" id="store-pill-text" placeholder="Tudo para a sua casa" oninput="triggerAutosave()">
+      </div>
+      
+      <div class="form-group">
+        <label for="store-title-text">Título Principal</label>
+        <input type="text" id="store-title-text" placeholder="Praticidade e elegância para o seu lar" oninput="triggerAutosave()">
+      </div>
+      
+      <div class="form-group">
+        <label for="store-desc-text">Descrição da Loja</label>
+        <textarea id="store-desc-text" placeholder="Escreva um breve resumo da sua loja..." oninput="triggerAutosave()"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="store-cta-text">Título de Chamada (CTA)</label>
+        <input type="text" id="store-cta-text" placeholder="Onde você quer nos encontrar?" oninput="triggerAutosave()">
+      </div>
+
+      <div class="form-group">
+        <label for="store-sub-text">Sub-título da Chamada</label>
+        <textarea id="store-sub-text" placeholder="Ex: Envio para todo o Brasil. Escolha um dos links abaixo." oninput="triggerAutosave()"></textarea>
+      </div>
+    </aside>
+
+    <!-- Links list & Copy URL -->
+    <main class="links-panel">
+      
+      <!-- Link URL display and copier -->
+      <section class="panel-card">
+        <div class="url-copier-box">
+          <label style="font-size: 11.5px; font-weight: 650; color: var(--text-muted)">Link da Página de Links</label>
+          <div class="url-input-wrap">
+            <input type="text" id="public-link-url" readonly value="">
+            <button class="btn-copy" onclick="copyLink()">
+              <span>Copiar Link</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            </button>
+          </div>
+          <div class="domain-setting-hint">
+            Dominio atual para a cópia. Clique <span onclick="configureDomain()">aqui para configurar o seu domínio principal</span>.
+          </div>
+        </div>
+      </section>
+
+      <!-- Links List -->
+      <section class="panel-card" style="flex: 1; display: flex; flex-direction: column;">
+        <div class="links-header">
+          <h3>Links Cadastrados</h3>
+          <button class="btn-add-link" onclick="openLinkModal()">
+            <span>Novo Link +</span>
+          </button>
+        </div>
+
+        <div class="links-list" id="links-container">
+          <!-- Rendered dynamically -->
+        </div>
+        
+        <div id="links-empty-state" class="empty-state" style="display: none; margin: auto;">
+          <p>Nenhum link cadastrado nesta loja ainda.</p>
+          <button class="btn-add-link" style="margin: 0 auto;" onclick="openLinkModal()">Cadastrar Primeiro Link</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+</div>
+
+<!-- MODAL: Super Admin Manage Users/Stores -->
+<div class="modal-backdrop" id="admin-manage-backdrop">
+  <div class="modal" style="max-width: 680px;">
+    <div class="modal-header">
+      <h3>Gerenciar Lojas</h3>
+      <button class="modal-close" onclick="closeAdminManageModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 14px; font-weight: 600; color: var(--text-muted)">Lojas Ativas</span>
+        <button class="btn-admin-manage" style="padding: 8px 16px; font-size: 13px;" onclick="openNewStoreModal()">
+          <span>➕ Criar Nova Loja</span>
+        </button>
+      </div>
+
+      <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-light)">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Identificador (ID)</th>
+              <th>Senha de Acesso</th>
+              <th style="text-align: right; padding-right: 24px;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="admin-stores-list">
+            <!-- Dynamically loaded rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAdminManageModal()">Fechar Painel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add/Edit Link -->
+<div class="modal-backdrop" id="link-modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-link-title">Adicionar Link</h3>
+      <button class="modal-close" onclick="closeLinkModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="modal-link-index">
+      
+      <div class="form-group">
+        <label>Escolher Ícone</label>
+        <div class="icon-selector-grid">
+          <div class="icon-option" data-icon="instagram" onclick="selectIcon('instagram')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="icon-option" data-icon="tiktok" onclick="selectIcon('tiktok')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>
+          </div>
+          <div class="icon-option" data-icon="shopee" onclick="selectIcon('shopee')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+          </div>
+          <div class="icon-option" data-icon="whatsapp" onclick="selectIcon('whatsapp')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="icon-option" data-icon="mapa" onclick="selectIcon('mapa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="web" onclick="selectIcon('web')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+          </div>
+          <div class="icon-option" data-icon="fallback" onclick="selectIcon('fallback')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- WhatsApp builder helper -->
+      <div id="whatsapp-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
+        <div class="form-group">
+          <label for="wa-phone" style="font-size: 11px; font-weight: 700;">Número do WhatsApp (com DDD)</label>
+          <input type="text" id="wa-phone" placeholder="Ex: (11) 99999-9999" oninput="handlePhoneInput(this)">
+        </div>
+        <div class="form-group">
+          <label for="wa-message" style="font-size: 11px; font-weight: 700;">Mensagem Inicial (Opcional)</label>
+          <input type="text" id="wa-message" placeholder="Ex: Olá! Vim pelo LinkVi" oninput="generateWhatsAppUrl()">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="modal-link-label">Texto do Link</label>
+        <input type="text" id="modal-link-label" placeholder="ex: Instagram Oficial">
+      </div>
+      
+      <div class="form-group">
+        <label for="modal-link-url">URL do Link</label>
+        <input type="text" id="modal-link-url" placeholder="https://...">
+        <div id="map-helper-text" style="display: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 6px;">
+          💡 <strong>Como mostrar o mapa:</strong> No Google Maps, clique em <strong>Compartilhar</strong> -> <strong>Incorporar mapa</strong> -> <strong>Copiar HTML</strong> e cole o código iframe completo no campo acima. O mapa interativo aparecerá na página.
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeLinkModal()">Cancelar</button>
+      <button class="btn-primary-modal" onclick="submitLinkModal()">Salvar Link</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Super Admin Create Store -->
+<div class="modal-backdrop" id="new-store-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Criar Nova Loja</h3>
+      <button class="modal-close" onclick="closeNewStoreModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="new-store-id">Identificador da Loja (Sem espaços/acentos, letras minúsculas)</label>
+        <input type="text" id="new-store-id" placeholder="ex: eprajapa">
+      </div>
+      <div class="form-group">
+        <label for="new-store-password">Senha de Acesso para esta Loja</label>
+        <input type="text" id="new-store-password" placeholder="Digite uma senha">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeNewStoreModal()">Cancelar</button>
+      <button class="btn-primary-modal" onclick="submitNewStore()">Cadastrar Loja</button>
+    </div>
+  </div>
+</div>
+
+<!-- SQL Editor setup help banner -->
+<div id="sql-setup-backdrop" class="modal-backdrop">
+  <div class="modal" style="max-width: 600px;">
+    <div class="modal-header">
+      <h3>Configuração Inicial do Banco</h3>
+      <button class="modal-close" onclick="document.getElementById('sql-setup-backdrop').classList.remove('open')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="sql-hint-container">
+        ⚠️ <strong>Tabela Não Encontrada:</strong> Certifique-se de criar a nova tabela <code>stores</code> no Supabase SQL Editor.
+        <pre>
+create table if not exists stores (
+  id text primary key,
+  password text not null,
+  config jsonb not null
+);
+
+-- Inserir o Admin Inicial
+insert into stores (id, password, config)
+values ('contato@linkvi.com.br', 'admin123', '{}'::jsonb)
+on conflict (id) do nothing;
+
+-- Políticas de RLS Públicas
+alter table stores enable row level security;
+create policy "Allow public read access" on stores for select using (true);
+create policy "Allow public insert access" on stores for insert with check (true);
+create policy "Allow public update access" on stores for update using (true);
+create policy "Allow public delete access" on stores for delete using (true);
+        </pre>
+        <p style="margin-top: 12px; font-weight: 600; font-size: 12px; color: #854d0e; border-top: 1px dashed #fed7aa; padding-top: 10px;">
+          📦 SUPABASE STORAGE: Crie um bucket público chamado <code>logos</code> (Storage -> New Bucket -> Nome: "logos" -> Marque como "Public").
+        </p>
+        <p style="font-size: 11.5px; color: #b45309; margin-top: 6px; font-weight: 600;">
+          Para liberar os uploads de imagem neste bucket, copie e execute este código no SQL Editor do Supabase:
+        </p>
+        <pre style="background-color: rgba(0,0,0,0.02); border: 1px solid #fde68a; padding: 8px; border-radius: 6px; font-size: 10.5px; margin-top: 6px; overflow-x: auto; color: #78350f; font-family: monospace;">
+-- Liberar uploads na pasta logos
+CREATE POLICY "Permitir upload público" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'logos');
+CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bucket_id = 'logos');
+        </pre>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary-modal" onclick="document.getElementById('sql-setup-backdrop').classList.remove('open')">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // SUPABASE CONFIG
+  const supabaseUrl = "https://lujsstahllhcrkfgjmcw.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
+  const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+
+  // ICONS
+  const LINK_ICONS = {
+    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>`,
+    tiktok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>`,
+    shopee: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>`,
+    whatsapp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+    web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
+    mapa: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+    fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
+  };
+
+  // STATE
+  let currentUser = null; // { id: '...', role: 'admin'|'store' }
+  let activeStore = "";
+  let allStoresList = []; // Used in Admin view
+  let storeConfig = {
+    logoUrl: "",
+    pillText: "",
+    title: "",
+    description: "",
+    ctaTitle: "",
+    subText: "",
+    links: []
+  };
+  let selectedIconType = "fallback";
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Domain setting setup
+    if (!localStorage.getItem('linkvi_domain')) {
+      localStorage.setItem('linkvi_domain', window.location.origin);
+    }
+    
+    // Check session
+    const sessionUser = sessionStorage.getItem('linkvi_user');
+    if (sessionUser) {
+      currentUser = JSON.parse(sessionUser);
+      enterDashboard();
+    }
+
+    // Initialize drag & drop for logo
+    initDropzone();
+  });
+
+  // TOAST
+  function showToast(message, type = 'success') {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
+  }
+
+  // LOADER
+  function toggleLoader(show) {
+    document.getElementById('main-loader').style.display = show ? 'flex' : 'none';
+  }
+
+  // LOGIN PROCESS
+  async function handleLogin() {
+    const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
+    const passwordInput = document.getElementById('login-password').value.trim();
+
+    if (!usernameInput || !passwordInput) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    toggleLoader(true);
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("stores")
+        .select("id, password")
+        .eq("id", usernameInput)
+        .eq("password", passwordInput)
+        .single();
+
+      if (error || !data) {
+        if (error && (error.message.includes("relation") || error.message.includes("does not exist"))) {
+          document.getElementById('sql-setup-backdrop').classList.add('open');
+          throw error;
+        }
+        showToast("Identificador ou Senha incorretos.", "error");
+        toggleLoader(false);
+        return;
+      }
+
+      // Login success
+      currentUser = {
+        id: data.id,
+        role: data.id === 'contato@linkvi.com.br' ? 'admin' : 'store'
+      };
+
+      sessionStorage.setItem('linkvi_user', JSON.stringify(currentUser));
+      enterDashboard();
+      showToast("Acesso concedido!");
+    } catch (e) {
+      console.error(e);
+      toggleLoader(false);
+    }
+  }
+
+  // ENTER DASHBOARD STATE
+  async function enterDashboard() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('app-container').style.display = 'flex';
+    document.getElementById('welcome-badge').textContent = currentUser.id.toUpperCase();
+
+    if (currentUser.role === 'admin') {
+      document.getElementById('admin-selector-area').style.display = 'flex';
+      await loadStoresForAdmin();
+    } else {
+      document.getElementById('admin-selector-area').style.display = 'none';
+      activeStore = currentUser.id;
+      await loadStoreConfig(activeStore);
+    }
+    toggleLoader(false);
+  }
+
+  // LOGOUT
+  function handleLogout() {
+    sessionStorage.removeItem('linkvi_user');
+    currentUser = null;
+    activeStore = "";
+    document.getElementById('app-container').style.display = 'none';
+    document.getElementById('login-container').style.display = 'flex';
+    document.getElementById('login-password').value = "";
+  }
+
+  // ADMIN: Load all stores for the selector dropdown
+  async function loadStoresForAdmin() {
+    toggleLoader(true);
+    try {
+      const { data, error } = await supabaseClient
+        .from("stores")
+        .select("id, password");
+
+      if (error) throw error;
+
+      allStoresList = data || [];
+      const dropdown = document.getElementById('store-select');
+      dropdown.innerHTML = "";
+
+      const stores = allStoresList.filter(s => s.id !== 'contato@linkvi.com.br');
+
+      if (stores.length > 0) {
+        stores.forEach(store => {
+          const option = document.createElement('option');
+          option.value = store.id;
+          option.textContent = store.id;
+          dropdown.appendChild(option);
+        });
+
+        if (!activeStore || !stores.find(s => s.id === activeStore)) {
+          activeStore = stores[0].id;
+        }
+        dropdown.value = activeStore;
+        await loadStoreConfig(activeStore);
+      } else {
+        dropdown.innerHTML = `<option value="">Nenhuma loja criada</option>`;
+        activeStore = "";
+        clearDashboardForm();
+        openAdminManageModal();
+      }
+    } catch (e) {
+      console.error(e);
+      showToast("Erro ao carregar lojas.", "error");
+    } finally {
+      toggleLoader(false);
+    }
+  }
+
+  function clearDashboardForm() {
+    document.getElementById('store-id-display').value = "";
+    document.getElementById('store-logo-url').value = "";
+    document.getElementById('store-theme-color').value = "#7c3aed";
+    document.getElementById('store-theme-color-hex').value = "#7C3AED";
+    document.getElementById('store-pill-text').value = "";
+    document.getElementById('store-title-text').value = "";
+    document.getElementById('store-desc-text').value = "";
+    document.getElementById('store-cta-text').value = "";
+    document.getElementById('store-sub-text').value = "";
+    document.getElementById('links-container').innerHTML = "";
+    document.getElementById('links-empty-state').style.display = 'block';
+    updatePublicLinkDisplay();
+    previewLogo();
+  }
+
+  // SELECTOR CHANGE
+  async function onStoreSelectChange() {
+    const dropdown = document.getElementById('store-select');
+    if (dropdown.value) {
+      activeStore = dropdown.value;
+      await loadStoreConfig(activeStore);
+    }
+  }
+
+  // LOAD STORE DATA
+  async function loadStoreConfig(storeKey) {
+    toggleLoader(true);
+    try {
+      const { data, error } = await supabaseClient
+        .from("stores")
+        .select("id, config")
+        .eq("id", storeKey)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        let parsed = data.config;
+        if (typeof parsed === 'string') {
+          try {
+            parsed = JSON.parse(parsed);
+          } catch(e) {
+            parsed = {};
+          }
+        }
+
+        storeConfig = {
+          logoUrl: parsed.logoUrl || "",
+          themeColor: parsed.themeColor || "#7c3aed",
+          pillText: parsed.pillText || "",
+          title: parsed.title || "",
+          description: parsed.description || "",
+          ctaTitle: parsed.ctaTitle || "",
+          subText: parsed.subText || "",
+          links: parsed.links || []
+        };
+
+        // Populate fields
+        document.getElementById('store-id-display').value = storeKey;
+        document.getElementById('store-logo-url').value = storeConfig.logoUrl;
+        document.getElementById('store-theme-color').value = storeConfig.themeColor;
+        document.getElementById('store-theme-color-hex').value = (storeConfig.themeColor || "#7c3aed").toUpperCase();
+        document.getElementById('store-pill-text').value = storeConfig.pillText;
+        document.getElementById('store-title-text').value = storeConfig.title;
+        document.getElementById('store-desc-text').value = storeConfig.description;
+        document.getElementById('store-cta-text').value = storeConfig.ctaTitle;
+        document.getElementById('store-sub-text').value = storeConfig.subText;
+
+        previewLogo();
+        updatePublicLinkDisplay();
+        renderLinksList();
+      }
+    } catch(e) {
+      console.error(e);
+      showToast("Erro ao ler dados da loja.", "error");
+    } finally {
+      toggleLoader(false);
+    }
+  }
+
+  // CONFIG PUBLIC LINK DISPLAY
+  function updatePublicLinkDisplay() {
+    const domain = localStorage.getItem('linkvi_domain') || window.location.origin;
+    const urlInput = document.getElementById('public-link-url');
+    if (!activeStore) {
+      urlInput.value = "";
+      return;
+    }
+
+    // Check if it's local development (e.g. 127.0.0.1 or localhost)
+    const isLocal = domain.includes("127.0.0.1") || domain.includes("localhost") || window.location.hostname.includes("127.0.0.1") || window.location.hostname.includes("localhost");
+    
+    if (isLocal) {
+      // For local testing, use query param URL that actually works on local servers (like Live Server)
+      urlInput.value = `${domain}/cliente.html?store=${activeStore}`;
+    } else {
+      // For production, use clean Vercel rewrite URL path
+      urlInput.value = `${domain}/${activeStore}`;
+    }
+  }
+
+  function copyLink() {
+    const input = document.getElementById('public-link-url');
+    if (!input.value) return;
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    showToast("Link copiado para a área de transferência!");
+  }
+
+  function configureDomain() {
+    const current = localStorage.getItem('linkvi_domain') || window.location.origin;
+    const domain = prompt("Digite o domínio principal da sua Vercel (ex: https://vitrinelinks.vercel.app):", current);
+    if (domain !== null) {
+      const formattedDomain = domain.trim().replace(/\/$/, "");
+      if (formattedDomain) {
+        localStorage.setItem('linkvi_domain', formattedDomain);
+        updatePublicLinkDisplay();
+        showToast("Domínio principal atualizado com sucesso!");
+      }
+    }
+  }
+
+  // PREVIEW LOGO
+  function previewLogo() {
+    const url = document.getElementById('store-logo-url').value.trim();
+    const dropzone = document.getElementById('logo-dropzone');
+    
+    // Remove previous previews
+    const oldPreview = dropzone.querySelector('.logo-dropped-preview');
+    if (oldPreview) oldPreview.remove();
+
+    if (url) {
+      // Render beautiful image preview in the center of the dropzone
+      const previewDiv = document.createElement('div');
+      previewDiv.className = 'logo-dropped-preview';
+      previewDiv.innerHTML = `
+        <img src="${url}">
+        <div class="logo-change-overlay">Arrastar imagem ou clicar para alterar</div>
+      `;
+      dropzone.appendChild(previewDiv);
+    }
+  }
+
+  // LOGO UPLOAD DRAG & DROP INITIALIZATION
+  function initDropzone() {
+    const dropzone = document.getElementById('logo-dropzone');
+    if (!dropzone) return;
+
+    dropzone.addEventListener('click', () => {
+      document.getElementById('logo-file-input').click();
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--border-focus)';
+      dropzone.style.backgroundColor = '#f1f5f9';
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--bg-light)';
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--bg-light)';
+      
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        uploadLogoFile(file);
+      }
+    });
+  }
+
+  function handleLogoUpload(event) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      uploadLogoFile(file);
+    }
+  }
+
+  async function uploadLogoFile(file) {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de enviar o logotipo.", "error");
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      alert("Por favor, selecione apenas arquivos de imagem.");
+      return;
+    }
+
+    const dropzone = document.getElementById('logo-dropzone');
+    dropzone.style.pointerEvents = 'none';
+    
+    // Create temporary upload indicator inside the dropzone
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'logo-dropped-preview';
+    loadingDiv.style.zIndex = '10';
+    loadingDiv.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div>
+        <span style="font-size: 11px; font-weight: 600; color: var(--text-main);">Carregando...</span>
+      </div>
+    `;
+    dropzone.appendChild(loadingDiv);
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const cleanFileName = `${activeStore}-${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabaseClient
+        .storage
+        .from('logos')
+        .upload(cleanFileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabaseClient
+        .storage
+        .from('logos')
+        .getPublicUrl(cleanFileName);
+
+      if (urlData && urlData.publicUrl) {
+        document.getElementById('store-logo-url').value = urlData.publicUrl;
+        previewLogo();
+        showToast("Logotipo carregado! Salve para confirmar.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Erro ao enviar imagem:\n" + (e.message || JSON.stringify(e)) + "\n\nVerifique se o bucket 'logos' foi criado no painel do Supabase, se foi definido como Público (Public) e se as políticas de upload foram rodadas.");
+      showToast("Erro no envio do logotipo.", "error");
+      // Remove loading overlay
+      loadingDiv.remove();
+    } finally {
+      dropzone.style.pointerEvents = 'auto';
+    }
+  }
+
+  // RENDER LINKS LIST
+  function renderLinksList() {
+    const container = document.getElementById('links-container');
+    const emptyState = document.getElementById('links-empty-state');
+    
+    if (!storeConfig.links || storeConfig.links.length === 0) {
+      container.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+
+    container.style.display = 'flex';
+    emptyState.style.display = 'none';
+    container.innerHTML = "";
+
+    storeConfig.links.forEach((link, index) => {
+      const item = document.createElement('div');
+      item.className = 'link-item';
+      const iconHTML = LINK_ICONS[link.image] || LINK_ICONS.fallback;
+
+      item.innerHTML = `
+        <div class="link-item-icon" data-platform="${link.image || 'fallback'}">
+          ${iconHTML}
+        </div>
+        <div class="link-item-details">
+          <div class="link-item-title">${link.label}</div>
+          <div class="link-item-url">${link.url}</div>
+        </div>
+        <div class="link-item-controls">
+          <button class="btn-control" onclick="moveLink(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+          </button>
+          <button class="btn-control" onclick="moveLink(${index}, 1)" title="Mover para baixo" ${index === storeConfig.links.length - 1 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <button class="btn-control" onclick="openLinkModal(${index})" title="Editar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          </button>
+          <button class="btn-control delete" onclick="deleteLink(${index})" title="Deletar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+          </button>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  function moveLink(index, direction) {
+    const targetIndex = index + direction;
+    if (targetIndex < 0 || targetIndex >= storeConfig.links.length) return;
+    const temp = storeConfig.links[index];
+    storeConfig.links[index] = storeConfig.links[targetIndex];
+    storeConfig.links[targetIndex] = temp;
+    renderLinksList();
+    triggerAutosave(true); // Instant save on reorder
+  }
+
+  function deleteLink(index) {
+    if (confirm("Remover este link?")) {
+      storeConfig.links.splice(index, 1);
+      renderLinksList();
+      triggerAutosave(true); // Instant save on delete
+    }
+  }
+
+  // AUTOSAVE LOGIC
+  let autosaveTimeout = null;
+
+  function updateSaveStatus(status) {
+    const dot = document.getElementById('save-status-dot');
+    const text = document.getElementById('save-status-text');
+    if (!dot || !text) return;
+    
+    if (status === 'saving') {
+      dot.style.backgroundColor = '#eab308'; // Yellow
+      text.textContent = 'Salvando...';
+    } else if (status === 'saved') {
+      dot.style.backgroundColor = 'var(--success)'; // Green
+      text.textContent = 'Salvo';
+    } else if (status === 'error') {
+      dot.style.backgroundColor = 'var(--danger)'; // Red
+      text.textContent = 'Erro ao salvar';
+    }
+  }
+
+  function triggerAutosave(instant = false) {
+    if (!activeStore) return;
+    updateSaveStatus('saving');
+    
+    if (autosaveTimeout) {
+      clearTimeout(autosaveTimeout);
+    }
+    
+    if (instant) {
+      saveAllToSupabase();
+    } else {
+      autosaveTimeout = setTimeout(saveAllToSupabase, 800); // 800ms debounce
+    }
+  }
+
+  async function saveAllToSupabase() {
+    if (!activeStore) return;
+
+    storeConfig.logoUrl = document.getElementById('store-logo-url').value.trim();
+    storeConfig.themeColor = document.getElementById('store-theme-color').value;
+    storeConfig.pillText = document.getElementById('store-pill-text').value.trim();
+    storeConfig.title = document.getElementById('store-title-text').value.trim();
+    storeConfig.description = document.getElementById('store-desc-text').value.trim();
+    storeConfig.ctaTitle = document.getElementById('store-cta-text').value.trim();
+    storeConfig.subText = document.getElementById('store-sub-text').value.trim();
+
+    try {
+      const { error } = await supabaseClient
+        .from("stores")
+        .update({ config: storeConfig })
+        .eq("id", activeStore);
+
+      if (error) throw error;
+      updateSaveStatus('saved');
+    } catch(e) {
+      console.error(e);
+      updateSaveStatus('error');
+    }
+  }
+
+  // ADMIN: Manage Stores panel modal
+  async function openAdminManageModal() {
+    toggleLoader(true);
+    try {
+      const { data, error } = await supabaseClient
+        .from("stores")
+        .select("id, password")
+        .order("id", { ascending: true });
+
+      if (error) throw error;
+      allStoresList = data || [];
+      renderAdminStoresTable();
+      document.getElementById('admin-manage-backdrop').classList.add('open');
+    } catch(e) {
+      console.error(e);
+      showToast("Erro ao listar usuários.", "error");
+    } finally {
+      toggleLoader(false);
+    }
+  }
+
+  function closeAdminManageModal() {
+    document.getElementById('admin-manage-backdrop').classList.remove('open');
+  }
+
+  function renderAdminStoresTable() {
+    const listBody = document.getElementById('admin-stores-list');
+    listBody.innerHTML = "";
+    
+    allStoresList.forEach(store => {
+      const row = document.createElement('tr');
+      const isSuper = store.id === 'contato@linkvi.com.br';
+      
+      row.innerHTML = `
+        <td style="font-weight: 600; color: var(--text-main);">
+          ${store.id} ${isSuper ? '<span style="font-size:10px; padding:2px 6px; background-color: rgba(15,23,42,0.05); color:var(--text-main); border-radius:4px; margin-left:6px; font-weight:700;">Master</span>' : ''}
+        </td>
+        <td>
+          <input type="password" readonly value="${store.password}" style="border:none; outline:none; background:none; font-family:monospace; width: 100px; color:var(--text-main);" id="pwd-${store.id}">
+          <button style="border:none; background:none; font-size:11px; color:var(--brand-indigo); cursor:pointer; font-weight:600;" onclick="togglePasswordVisibility('${store.id}')">Exibir</button>
+        </td>
+        <td style="text-align: right; padding-right: 24px;">
+          <button class="btn-control" style="display:inline-flex;" onclick="adminResetPassword('${store.id}')" title="Alterar Senha">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5l-3.5 3.5"/></svg>
+          </button>
+          ${!isSuper ? `
+            <button class="btn-control delete" style="display:inline-flex;" onclick="adminDeleteStore('${store.id}')" title="Excluir Loja">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          ` : ''}
+        </td>
+      `;
+      listBody.appendChild(row);
+    });
+  }
+
+  function togglePasswordVisibility(storeId) {
+    const input = document.getElementById(`pwd-${storeId}`);
+    if (input.type === 'password') {
+      input.type = 'text';
+    } else {
+      input.type = 'password';
+    }
+  }
+
+  // ADMIN: Change store password
+  async function adminResetPassword(storeId) {
+    const newPwd = prompt(`Digite a nova senha para '${storeId}':`);
+    if (newPwd !== null) {
+      const pwd = newPwd.trim();
+      if (!pwd) {
+        alert("A senha não pode ser vazia.");
+        return;
+      }
+
+      toggleLoader(true);
+      try {
+        const { error } = await supabaseClient
+          .from("stores")
+          .update({ password: pwd })
+          .eq("id", storeId);
+
+        if (error) throw error;
+        showToast("Senha alterada com sucesso!");
+        await openAdminManageModal();
+      } catch (e) {
+        console.error(e);
+        showToast("Erro ao alterar senha.", "error");
+        toggleLoader(false);
+      }
+    }
+  }
+
+  // ADMIN: Delete store
+  async function adminDeleteStore(storeId) {
+    if (confirm(`Deseja REALMENTE excluir a loja '${storeId}'? Todos os links e configurações serão apagados permanentemente.`)) {
+      toggleLoader(true);
+      try {
+        const { error } = await supabaseClient
+          .from("stores")
+          .delete()
+          .eq("id", storeId);
+
+        if (error) throw error;
+        
+        showToast(`Loja '${storeId}' excluída.`);
+        
+        if (activeStore === storeId) {
+          activeStore = "";
+        }
+        
+        await loadStoresForAdmin();
+        await openAdminManageModal();
+      } catch (e) {
+        console.error(e);
+        showToast("Erro ao excluir loja.", "error");
+        toggleLoader(false);
+      }
+    }
+  }
+
+  // ADMIN: Open create store
+  function openNewStoreModal() {
+    document.getElementById('new-store-id').value = "";
+    document.getElementById('new-store-password').value = "";
+    document.getElementById('new-store-backdrop').classList.add('open');
+  }
+
+  // ADMIN: Close create store
+  function closeNewStoreModal() {
+    document.getElementById('new-store-backdrop').classList.remove('open');
+  }
+
+  // ADMIN: Submit create store
+  async function submitNewStore() {
+    const storeId = document.getElementById('new-store-id').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, "");
+    const storePwd = document.getElementById('new-store-password').value.trim();
+
+    if (!storeId || !storePwd) {
+      alert("Por favor, digite um Identificador e uma Senha.");
+      return;
+    }
+
+    if (storeId === 'contato@linkvi.com.br' || storeId === 'admin') {
+      alert("Este identificador é reservado do sistema.");
+      return;
+    }
+
+    toggleLoader(true);
+    closeNewStoreModal();
+
+    try {
+      const defaultConf = {
+        logoUrl: "",
+        pillText: "Nossos Links",
+        title: storeId.toUpperCase(),
+        description: "Confira nossos links úteis abaixo.",
+        ctaTitle: "Onde você quer nos encontrar?",
+        subText: "Selecione uma das opções abaixo.",
+        links: []
+      };
+
+      const { error } = await supabaseClient
+        .from("stores")
+        .insert([{ id: storeId, password: storePwd, config: defaultConf }]);
+
+      if (error) throw error;
+
+      showToast(`Loja '${storeId}' cadastrada!`);
+      activeStore = storeId;
+      await loadStoresForAdmin();
+      closeAdminManageModal();
+    } catch (e) {
+      console.error(e);
+      showToast("Erro ao cadastrar. Verifique se o ID já existe.", "error");
+    } finally {
+      toggleLoader(false);
+    }
+  }
+
+  // LINK MODAL
+  function openLinkModal(index = -1) {
+    const title = document.getElementById('modal-link-title');
+    const indexInput = document.getElementById('modal-link-index');
+    const labelInput = document.getElementById('modal-link-label');
+    const urlInput = document.getElementById('modal-link-url');
+
+    indexInput.value = index;
+
+    // Reset WhatsApp fields
+    document.getElementById('wa-phone').value = "";
+    document.getElementById('wa-message').value = "";
+
+    if (index === -1) {
+      title.textContent = "Adicionar Link";
+      labelInput.value = "";
+      urlInput.value = "";
+      selectIcon("fallback");
+    } else {
+      title.textContent = "Editar Link";
+      const link = storeConfig.links[index];
+      labelInput.value = link.label;
+      urlInput.value = link.url;
+      
+      // Check if it's WhatsApp link to pre-populate WhatsApp inputs
+      if (link.image === 'whatsapp') {
+        const parsed = parseWhatsAppUrl(link.url);
+        document.getElementById('wa-phone').value = maskPhone(parsed.phone);
+        document.getElementById('wa-message').value = parsed.message;
+      }
+      
+      selectIcon(link.image || "fallback");
+    }
+
+    document.getElementById('link-modal-backdrop').classList.add('open');
+  }
+
+  function closeLinkModal() {
+    document.getElementById('link-modal-backdrop').classList.remove('open');
+  }
+
+  function selectIcon(iconName) {
+    selectedIconType = iconName;
+    document.querySelectorAll('.icon-option').forEach(opt => {
+      if (opt.getAttribute('data-icon') === iconName) {
+        opt.classList.add('selected');
+      } else {
+        opt.classList.remove('selected');
+      }
+    });
+
+    // Auto-populate link text based on icon clicked
+    const labelInput = document.getElementById('modal-link-label');
+    const currentVal = labelInput.value.trim().toLowerCase();
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar"].includes(currentVal);
+
+    if (isDefault) {
+      if (iconName === 'instagram') labelInput.value = "Instagram";
+      else if (iconName === 'tiktok') labelInput.value = "TikTok";
+      else if (iconName === 'shopee') labelInput.value = "Shopee";
+      else if (iconName === 'whatsapp') labelInput.value = "WhatsApp";
+      else if (iconName === 'mapa') labelInput.value = "Nossa Localização";
+      else if (iconName === 'web') labelInput.value = "Website";
+      else if (iconName === 'fallback') labelInput.value = "Link";
+    }
+
+    // Show/Hide fields
+    const waFields = document.getElementById('whatsapp-builder-fields');
+    const urlInput = document.getElementById('modal-link-url');
+    const mapHelper = document.getElementById('map-helper-text');
+
+    if (iconName === 'whatsapp') {
+      waFields.style.display = 'flex';
+      urlInput.setAttribute('readonly', 'true');
+      urlInput.style.backgroundColor = 'var(--bg-light)';
+      urlInput.style.cursor = 'not-allowed';
+      generateWhatsAppUrl();
+    } else {
+      waFields.style.display = 'none';
+      urlInput.removeAttribute('readonly');
+      urlInput.style.backgroundColor = 'var(--panel-white)';
+      urlInput.style.cursor = 'text';
+    }
+
+    if (iconName === 'mapa') {
+      mapHelper.style.display = 'block';
+    } else {
+      mapHelper.style.display = 'none';
+    }
+  }
+
+  function maskPhone(value) {
+    let digits = value.replace(/\D/g, '');
+    if (digits.length > 13) {
+      digits = digits.slice(0, 13);
+    }
+    
+    if (digits.length <= 11) {
+      if (digits.length > 6) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+      } else if (digits.length > 2) {
+        return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+      } else if (digits.length > 0) {
+        return `(${digits}`;
+      }
+    } else {
+      const cc = digits.slice(0, 2);
+      const ddd = digits.slice(2, 4);
+      const rest = digits.slice(4);
+      
+      if (rest.slice(5).length > 0) {
+        return `+${cc} (${ddd}) ${rest.slice(0, 5)}-${rest.slice(5)}`;
+      } else if (rest.length > 0) {
+        return `+${cc} (${ddd}) ${rest}`;
+      } else {
+        return `+${cc} (${ddd}`;
+      }
+    }
+    return digits;
+  }
+
+  function handlePhoneInput(input) {
+    input.value = maskPhone(input.value);
+    generateWhatsAppUrl();
+  }
+
+  function generateWhatsAppUrl() {
+    const phone = document.getElementById('wa-phone').value.replace(/\D/g, '');
+    const message = encodeURIComponent(document.getElementById('wa-message').value);
+    const urlField = document.getElementById('modal-link-url');
+    if (phone) {
+      let fullPhone = phone;
+      // Prepend country code '55' if it's missing (length 10 or 11)
+      if (phone.length === 10 || phone.length === 11) {
+        fullPhone = '55' + phone;
+      }
+      urlField.value = `https://wa.me/${fullPhone}${message ? '?text=' + message : ''}`;
+    } else {
+      urlField.value = '';
+    }
+  }
+
+  function parseWhatsAppUrl(url) {
+    let phone = "";
+    let message = "";
+    try {
+      if (url.includes('wa.me/')) {
+        const parts = url.split('wa.me/');
+        if (parts[1]) {
+          const subparts = parts[1].split('?');
+          phone = subparts[0].replace(/\D/g, '');
+          if (subparts[1] && subparts[1].includes('text=')) {
+            const params = new URLSearchParams(subparts[1]);
+            message = params.get('text') || "";
+          }
+        }
+      }
+    } catch(e) {
+      console.error("Error parsing WhatsApp URL:", e);
+    }
+    return { phone, message };
+  }
+
+  function submitLinkModal() {
+    const index = parseInt(document.getElementById('modal-link-index').value);
+    const label = document.getElementById('modal-link-label').value.trim();
+    const url = document.getElementById('modal-link-url').value.trim();
+
+    if (!label || !url) {
+      alert("Preencha o título e a URL do link.");
+      return;
+    }
+
+    const linkData = {
+      label: label,
+      url: url,
+      image: selectedIconType
+    };
+
+    if (index === -1) {
+      storeConfig.links.push(linkData);
+    } else {
+      storeConfig.links[index] = linkData;
+    }
+
+    closeLinkModal();
+    renderLinksList();
+    showToast(index === -1 ? "Link adicionado!" : "Link atualizado!");
+    triggerAutosave(true); // Instant save on link submit
+  }
+</script>
+
+</body>
+</html>
