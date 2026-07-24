@@ -1428,6 +1428,146 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     setTimeout(() => { toast.classList.remove('show'); }, 3000);
   }
 
+  // CUSTOM DIALOGS (Alert, Confirm, Prompt)
+  function showAlert(title, message, buttonText = "Entendido") {
+    return new Promise((resolve) => {
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop open';
+      backdrop.style.zIndex = '9999';
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.style.maxWidth = '380px';
+      modal.style.padding = '24px';
+      
+      modal.innerHTML = `
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(124, 58, 237, 0.08); display: flex; align-items: center; justify-content: center; color: #7C3AED;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0;">${message}</p>
+          </div>
+          <button class="btn-primary-modal" style="width: 100%; padding: 11px; font-size: 13.5px; font-weight: 600; background-color: #7C3AED; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px;" id="alert-btn-close">${buttonText}</button>
+        </div>
+      `;
+      
+      backdrop.appendChild(modal);
+      document.body.appendChild(backdrop);
+      
+      modal.querySelector('#alert-btn-close').addEventListener('click', () => {
+        backdrop.remove();
+        resolve();
+      });
+    });
+  }
+
+  function showConfirm(title, message, confirmText = "Confirmar", cancelText = "Cancelar", isDanger = false) {
+    return new Promise((resolve) => {
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop open';
+      backdrop.style.zIndex = '9999';
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.style.maxWidth = '400px';
+      modal.style.padding = '24px';
+      
+      modal.innerHTML = `
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(124, 58, 237, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : '#7C3AED'};">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0;">${message}</p>
+          </div>
+          <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
+            <button class="btn-secondary" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600;" id="confirm-btn-cancel">${cancelText}</button>
+            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; background-color: ${isDanger ? '#ef4444' : '#7C3AED'}; color: white; border: none; border-radius: 6px; cursor: pointer;" id="confirm-btn-ok">${confirmText}</button>
+          </div>
+        </div>
+      `;
+      
+      backdrop.appendChild(modal);
+      document.body.appendChild(backdrop);
+      
+      const btnCancel = modal.querySelector('#confirm-btn-cancel');
+      const btnOk = modal.querySelector('#confirm-btn-ok');
+      
+      btnCancel.addEventListener('click', () => {
+        backdrop.remove();
+        resolve(false);
+      });
+      
+      btnOk.addEventListener('click', () => {
+        backdrop.remove();
+        resolve(true);
+      });
+    });
+  }
+
+  function showPrompt(title, message, placeholder = "", isPassword = false) {
+    return new Promise((resolve) => {
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop open';
+      backdrop.style.zIndex = '9999';
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal';
+      modal.style.maxWidth = '380px';
+      modal.style.padding = '24px';
+      
+      modal.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin: 0;">${message}</p>
+          </div>
+          <div class="form-group">
+            <input type="${isPassword ? 'password' : 'text'}" id="prompt-input-field" placeholder="${placeholder}" style="width: 100%; padding: 10px 12px; border: 1.4px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; outline: none; transition: border-color 0.15s;" autofocus>
+          </div>
+          <div style="display: flex; gap: 10px; width: 100%; margin-top: 4px;">
+            <button class="btn-secondary" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600;" id="prompt-btn-cancel">Cancelar</button>
+            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; background-color: #7C3AED; color: white; border: none; border-radius: 6px; cursor: pointer;" id="prompt-btn-ok">Confirmar</button>
+          </div>
+        </div>
+      `;
+      
+      backdrop.appendChild(modal);
+      document.body.appendChild(backdrop);
+      
+      const input = modal.querySelector('#prompt-input-field');
+      input.focus();
+      
+      input.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+          backdrop.remove();
+          resolve(input.value);
+        }
+      });
+      
+      modal.querySelector('#prompt-btn-cancel').addEventListener('click', () => {
+        backdrop.remove();
+        resolve(null);
+      });
+      
+      modal.querySelector('#prompt-btn-ok').addEventListener('click', () => {
+        backdrop.remove();
+        resolve(input.value);
+      });
+    });
+  }
+
   // LOADER
   function toggleLoader(show) {
     document.getElementById('main-loader').style.display = show ? 'flex' : 'none';
@@ -1439,7 +1579,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const passwordInput = document.getElementById('login-password').value.trim();
 
     if (!usernameInput || !passwordInput) {
-      alert("Por favor, preencha todos os campos.");
+      showAlert("Campos Incompletos", "Por favor, preencha todos os campos do formulário.");
       return;
     }
 
@@ -1756,7 +1896,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
     
     if (!file.type.startsWith('image/')) {
-      alert("Por favor, selecione apenas arquivos de imagem.");
+      showAlert("Arquivo Inválido", "Por favor, selecione apenas arquivos de imagem comuns (PNG, JPG, WEBP).");
       return;
     }
 
@@ -1801,7 +1941,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       }
     } catch (e) {
       console.error(e);
-      alert("Erro ao enviar imagem:\n" + (e.message || JSON.stringify(e)) + "\n\nVerifique se o bucket 'logos' foi criado no painel do Supabase, se foi definido como Público (Public) e se as políticas de upload foram rodadas.");
+      showAlert("Erro no Upload", "Não foi possível enviar a imagem. Verifique se o bucket 'logos' está criado no Supabase e configurado como Público.");
       showToast("Erro no envio do logotipo.", "error");
       // Remove loading overlay
       loadingDiv.remove();
@@ -1867,8 +2007,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     triggerAutosave(true); // Instant save on reorder
   }
 
-  function deleteLink(index) {
-    if (confirm("Remover este link?")) {
+  async function deleteLink(index) {
+    const confirmed = await showConfirm("Remover Link", "Deseja realmente excluir este link? Essa alteração será salva automaticamente no banco de dados.", "Remover", "Cancelar", true);
+    if (confirmed) {
       storeConfig.links.splice(index, 1);
       renderLinksList();
       triggerAutosave(true); // Instant save on delete
@@ -2002,11 +2143,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // ADMIN: Change store password
   async function adminResetPassword(storeId) {
-    const newPwd = prompt(`Digite a nova senha para '${storeId}':`);
+    const newPwd = await showPrompt("Alterar Senha", `Digite a nova senha de acesso para a loja '${storeId}':`, "Nova senha");
     if (newPwd !== null) {
       const pwd = newPwd.trim();
       if (!pwd) {
-        alert("A senha não pode ser vazia.");
+        showAlert("Senha Inválida", "A senha não pode ser vazia.");
         return;
       }
 
@@ -2030,7 +2171,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // ADMIN: Delete store
   async function adminDeleteStore(storeId) {
-    if (confirm(`Deseja REALMENTE excluir a loja '${storeId}'? Todos os links e configurações serão apagados permanentemente.`)) {
+    const confirmed = await showConfirm("Excluir Loja", `Deseja REALMENTE excluir a loja '${storeId}'? Todos os links e configurações serão apagados permanentemente.`, "Excluir Loja", "Cancelar", true);
+    if (confirmed) {
       toggleLoader(true);
       try {
         const { error } = await supabaseClient
@@ -2074,12 +2216,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const storePwd = document.getElementById('new-store-password').value.trim();
 
     if (!storeId || !storePwd) {
-      alert("Por favor, digite um Identificador e uma Senha.");
+      showAlert("Campos Incompletos", "Por favor, digite um Identificador e uma Senha para a nova loja.");
       return;
     }
 
     if (storeId === 'contato@linkvi.com.br' || storeId === 'admin') {
-      alert("Este identificador é reservado do sistema.");
+      showAlert("Identificador Inválido", "Este identificador é reservado do sistema e não pode ser criado.");
       return;
     }
 
@@ -2301,7 +2443,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const url = document.getElementById('modal-link-url').value.trim();
 
     if (!label || !url) {
-      alert("Preencha o título e a URL do link.");
+      showAlert("Campos Incompletos", "Por favor, preencha o título e a URL do link.");
       return;
     }
 
