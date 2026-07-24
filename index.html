@@ -1024,7 +1024,7 @@
     <div class="form-body" style="display: flex; flex-direction: column; gap: 16px;">
       <div class="form-group">
         <label for="login-username">Identificador da Loja (ou admin)</label>
-        <input type="text" id="login-username" placeholder="ex: sualoja">
+        <input type="text" id="login-username" placeholder="ex: sualoja ou admin">
       </div>
       <div class="form-group">
         <label for="login-password">Senha de Acesso</label>
@@ -1575,12 +1575,18 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // LOGIN PROCESS
   async function handleLogin() {
-    const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
+    let usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
     const passwordInput = document.getElementById('login-password').value.trim();
 
     if (!usernameInput || !passwordInput) {
       showAlert("Campos Incompletos", "Por favor, preencha todos os campos do formulário.");
       return;
+    }
+
+    // Map "admin" username to the master email
+    const isAdminUser = usernameInput === 'admin' || usernameInput === 'contato@linksvi.com.br' || usernameInput === 'contato@linkvi.com.br';
+    if (usernameInput === 'admin') {
+      usernameInput = 'contato@linksvi.com.br';
     }
 
     toggleLoader(true);
@@ -1597,7 +1603,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         loginQuery = loginQuery.eq("id", usernameInput);
       }
 
-      const { data, error } = await loginQuery.single();
+      let { data, error } = await loginQuery.single();
+
+      // Fallback for admin password migration: if failed and password typed was admin1234, try with admin123
+      if ((error || !data) && isAdminUser && passwordInput === 'admin1234') {
+        const fallbackQuery = supabaseClient
+          .from("stores")
+          .select("id, password")
+          .eq("password", "admin123")
+          .or('id.eq.contato@linksvi.com.br,id.eq.contato@linkvi.com.br');
+        
+        const fallbackRes = await fallbackQuery.single();
+        if (fallbackRes.data) {
+          data = fallbackRes.data;
+          error = null;
+        }
+      }
 
       if (error || !data) {
         if (error && (error.message.includes("relation") || error.message.includes("does not exist"))) {
