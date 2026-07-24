@@ -1,9 +1,28 @@
 {
-  "cleanUrls": true,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/:store",
-      "destination": "/cliente.html?store=:store"
+      "src": "/LogoSite.png",
+      "dest": "/LogoSite.png"
+    },
+    {
+      "src": "/index.html",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/cliente.html",
+      "dest": "/cliente.html"
+    },
+    {
+      "src": "/index",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/cliente",
+      "dest": "/cliente.html"
+    },
+    {
+      "src": "/([^/\\.]+)",
+      "dest": "/cliente.html?store=$1"
     }
   ]
 }
