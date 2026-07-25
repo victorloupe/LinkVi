@@ -1872,7 +1872,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     description: "",
     ctaTitle: "",
     subText: "",
-    links: []
+    links: [],
+    bgType: "solid",
+    bgGradient: "",
+    bgImageUrl: "",
+    bgBlur: 0,
+    bgOverlay: 0
   };
   let selectedIconType = "fallback";
 
@@ -2263,7 +2268,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           description: parsed.description || "",
           ctaTitle: parsed.ctaTitle || "",
           subText: parsed.subText || "",
-          links: parsed.links || []
+          links: parsed.links || [],
+          bgType: parsed.bgType || "solid",
+          bgGradient: parsed.bgGradient || "",
+          bgImageUrl: parsed.bgImageUrl || "",
+          bgBlur: parsed.bgBlur || 0,
+          bgOverlay: parsed.bgOverlay || 0
         };
 
         // Populate fields
@@ -2850,7 +2860,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         bgColor: "#ffffff",
         btnColor: "#ffffff",
         btnTextColor: "#0f172a",
-        links: []
+        links: [],
+        bgType: "solid",
+        bgGradient: "",
+        bgImageUrl: "",
+        bgBlur: 0,
+        bgOverlay: 0
       };
 
       const { error } = await supabaseClient
