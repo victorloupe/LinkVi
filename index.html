@@ -450,6 +450,10 @@
     min-height: 70px;
   }
 
+  #store-title-text, #store-cta-text {
+    font-weight: 700;
+  }
+
   /* Logo Upload dropzone */
   #logo-dropzone {
     border: 1px dashed #cbd5e1;
@@ -663,6 +667,11 @@
   .link-item-icon[data-platform="shopee"] { color: #ee4d2d; }
   .link-item-icon[data-platform="tiktok"] { color: #000000; }
   .link-item-icon[data-platform="web"] { color: #3b82f6; }
+  .link-item-icon[data-platform="email"] { color: #ea4335; }
+  .link-item-icon[data-platform="telefone"] { color: #475569; }
+  .link-item-icon[data-platform="facebook"] { color: #1877f2; }
+  .link-item-icon[data-platform="youtube"] { color: #ff0000; }
+  .link-item-icon[data-platform="linkedin"] { color: #0a66c2; }
   .link-item-icon[data-platform="fallback"] { color: var(--text-muted); }
 
   .link-item-icon svg, .link-item-icon img {
@@ -1050,9 +1059,74 @@
   /* Responsive color customizer grid */
   .color-customizer-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  /* Tabs for background selector */
+  .bg-tabs-container {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    background-color: var(--bg-light);
+    margin-top: 10px;
+    margin-bottom: 14px;
+  }
+
+  .bg-tabs {
+    display: flex;
+    gap: 4px;
     margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 6px;
+  }
+
+  .bg-tab-btn {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .bg-tab-btn:hover {
+    color: var(--text-main);
+    background-color: rgba(15, 23, 42, 0.03);
+  }
+
+  .bg-tab-btn.active {
+    background-color: var(--border-focus);
+    color: #ffffff;
+  }
+
+  .bg-tab-content {
+    display: none;
+  }
+
+  .bg-tab-content.active {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .gradient-preset-option {
+    aspect-ratio: 1.6;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s ease;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .gradient-preset-option:hover {
+    transform: scale(1.04);
   }
 
   @media (max-width: 968px) {
@@ -1338,19 +1412,7 @@
           </div>
         </div>
 
-        <!-- Column 3: Background Color -->
-        <div class="form-group" style="margin-bottom: 0;">
-          <label for="store-bg-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor do Fundo</label>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <input type="color" id="store-bg-color" value="#ffffff" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-bg-color-hex').value = this.value.toUpperCase(); triggerAutosave();">
-            <input type="text" id="store-bg-color-hex" value="#FFFFFF" placeholder="#FFFFFF" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-bg-color').value = val; triggerAutosave(); }">
-          </div>
-        </div>
-      </div>
-      
-      <!-- Second row of color customizer -->
-      <div class="color-customizer-grid" style="margin-top: 8px;">
-        <!-- Column 1: Button background color -->
+        <!-- Column 3: Button background color -->
         <div class="form-group" style="margin-bottom: 0;">
           <label for="store-btn-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Cor do Balão</label>
           <div style="display: flex; align-items: center; gap: 8px;">
@@ -1359,7 +1421,7 @@
           </div>
         </div>
 
-        <!-- Column 2: Button text color -->
+        <!-- Column 4: Button text color -->
         <div class="form-group" style="margin-bottom: 0;">
           <label for="store-btn-text-color" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">Escrito do Balão</label>
           <div style="display: flex; align-items: center; gap: 8px;">
@@ -1367,32 +1429,101 @@
             <input type="text" id="store-btn-text-color-hex" value="#0F172A" placeholder="#0F172A" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-btn-text-color').value = val; triggerAutosave(); }">
           </div>
         </div>
-        <div></div>
+      </div>
+
+      <!-- ESTILO DO FUNDO DA PÁGINA -->
+      <div class="bg-tabs-container">
+        <label style="font-size: 11px; font-weight: 750; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Estilo do Fundo da Página</label>
+        
+        <div class="bg-tabs">
+          <button type="button" class="bg-tab-btn active" data-tab="solid" onclick="switchBgTab('solid')">Cor Sólida</button>
+          <button type="button" class="bg-tab-btn" data-tab="gradient" onclick="switchBgTab('gradient')">Gradiente</button>
+          <button type="button" class="bg-tab-btn" data-tab="image" onclick="switchBgTab('image')">Imagem de Fundo</button>
+        </div>
+
+        <!-- Tab 1: Solid Color -->
+        <div id="bg-content-solid" class="bg-tab-content active">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="color" id="store-bg-color" value="#ffffff" style="width: 34px; height: 34px; border: none; border-radius: 50%; cursor: pointer; padding: 0; background: none; -webkit-appearance: none; box-shadow: 0 0 0 1px var(--border-color), 0 2px 4px rgba(0,0,0,0.05);" oninput="document.getElementById('store-bg-color-hex').value = this.value.toUpperCase(); handleBgSolidChange(this.value);">
+            <input type="text" id="store-bg-color-hex" value="#FFFFFF" placeholder="#FFFFFF" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-bg-color').value = val; handleBgSolidChange(val); }">
+          </div>
+        </div>
+
+        <!-- Tab 2: Gradient -->
+        <div id="bg-content-gradient" class="bg-tab-content">
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 6px;">
+            <div class="gradient-preset-option" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="selectBgGradient('linear-gradient(135deg, #667eea 0%, #764ba2 100%)')" title="Sunset Violet"></div>
+            <div class="gradient-preset-option" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);" onclick="selectBgGradient('linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)')" title="Soft Gray"></div>
+            <div class="gradient-preset-option" style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);" onclick="selectBgGradient('linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)')" title="Deep Ocean"></div>
+            <div class="gradient-preset-option" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);" onclick="selectBgGradient('linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)')" title="Soft Pink"></div>
+            <div class="gradient-preset-option" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);" onclick="selectBgGradient('linear-gradient(135deg, #11998e 0%, #38ef7d 100%)')" title="Fresh Emerald"></div>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="store-bg-gradient" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">Código CSS do Gradiente:</label>
+            <input type="text" id="store-bg-gradient" placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" style="font-size: 11px; padding: 6px 10px;" oninput="handleBgGradientChange(this.value)">
+          </div>
+        </div>
+
+        <!-- Tab 3: Background Image -->
+        <div id="bg-content-image" class="bg-tab-content">
+          <div style="display: flex; gap: 8px; align-items: stretch;">
+            <div id="bg-image-dropzone" style="flex: 1; border: 1.5px dashed var(--border-color); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--panel-white); padding: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; min-height: 50px; user-select: none;">
+              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="bg-image-upload-label">
+                📂 Clique ou arraste uma imagem aqui
+              </span>
+              <input type="file" id="bg-image-file-input" accept="image/*" style="display: none;" onchange="handleBgImageUpload(event)">
+            </div>
+            <div id="bg-image-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
+              <img id="bg-image-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+              <div id="bg-image-preview-placeholder" style="color: var(--text-muted); font-size: 14px;">🖼️</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+            <label for="store-bg-image-url" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">Ou cole a URL da imagem diretamente:</label>
+            <input type="text" id="store-bg-image-url" placeholder="https://exemplo.com/fundo.jpg" style="font-size: 11px; padding: 6px 10px;" oninput="handleBgImageUrlChange(this.value)">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="store-bg-blur" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>Desfoque (Blur):</span>
+                <span id="store-bg-blur-val">0px</span>
+              </label>
+              <input type="range" id="store-bg-blur" min="0" max="25" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-blur-val').textContent = this.value + 'px'; handleBgBlurChange(this.value);">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="store-bg-overlay" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>Escurecimento:</span>
+                <span id="store-bg-overlay-val">0%</span>
+              </label>
+              <input type="range" id="store-bg-overlay" min="0" max="1" step="0.05" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-overlay-val').textContent = Math.round(this.value * 100) + '%'; handleBgOverlayChange(this.value);">
+            </div>
+          </div>
+        </div>
       </div>
       
       <div class="form-group">
         <label for="store-pill-text">Texto da Tag (Pill superior)</label>
-        <input type="text" id="store-pill-text" placeholder="Tudo para a sua casa" oninput="triggerAutosave()">
+        <input type="text" id="store-pill-text" placeholder="Ex: Novidades, Destaque, Promoção (Opcional)" oninput="triggerAutosave()">
       </div>
       
       <div class="form-group">
         <label for="store-title-text">Título Principal</label>
-        <input type="text" id="store-title-text" placeholder="Praticidade e elegância para o seu lar" oninput="triggerAutosave()">
+        <input type="text" id="store-title-text" placeholder="Digite o nome da loja ou slogan principal" oninput="triggerAutosave()">
       </div>
       
       <div class="form-group">
         <label for="store-desc-text">Descrição da Loja</label>
-        <textarea id="store-desc-text" placeholder="Escreva um breve resumo da sua loja..." oninput="triggerAutosave()"></textarea>
+        <textarea id="store-desc-text" placeholder="Escreva um breve resumo ou mensagem de boas-vindas da loja..." oninput="triggerAutosave()"></textarea>
       </div>
 
       <div class="form-group">
         <label for="store-cta-text">Título de Chamada (CTA)</label>
-        <input type="text" id="store-cta-text" placeholder="Onde você quer nos encontrar?" oninput="triggerAutosave()">
+        <input type="text" id="store-cta-text" placeholder="Ex: Links Úteis, Canais de Atendimento" oninput="triggerAutosave()">
       </div>
 
       <div class="form-group">
         <label for="store-sub-text">Sub-título da Chamada</label>
-        <textarea id="store-sub-text" placeholder="Ex: Envio para todo o Brasil. Escolha um dos links abaixo." oninput="triggerAutosave()"></textarea>
+        <textarea id="store-sub-text" placeholder="Ex: Selecione uma das opções abaixo para falar conosco" oninput="triggerAutosave()"></textarea>
       </div>
     </aside>
 
@@ -1487,17 +1618,35 @@
       <div class="form-group">
         <label>Escolher Ícone</label>
         <div class="icon-selector-grid">
+          <!-- Fileira 1: Redes Sociais & Web -->
           <div class="icon-option" data-icon="instagram" data-title="Instagram" onclick="selectIcon('instagram')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>
           </div>
           <div class="icon-option" data-icon="tiktok" data-title="TikTok" onclick="selectIcon('tiktok')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>
           </div>
-          <div class="icon-option" data-icon="shopee" data-title="Shopee" onclick="selectIcon('shopee')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
+          <div class="icon-option" data-icon="facebook" data-title="Facebook" onclick="selectIcon('facebook')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
           </div>
+          <div class="icon-option" data-icon="youtube" data-title="YouTube" onclick="selectIcon('youtube')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2a29 29 0 0 0-.46 5.33 29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+          </div>
+          <div class="icon-option" data-icon="linkedin" data-title="LinkedIn" onclick="selectIcon('linkedin')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+          </div>
+          <div class="icon-option" data-icon="web" data-title="Website" onclick="selectIcon('web')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+          </div>
+
+          <!-- Fileira 2: Canais de Contato, Localização & Alimentação -->
           <div class="icon-option" data-icon="whatsapp" data-title="WhatsApp" onclick="selectIcon('whatsapp')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="icon-option" data-icon="telefone" data-title="Telefone" onclick="selectIcon('telefone')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          <div class="icon-option" data-icon="email" data-title="E-mail" onclick="selectIcon('email')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
           </div>
           <div class="icon-option" data-icon="mapa" data-title="Nossa Localização" onclick="selectIcon('mapa')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1508,8 +1657,10 @@
           <div class="icon-option" data-icon="ifood" data-title="iFood" onclick="selectIcon('ifood')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M18 18h-6v-5h3l2-3V7M6 18h6M12 13V8H8M3 8h5"/></svg>
           </div>
-          <div class="icon-option" data-icon="coleta" data-title="Coleta" onclick="selectIcon('coleta')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>
+
+          <!-- Fileira 3: Vendas, Logística & Customização -->
+          <div class="icon-option" data-icon="shopee" data-title="Shopee" onclick="selectIcon('shopee')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
           </div>
           <div class="icon-option" data-icon="catalago" data-title="Catálogo" onclick="selectIcon('catalago')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
@@ -1517,10 +1668,13 @@
           <div class="icon-option" data-icon="retirada" data-title="Retirada" onclick="selectIcon('retirada')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>
           </div>
-          <div class="icon-option" data-icon="web" data-title="Website" onclick="selectIcon('web')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+          <div class="icon-option" data-icon="coleta" data-title="Coleta" onclick="selectIcon('coleta')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>
           </div>
-          <div class="icon-option" data-icon="fallback" data-title="Link / Outro" onclick="selectIcon('fallback')">
+          <div class="icon-option" data-icon="custom" data-title="Imagem Externa" onclick="selectIcon('custom')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="icon-option" data-icon="fallback" data-title="Outro Link" onclick="selectIcon('fallback')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           </div>
         </div>
@@ -1535,6 +1689,49 @@
         <div class="form-group">
           <label for="wa-message" style="font-size: 11px; font-weight: 700;">Mensagem Inicial (Opcional)</label>
           <input type="text" id="wa-message" placeholder="Ex: Olá! Vim pelo LinksVi" oninput="generateWhatsAppUrl()">
+        </div>
+      </div>
+
+      <!-- Email builder helper -->
+      <div id="email-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
+        <div class="form-group">
+          <label for="email-address" style="font-size: 11px; font-weight: 700;">Endereço de E-mail</label>
+          <input type="email" id="email-address" placeholder="Ex: contato@sualoja.com" oninput="generateEmailUrl()">
+        </div>
+        <div class="form-group">
+          <label for="email-subject" style="font-size: 11px; font-weight: 700;">Assunto da Mensagem (Opcional)</label>
+          <input type="text" id="email-subject" placeholder="Ex: Dúvida sobre pedido" oninput="generateEmailUrl()">
+        </div>
+      </div>
+
+      <!-- Telefone builder helper -->
+      <div id="telefone-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
+        <div class="form-group">
+          <label for="tel-number" style="font-size: 11px; font-weight: 700;">Número do Telefone (com DDD)</label>
+          <input type="text" id="tel-number" placeholder="Ex: (11) 99999-9999" oninput="handleTelInput(this)">
+        </div>
+      </div>
+
+      <!-- Custom Icon helper -->
+      <div id="custom-icon-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label style="font-size: 11px; font-weight: 700;">Imagem do Ícone Personalizado</label>
+          <div style="display: flex; gap: 8px; align-items: stretch; margin-top: 4px;">
+            <div id="custom-icon-dropzone" style="flex: 1; border: 1.5px dashed var(--border-color); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--panel-white); padding: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; min-height: 50px; user-select: none;">
+              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="custom-icon-upload-label">
+                📂 Clique ou arraste uma imagem aqui
+              </span>
+              <input type="file" id="custom-icon-file-input" accept="image/*" style="display: none;" onchange="handleCustomIconUpload(event)">
+            </div>
+            <div id="custom-icon-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
+              <img id="custom-icon-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: contain;">
+              <div id="custom-icon-preview-placeholder" style="color: var(--text-muted); font-size: 14px;">🖼️</div>
+            </div>
+          </div>
+          <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
+            <label for="custom-icon-url" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">Ou cole a URL da imagem diretamente:</label>
+            <input type="text" id="custom-icon-url" placeholder="https://exemplo.com/icone.png" oninput="previewCustomIcon()" style="font-size: 11px; padding: 6px 10px;">
+          </div>
         </div>
       </div>
       
@@ -1655,6 +1852,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     catalago: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
     retirada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>`,
     web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
+    email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
+    telefone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`,
+    facebook: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>`,
+    youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2a29 29 0 0 0-.46 5.33 29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>`,
+    linkedin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`,
+    custom: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
     fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
   };
 
@@ -1686,8 +1889,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       enterDashboard();
     }
 
-    // Initialize drag & drop for logo
+    // Initialize drag & drop for logo, custom icon and background image
     initDropzone();
+    initCustomIconDropzone();
+    initBgImageDropzone();
   });
 
   // TOAST
@@ -2069,8 +2274,50 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         document.getElementById('store-theme-color-hex').value = (storeConfig.themeColor || "#7c3aed").toUpperCase();
         document.getElementById('store-text-color').value = storeConfig.textColor;
         document.getElementById('store-text-color-hex').value = (storeConfig.textColor || "#0f172a").toUpperCase();
-        document.getElementById('store-bg-color').value = storeConfig.bgColor;
-        document.getElementById('store-bg-color-hex').value = (storeConfig.bgColor || "#ffffff").toUpperCase();
+        const bgColor = storeConfig.bgColor || "#ffffff";
+        document.getElementById('store-bg-color').value = bgColor;
+        document.getElementById('store-bg-color-hex').value = bgColor.toUpperCase();
+        
+        // Gradient loading
+        const bgGradient = storeConfig.bgGradient || "";
+        document.getElementById('store-bg-gradient').value = bgGradient;
+        
+        // Preset borders reset
+        document.querySelectorAll('.gradient-preset-option').forEach(preset => {
+          if (bgGradient && preset.getAttribute('onclick').includes(bgGradient)) {
+            preset.style.borderColor = 'var(--border-focus)';
+          } else {
+            preset.style.borderColor = 'transparent';
+          }
+        });
+
+        // Image URL loading
+        const bgImageUrl = storeConfig.bgImageUrl || "";
+        document.getElementById('store-bg-image-url').value = bgImageUrl;
+        const bgPreviewImg = document.getElementById('bg-image-preview-img');
+        const bgPreviewPlaceholder = document.getElementById('bg-image-preview-placeholder');
+        if (bgImageUrl) {
+          bgPreviewImg.src = bgImageUrl;
+          bgPreviewImg.style.display = 'block';
+          bgPreviewPlaceholder.style.display = 'none';
+        } else {
+          bgPreviewImg.style.display = 'none';
+          bgPreviewPlaceholder.style.display = 'block';
+        }
+        
+        // Blur range loading
+        const bgBlur = storeConfig.bgBlur || 0;
+        document.getElementById('store-bg-blur').value = bgBlur;
+        document.getElementById('store-bg-blur-val').textContent = bgBlur + 'px';
+        
+        // Overlay range loading
+        const bgOverlay = storeConfig.bgOverlay || 0;
+        document.getElementById('store-bg-overlay').value = bgOverlay;
+        document.getElementById('store-bg-overlay-val').textContent = Math.round(bgOverlay * 100) + '%';
+
+        // Switch to the correct tab silently (so it doesn't trigger autosave during load)
+        const bgType = storeConfig.bgType || 'solid';
+        switchBgTab(bgType, true);
         document.getElementById('store-btn-color').value = storeConfig.btnColor || "#ffffff";
         document.getElementById('store-btn-color-hex').value = (storeConfig.btnColor || "#ffffff").toUpperCase();
         document.getElementById('store-btn-text-color').value = storeConfig.btnTextColor || "#0f172a";
@@ -2275,6 +2522,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
   }
 
+  function getLinkIconHTML(imageKeyOrUrl, label = "") {
+    if (!imageKeyOrUrl) {
+      return LINK_ICONS.fallback;
+    }
+    if (imageKeyOrUrl.startsWith("http://") || imageKeyOrUrl.startsWith("https://") || imageKeyOrUrl.startsWith("data:")) {
+      return `<img src="${imageKeyOrUrl}" alt="${label}" style="width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 4px;">`;
+    }
+    if (imageKeyOrUrl.startsWith("<svg")) {
+      return imageKeyOrUrl;
+    }
+    if (LINK_ICONS[imageKeyOrUrl]) {
+      return LINK_ICONS[imageKeyOrUrl];
+    }
+    return LINK_ICONS.fallback;
+  }
+
   // RENDER LINKS LIST
   function renderLinksList() {
     const container = document.getElementById('links-container');
@@ -2293,10 +2556,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.links.forEach((link, index) => {
       const item = document.createElement('div');
       item.className = 'link-item';
-      const iconHTML = LINK_ICONS[link.image] || LINK_ICONS.fallback;
+      const iconHTML = getLinkIconHTML(link.image, link.label);
+      const isCustomUrl = link.image && (link.image.startsWith("http://") || link.image.startsWith("https://") || link.image.startsWith("data:"));
 
       item.innerHTML = `
-        <div class="link-item-icon" data-platform="${link.image || 'fallback'}">
+        <div class="link-item-icon" data-platform="${isCustomUrl ? 'fallback' : (link.image || 'fallback')}">
           ${iconHTML}
         </div>
         <div class="link-item-details">
@@ -2391,6 +2655,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.description = document.getElementById('store-desc-text').value.trim();
     storeConfig.ctaTitle = document.getElementById('store-cta-text').value.trim();
     storeConfig.subText = document.getElementById('store-sub-text').value.trim();
+
+    // Background customizer options
+    storeConfig.bgType = activeBgTab;
+    storeConfig.bgGradient = document.getElementById('store-bg-gradient').value.trim();
+    storeConfig.bgImageUrl = document.getElementById('store-bg-image-url').value.trim();
+    storeConfig.bgBlur = parseInt(document.getElementById('store-bg-blur').value) || 0;
+    storeConfig.bgOverlay = parseFloat(document.getElementById('store-bg-overlay').value) || 0;
 
     try {
       const { error } = await supabaseClient
@@ -2609,9 +2880,16 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
     indexInput.value = index;
 
-    // Reset WhatsApp fields
+    // Reset helper fields
     document.getElementById('wa-phone').value = "";
     document.getElementById('wa-message').value = "";
+    document.getElementById('email-address').value = "";
+    document.getElementById('email-subject').value = "";
+    document.getElementById('tel-number').value = "";
+    document.getElementById('custom-icon-url').value = "";
+    document.getElementById('custom-icon-preview-img').style.display = 'none';
+    document.getElementById('custom-icon-preview-img').src = "";
+    document.getElementById('custom-icon-preview-placeholder').style.display = 'block';
 
     if (index === -1) {
       title.textContent = "Adicionar Link";
@@ -2624,11 +2902,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       labelInput.value = link.label;
       urlInput.value = link.url;
       
-      // Check if it's WhatsApp link to pre-populate WhatsApp inputs
+      // Populate helper fields based on icon type
       if (link.image === 'whatsapp') {
         const parsed = parseWhatsAppUrl(link.url);
         document.getElementById('wa-phone').value = maskPhone(parsed.phone);
         document.getElementById('wa-message').value = parsed.message;
+      } else if (link.image === 'email') {
+        const parsed = parseEmailUrl(link.url);
+        document.getElementById('email-address').value = parsed.email;
+        document.getElementById('email-subject').value = parsed.subject;
+      } else if (link.image === 'telefone') {
+        const parsed = parseTelUrl(link.url);
+        document.getElementById('tel-number').value = maskPhone(parsed.phone);
+      } else if (link.image && (link.image.startsWith("http://") || link.image.startsWith("https://") || link.image.startsWith("data:"))) {
+        document.getElementById('custom-icon-url').value = link.image;
+        const previewImg = document.getElementById('custom-icon-preview-img');
+        previewImg.src = link.image;
+        previewImg.style.display = 'block';
+        document.getElementById('custom-icon-preview-placeholder').style.display = 'none';
       }
       
       selectIcon(link.image || "fallback");
@@ -2642,9 +2933,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   }
 
   function selectIcon(iconName) {
+    const isCustomUrl = iconName && (iconName.startsWith("http://") || iconName.startsWith("https://") || iconName.startsWith("data:"));
+    
     selectedIconType = iconName;
+    
     document.querySelectorAll('.icon-option').forEach(opt => {
-      if (opt.getAttribute('data-icon') === iconName) {
+      const dataIcon = opt.getAttribute('data-icon');
+      if (dataIcon === iconName || (isCustomUrl && dataIcon === 'custom')) {
         opt.classList.add('selected');
       } else {
         opt.classList.remove('selected');
@@ -2654,7 +2949,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     // Auto-populate link text based on icon clicked
     const labelInput = document.getElementById('modal-link-label');
     const currentVal = labelInput.value.trim().toLowerCase();
-    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "retirada"].includes(currentVal);
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "personalizado", "ícone personalizado"].includes(currentVal);
 
     if (isDefault) {
       if (iconName === 'instagram') labelInput.value = "Instagram";
@@ -2669,25 +2964,73 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'catalago') labelInput.value = "Catálogo";
       else if (iconName === 'retirada') labelInput.value = "Retirada";
       else if (iconName === 'web') labelInput.value = "Website";
+      else if (iconName === 'email') labelInput.value = "E-mail";
+      else if (iconName === 'telefone') labelInput.value = "Telefone";
+      else if (iconName === 'facebook') labelInput.value = "Facebook";
+      else if (iconName === 'youtube') labelInput.value = "YouTube";
+      else if (iconName === 'linkedin') labelInput.value = "LinkedIn";
+      else if (iconName === 'custom') labelInput.value = "Link";
       else if (iconName === 'fallback') labelInput.value = "Link";
     }
 
     // Show/Hide fields
     const waFields = document.getElementById('whatsapp-builder-fields');
+    const emailFields = document.getElementById('email-builder-fields');
+    const telFields = document.getElementById('telefone-builder-fields');
+    const customIconFields = document.getElementById('custom-icon-fields');
     const urlInput = document.getElementById('modal-link-url');
     const mapHelper = document.getElementById('map-helper-text');
 
-    if (iconName === 'whatsapp') {
-      waFields.style.display = 'flex';
+    // Handle builders and URL readonly status
+    if (iconName === 'whatsapp' || iconName === 'email' || iconName === 'telefone') {
       urlInput.setAttribute('readonly', 'true');
       urlInput.style.backgroundColor = 'var(--bg-light)';
       urlInput.style.cursor = 'not-allowed';
-      generateWhatsAppUrl();
     } else {
-      waFields.style.display = 'none';
       urlInput.removeAttribute('readonly');
       urlInput.style.backgroundColor = 'var(--panel-white)';
       urlInput.style.cursor = 'text';
+    }
+
+    // Show/Hide WhatsApp fields
+    if (iconName === 'whatsapp') {
+      waFields.style.display = 'flex';
+      generateWhatsAppUrl();
+    } else {
+      waFields.style.display = 'none';
+    }
+
+    // Show/Hide Email fields
+    if (iconName === 'email') {
+      emailFields.style.display = 'flex';
+      generateEmailUrl();
+    } else {
+      emailFields.style.display = 'none';
+    }
+
+    // Show/Hide Telefone fields
+    if (iconName === 'telefone') {
+      telFields.style.display = 'flex';
+      generateTelUrl();
+    } else {
+      telFields.style.display = 'none';
+    }
+
+    // Show/Hide Custom Icon fields
+    if (iconName === 'custom' || isCustomUrl) {
+      customIconFields.style.display = 'flex';
+      const customUrlInput = document.getElementById('custom-icon-url');
+      if (isCustomUrl) {
+        customUrlInput.value = iconName;
+      } else {
+        if (!customUrlInput.value.startsWith('http')) {
+          customUrlInput.value = '';
+        }
+        selectedIconType = customUrlInput.value.trim() || 'fallback';
+      }
+      previewCustomIcon();
+    } else {
+      customIconFields.style.display = 'none';
     }
 
     if (iconName === 'mapa') {
@@ -2767,6 +3110,352 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       console.error("Error parsing WhatsApp URL:", e);
     }
     return { phone, message };
+  }
+
+  function parseEmailUrl(url) {
+    let email = "";
+    let subject = "";
+    try {
+      if (url.startsWith('mailto:')) {
+        const mailtoPart = url.slice(7); // remove 'mailto:'
+        const parts = mailtoPart.split('?');
+        email = parts[0];
+        if (parts[1]) {
+          const params = new URLSearchParams(parts[1]);
+          subject = params.get('subject') || "";
+        }
+      } else if (url.includes('@')) {
+        email = url;
+      }
+    } catch(e) {
+      console.error("Error parsing Email URL:", e);
+    }
+    return { email, subject };
+  }
+
+  function generateEmailUrl() {
+    const email = document.getElementById('email-address').value.trim();
+    const subject = encodeURIComponent(document.getElementById('email-subject').value.trim());
+    const urlField = document.getElementById('modal-link-url');
+    if (email) {
+      urlField.value = `mailto:${email}${subject ? '?subject=' + subject : ''}`;
+    } else {
+      urlField.value = '';
+    }
+  }
+
+  function parseTelUrl(url) {
+    let phone = "";
+    try {
+      if (url.startsWith('tel:')) {
+        phone = url.slice(4).replace(/\D/g, '');
+      } else {
+        phone = url.replace(/\D/g, '');
+      }
+    } catch(e) {
+      console.error("Error parsing Tel URL:", e);
+    }
+    return { phone };
+  }
+
+  function handleTelInput(input) {
+    input.value = maskPhone(input.value);
+    generateTelUrl();
+  }
+
+  function generateTelUrl() {
+    const phone = document.getElementById('tel-number').value.replace(/\D/g, '');
+    const urlField = document.getElementById('modal-link-url');
+    if (phone) {
+      urlField.value = `tel:${phone}`;
+    } else {
+      urlField.value = '';
+    }
+  }
+
+  function previewCustomIcon() {
+    const url = document.getElementById('custom-icon-url').value.trim();
+    const previewImg = document.getElementById('custom-icon-preview-img');
+    const previewPlaceholder = document.getElementById('custom-icon-preview-placeholder');
+    const isUrl = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("data:");
+    
+    if (isUrl) {
+      previewImg.src = url;
+      previewImg.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+      selectedIconType = url;
+    } else {
+      previewImg.style.display = 'none';
+      previewPlaceholder.style.display = 'block';
+      selectedIconType = 'fallback'; // fallback if no valid URL
+    }
+  }
+
+  function initCustomIconDropzone() {
+    const dropzone = document.getElementById('custom-icon-dropzone');
+    if (!dropzone) return;
+
+    dropzone.addEventListener('click', () => {
+      document.getElementById('custom-icon-file-input').click();
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--border-focus)';
+      dropzone.style.backgroundColor = '#f1f5f9';
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--panel-white)';
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--panel-white)';
+      
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        uploadCustomIconFile(file);
+      }
+    });
+  }
+
+  function handleCustomIconUpload(event) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      uploadCustomIconFile(file);
+    }
+  }
+
+  async function uploadCustomIconFile(file) {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de enviar um ícone.", "error");
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      showAlert("Arquivo Inválido", "Por favor, selecione apenas arquivos de imagem comuns (PNG, JPG, WEBP, SVG).");
+      return;
+    }
+
+    const dropzone = document.getElementById('custom-icon-dropzone');
+    const label = document.getElementById('custom-icon-upload-label');
+    
+    dropzone.style.pointerEvents = 'none';
+    label.textContent = "⏳ Enviando ícone...";
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const cleanFileName = `custom-icon-${activeStore}-${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabaseClient
+        .storage
+        .from('logos')
+        .upload(cleanFileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabaseClient
+        .storage
+        .from('logos')
+        .getPublicUrl(cleanFileName);
+
+      if (urlData && urlData.publicUrl) {
+        document.getElementById('custom-icon-url').value = urlData.publicUrl;
+        previewCustomIcon();
+        showToast("Ícone personalizado carregado!");
+      }
+    } catch (err) {
+      console.error("Error uploading custom icon:", err);
+      showToast("Erro no envio do ícone.", "error");
+    } finally {
+      dropzone.style.pointerEvents = 'auto';
+      label.textContent = "📂 Clique ou arraste uma imagem aqui";
+    }
+  }
+
+  let activeBgTab = 'solid'; // 'solid' | 'gradient' | 'image'
+
+  function switchBgTab(tabName, silent = false) {
+    activeBgTab = tabName;
+    document.querySelectorAll('.bg-tab-btn').forEach(btn => {
+      if (btn.getAttribute('data-tab') === tabName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    document.querySelectorAll('.bg-tab-content').forEach(content => {
+      if (content.id === `bg-content-${tabName}`) {
+        content.classList.add('active');
+      } else {
+        content.classList.remove('active');
+      }
+    });
+
+    // Update state and trigger save
+    if (storeConfig) {
+      storeConfig.bgType = tabName;
+      if (!silent) {
+        triggerAutosave();
+      }
+    }
+  }
+
+  function handleBgSolidChange(val) {
+    if (storeConfig) {
+      storeConfig.bgColor = val;
+      triggerAutosave();
+    }
+  }
+
+  function handleBgGradientChange(val) {
+    if (storeConfig) {
+      storeConfig.bgGradient = val;
+      triggerAutosave();
+    }
+  }
+
+  function selectBgGradient(val) {
+    document.getElementById('store-bg-gradient').value = val;
+    if (storeConfig) {
+      storeConfig.bgGradient = val;
+      triggerAutosave();
+    }
+    
+    // Add visual selected border to preset options
+    document.querySelectorAll('.gradient-preset-option').forEach(preset => {
+      if (preset.getAttribute('onclick').includes(val)) {
+        preset.style.borderColor = 'var(--border-focus)';
+      } else {
+        preset.style.borderColor = 'transparent';
+      }
+    });
+  }
+
+  function handleBgImageUrlChange(val) {
+    if (storeConfig) {
+      storeConfig.bgImageUrl = val;
+      triggerAutosave();
+    }
+    const previewImg = document.getElementById('bg-image-preview-img');
+    const previewPlaceholder = document.getElementById('bg-image-preview-placeholder');
+    if (val.startsWith('http') || val.startsWith('data:')) {
+      previewImg.src = val;
+      previewImg.style.display = 'block';
+      previewPlaceholder.style.display = 'none';
+    } else {
+      previewImg.style.display = 'none';
+      previewPlaceholder.style.display = 'block';
+    }
+  }
+
+  function handleBgBlurChange(val) {
+    if (storeConfig) {
+      storeConfig.bgBlur = parseInt(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBgOverlayChange(val) {
+    if (storeConfig) {
+      storeConfig.bgOverlay = parseFloat(val);
+      triggerAutosave();
+    }
+  }
+
+  function initBgImageDropzone() {
+    const dropzone = document.getElementById('bg-image-dropzone');
+    if (!dropzone) return;
+
+    dropzone.addEventListener('click', () => {
+      document.getElementById('bg-image-file-input').click();
+    });
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = 'var(--border-focus)';
+      dropzone.style.backgroundColor = '#f1f5f9';
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--panel-white)';
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = '#cbd5e1';
+      dropzone.style.backgroundColor = 'var(--panel-white)';
+      
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        const file = e.dataTransfer.files[0];
+        uploadBgImageFile(file);
+      }
+    });
+  }
+
+  function handleBgImageUpload(event) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      uploadBgImageFile(file);
+    }
+  }
+
+  async function uploadBgImageFile(file) {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de enviar a imagem de fundo.", "error");
+      return;
+    }
+    
+    if (!file.type.startsWith('image/')) {
+      showAlert("Arquivo Inválido", "Por favor, selecione apenas arquivos de imagem comuns (PNG, JPG, WEBP).");
+      return;
+    }
+
+    const dropzone = document.getElementById('bg-image-dropzone');
+    const label = document.getElementById('bg-image-upload-label');
+    
+    dropzone.style.pointerEvents = 'none';
+    label.textContent = "⏳ Enviando imagem...";
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const cleanFileName = `bg-${activeStore}-${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabaseClient
+        .storage
+        .from('logos')
+        .upload(cleanFileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabaseClient
+        .storage
+        .from('logos')
+        .getPublicUrl(cleanFileName);
+
+      if (urlData && urlData.publicUrl) {
+        document.getElementById('store-bg-image-url').value = urlData.publicUrl;
+        handleBgImageUrlChange(urlData.publicUrl);
+        showToast("Imagem de fundo carregada!");
+      }
+    } catch (err) {
+      console.error("Error uploading background image:", err);
+      showToast("Erro no envio da imagem.", "error");
+    } finally {
+      dropzone.style.pointerEvents = 'auto';
+      label.textContent = "📂 Clique ou arraste uma imagem aqui";
+    }
   }
 
   function togglePasswordVisibility() {

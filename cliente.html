@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Mobile Integration -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <link rel="shortcut icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <title>LinksVi — Carregando...</title>
@@ -31,6 +35,9 @@
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+  body.has-bg-image, body.has-bg-image footer, body.has-bg-image nav {
+    background: transparent !important;
   }
 
   /* Nav styling */
@@ -162,13 +169,11 @@
     justify-content: center;
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .btn:hover .btn-icon { transform: scale(1.15); }
   .btn-icon svg { width: 100%; height: 100%; }
 
   .btn-label { flex: 1; text-align: left; }
 
   .btn-arrow { flex: none; transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1); }
-  .btn:hover .btn-arrow { transform: translateX(5px); }
 
   .btn-outline {
     background: var(--btn-bg);
@@ -177,11 +182,24 @@
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
   }
   .btn-outline .btn-icon { color: var(--gold-deep); }
-  .btn-outline:hover {
-    border-color: var(--gold-deep);
-    background: var(--btn-bg);
-    transform: translateY(-3px) scale(1.015);
-    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04);
+
+  /* Hover optimizations for desktop mouse pointers */
+  @media (hover: hover) {
+    .btn:hover .btn-icon { transform: scale(1.15); }
+    .btn:hover .btn-arrow { transform: translateX(5px); }
+    .btn-outline:hover {
+      border-color: var(--gold-deep);
+      background: var(--btn-bg);
+      transform: translateY(-3px) scale(1.015);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04);
+    }
+  }
+
+  /* Tap feedback for touch screens and click feedback */
+  .btn:active {
+    transform: scale(0.97) !important;
+    background-color: var(--pill-bg);
+    transition: transform 0.08s ease;
   }
 
   footer {
@@ -325,6 +343,10 @@
 </head>
 <body>
 
+<!-- Camadas de Fundo Personalizado -->
+<div id="custom-bg-layer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background-size: cover; background-position: center; transition: background 0.3s ease, filter 0.3s ease; pointer-events: none;"></div>
+<div id="custom-bg-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; transition: background 0.3s ease; pointer-events: none;"></div>
+
 <!-- Loader Screen -->
 <div id="loader-container">
   <div class="spinner"></div>
@@ -359,7 +381,7 @@
   </div>
 </main>
 
-<footer id="footer">Desenvolvido por Links<span class="purple-vi">Vi</span></footer>
+<footer id="footer">Desenvolvido por <a href="index.html" style="text-decoration: none; color: inherit; font-weight: inherit;">Links<span class="purple-vi">Vi</span></a></footer>
 
 <!-- Supabase JS Client Library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -386,7 +408,13 @@
       const cachedBtnBg = localStorage.getItem('last_btn_bg_' + storeName);
       const cachedBtnText = localStorage.getItem('last_btn_text_' + storeName);
 
-      if (cachedBg) document.documentElement.style.setProperty('--bg', cachedBg);
+      if (cachedBg) {
+        document.documentElement.style.setProperty('--bg', cachedBg);
+        let metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) {
+          metaTheme.setAttribute('content', cachedBg.startsWith('#') ? cachedBg : (cachedHighlight || '#7c3aed'));
+        }
+      }
       if (cachedText) {
         document.documentElement.style.setProperty('--navy', cachedText);
         if (cachedText.startsWith("#") && cachedText.length === 7) {
@@ -419,6 +447,11 @@
     catalago: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
     retirada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>`,
     web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
+    email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
+    telefone: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`,
+    facebook: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>`,
+    youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>`,
+    linkedin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`,
     fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
   };
 
@@ -527,8 +560,50 @@
             }
           }
 
-          if (config.bgColor) {
-            document.documentElement.style.setProperty('--bg', config.bgColor);
+          // Background configuration
+          const bgType = config.bgType || 'solid';
+          const bgLayer = document.getElementById('custom-bg-layer');
+          const bgOverlay = document.getElementById('custom-bg-overlay');
+          let currentBgCache = '#ffffff';
+          
+          if (bgType === 'solid') {
+            document.body.classList.remove('has-bg-image');
+            const bgColor = config.bgColor || '#ffffff';
+            document.documentElement.style.setProperty('--bg', bgColor);
+            if (bgLayer) {
+              bgLayer.style.background = bgColor;
+              bgLayer.style.filter = 'none';
+            }
+            if (bgOverlay) bgOverlay.style.background = 'transparent';
+            currentBgCache = bgColor;
+          } else if (bgType === 'gradient') {
+            document.body.classList.remove('has-bg-image');
+            const bgGradient = config.bgGradient || 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+            document.documentElement.style.setProperty('--bg', bgGradient);
+            if (bgLayer) {
+              bgLayer.style.background = bgGradient;
+              bgLayer.style.filter = 'none';
+            }
+            if (bgOverlay) bgOverlay.style.background = 'transparent';
+            currentBgCache = bgGradient;
+          } else if (bgType === 'image') {
+            document.body.classList.add('has-bg-image');
+            const bgImageUrl = config.bgImageUrl || '';
+            const fallbackColor = config.bgColor || '#ffffff';
+            document.documentElement.style.setProperty('--bg', fallbackColor);
+            if (bgLayer) {
+              bgLayer.style.backgroundImage = `url("${bgImageUrl}")`;
+              if (config.bgBlur) {
+                bgLayer.style.filter = `blur(${config.bgBlur}px) scale(1.05)`;
+              } else {
+                bgLayer.style.filter = 'none';
+              }
+            }
+            if (bgOverlay) {
+              const opacity = config.bgOverlay !== undefined ? config.bgOverlay : 0;
+              bgOverlay.style.background = `rgba(0, 0, 0, ${opacity})`;
+            }
+            currentBgCache = fallbackColor;
           }
 
           if (config.btnColor) {
@@ -539,8 +614,14 @@
             document.documentElement.style.setProperty('--btn-text', config.btnTextColor);
           }
 
+          // Set mobile status bar theme-color dynamically
+          let metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme) {
+            metaTheme.setAttribute('content', bgType === 'solid' ? (config.bgColor || '#ffffff') : (config.themeColor || '#7c3aed'));
+          }
+
           // Cache theme configuration locally to prevent flashes on next load
-          localStorage.setItem('last_bg_' + storeName, config.bgColor || "#ffffff");
+          localStorage.setItem('last_bg_' + storeName, currentBgCache);
           localStorage.setItem('last_text_' + storeName, config.textColor || "#0f172a");
           localStorage.setItem('last_highlight_' + storeName, config.themeColor || "#7c3aed");
           localStorage.setItem('last_btn_bg_' + storeName, config.btnColor || "#ffffff");
