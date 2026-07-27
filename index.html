@@ -872,7 +872,7 @@
   /* Icons selector */
   .icon-selector-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     gap: 6px;
     margin-top: 2px;
   }
@@ -1239,7 +1239,7 @@
     }
 
     .icon-selector-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
     }
 
     .url-input-wrap {
@@ -1665,6 +1665,9 @@
           <div class="icon-option" data-icon="catalago" data-title="Catálogo" onclick="selectIcon('catalago')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
           </div>
+          <div class="icon-option" data-icon="catalago_web" data-title="Catálogo Web" onclick="selectIcon('catalago_web')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path><circle cx="12" cy="8" r="3" stroke-width="1.2"></circle><line x1="12" y1="5" x2="12" y2="11" stroke-width="1.2"></line><path d="M9.5 8h5" stroke-width="1.2"></path></svg>
+          </div>
           <div class="icon-option" data-icon="retirada" data-title="Retirada" onclick="selectIcon('retirada')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>
           </div>
@@ -1745,6 +1748,23 @@
         <input type="text" id="modal-link-url" placeholder="https://...">
         <div id="map-helper-text" style="display: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 6px;">
           💡 <strong>Como mostrar o mapa:</strong> No Google Maps, clique em <strong>Compartilhar</strong> -> <strong>Incorporar mapa</strong> -> <strong>Copiar HTML</strong> e cole o código iframe completo no campo acima. O mapa interativo aparecerá na página.
+        </div>
+      </div>
+
+      <!-- PDF upload helper (only shown for catalago and catalago_web) -->
+      <div id="pdf-upload-container" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 8px; margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+          <span>Enviar arquivo PDF do Catálogo</span>
+          <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="pdf-upload-status">Nenhum arquivo enviado</span>
+        </label>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button type="button" class="btn-secondary" onclick="document.getElementById('pdf-file-input').click()" style="padding: 8px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; flex-shrink: 0; border: 1px solid var(--border-color); background: #fff; font-weight: 600;">
+            Selecionar PDF
+          </button>
+          <input type="file" id="pdf-file-input" accept="application/pdf" style="display: none;" onchange="handlePdfUpload(event)">
+          <div style="font-size: 11px; color: var(--text-muted); line-height: 1.3;">
+            O arquivo PDF será carregado e preencherá a URL do link automaticamente.
+          </div>
         </div>
       </div>
     </div>
@@ -1850,6 +1870,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     coleta: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>`,
     descarga: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
     catalago: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
+    catalago_web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path><circle cx="12" cy="8" r="3" stroke-width="1.2"></circle><line x1="12" y1="5" x2="12" y2="11" stroke-width="1.2"></line><path d="M9.5 8h5" stroke-width="1.2"></path></svg>`,
     retirada: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>`,
     web: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>`,
     email: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
@@ -2532,6 +2553,62 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
   }
 
+  function handlePdfUpload(event) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      uploadPdfFile(file);
+    }
+  }
+
+  async function uploadPdfFile(file) {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de enviar o PDF.", "error");
+      return;
+    }
+    
+    if (file.type !== 'application/pdf') {
+      showAlert("Arquivo Inválido", "Por favor, selecione apenas arquivos em formato PDF.");
+      return;
+    }
+
+    const statusLabel = document.getElementById('pdf-upload-status');
+    statusLabel.textContent = "Carregando...";
+    statusLabel.style.color = "var(--brand-purple)";
+    
+    try {
+      const fileExt = file.name.split('.').pop();
+      const cleanFileName = `catalogo-${activeStore}-${Date.now()}.${fileExt}`;
+      
+      const { data, error } = await supabaseClient
+        .storage
+        .from('logos')
+        .upload(cleanFileName, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (error) throw error;
+
+      const { data: urlData } = supabaseClient
+        .storage
+        .from('logos')
+        .getPublicUrl(cleanFileName);
+
+      if (urlData && urlData.publicUrl) {
+        document.getElementById('modal-link-url').value = urlData.publicUrl;
+        statusLabel.textContent = "Carregado com sucesso!";
+        statusLabel.style.color = "var(--success)";
+        showToast("PDF carregado com sucesso!");
+      }
+    } catch (e) {
+      console.error(e);
+      statusLabel.textContent = "Erro no envio";
+      statusLabel.style.color = "var(--danger)";
+      showAlert("Erro no Upload", "Não foi possível enviar o PDF. Verifique se o bucket 'logos' está criado no Supabase e configurado como Público.");
+      showToast("Erro no envio do PDF.", "error");
+    }
+  }
+
   function getLinkIconHTML(imageKeyOrUrl, label = "") {
     if (!imageKeyOrUrl) {
       return LINK_ICONS.fallback;
@@ -2964,7 +3041,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     // Auto-populate link text based on icon clicked
     const labelInput = document.getElementById('modal-link-label');
     const currentVal = labelInput.value.trim().toLowerCase();
-    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "personalizado", "ícone personalizado"].includes(currentVal);
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "catálogo web", "catálogo online", "catalago web", "catalago_web", "catalago online", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "personalizado", "ícone personalizado"].includes(currentVal);
 
     if (isDefault) {
       if (iconName === 'instagram') labelInput.value = "Instagram";
@@ -2977,6 +3054,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'coleta') labelInput.value = "Coleta";
       else if (iconName === 'descarga') labelInput.value = "Catálogo";
       else if (iconName === 'catalago') labelInput.value = "Catálogo";
+      else if (iconName === 'catalago_web') labelInput.value = "Catálogo Online";
       else if (iconName === 'retirada') labelInput.value = "Retirada";
       else if (iconName === 'web') labelInput.value = "Website";
       else if (iconName === 'email') labelInput.value = "E-mail";
@@ -3052,6 +3130,18 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       mapHelper.style.display = 'block';
     } else {
       mapHelper.style.display = 'none';
+    }
+
+    // Show/Hide PDF Upload helper
+    const pdfFields = document.getElementById('pdf-upload-container');
+    if (pdfFields) {
+      if (iconName === 'catalago' || iconName === 'catalago_web') {
+        pdfFields.style.display = 'flex';
+        document.getElementById('pdf-upload-status').textContent = "Nenhum arquivo enviado";
+        document.getElementById('pdf-upload-status').style.color = "var(--text-muted)";
+      } else {
+        pdfFields.style.display = 'none';
+      }
     }
   }
 
