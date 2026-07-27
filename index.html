@@ -378,9 +378,9 @@
   /* Layout Container */
   .dashboard-container {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     flex: 1;
-    max-width: 1200px;
+    max-width: 1280px;
     width: 100%;
     margin: 0 auto;
     padding: 12px 16px 24px 16px;
@@ -397,11 +397,76 @@
   }
 
   .profile-panel {
-    flex: 1;
+    flex: 1.1;
     display: flex;
     flex-direction: column;
     gap: 18px;
     height: fit-content;
+  }
+
+  .preview-panel {
+    flex: 0 0 310px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: sticky;
+    top: 92px;
+    height: calc(100vh - 120px);
+  }
+
+  .device-smartphone {
+    position: relative;
+    width: 290px;
+    height: 580px;
+    border: 11px solid #1e293b;
+    border-radius: 36px;
+    background: #1e293b;
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+  }
+
+  .device-smartphone::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 18px;
+    background: #000000;
+    border-radius: 10px;
+    z-index: 100;
+  }
+
+  .device-smartphone::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  .device-screen {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 26px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .device-screen iframe {
+    width: 375px;
+    height: 781px;
+    border: none;
+    transform: scale(0.7146);
+    transform-origin: top left;
   }
 
   .section-title {
@@ -1144,7 +1209,17 @@
     transform: scale(1.04);
   }
 
-  @media (max-width: 968px) {
+  #mobile-preview-btn {
+    display: none;
+  }
+
+  @media (max-width: 1024px) {
+    #mobile-preview-btn {
+      display: flex !important;
+    }
+    .preview-panel {
+      display: none;
+    }
     .dashboard-container {
       flex-direction: column;
       padding: 16px;
@@ -1354,6 +1429,11 @@
         </button>
       </div>
 
+      <!-- Mobile Preview Button -->
+      <button class="btn-secondary" id="mobile-preview-btn" style="align-items: center; gap: 6px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; border-color: var(--border-color); cursor: pointer;" onclick="openMobilePreviewModal()">
+        <span>👁️ Visualizar</span>
+      </button>
+
       <!-- User capsule tag -->
       <div class="user-tag">
         <div class="user-avatar">
@@ -1561,7 +1641,7 @@
       </section>
 
       <!-- Links List -->
-      <section class="panel-card" style="flex: 1; display: flex; flex-direction: column;">
+      <section class="panel-card" style="margin-bottom: 20px; display: flex; flex-direction: column;">
         <div class="links-header">
           <h3>Links Cadastrados</h3>
           <button class="btn-add-link" onclick="openLinkModal()">
@@ -1578,7 +1658,79 @@
           <button class="btn-add-link" style="margin: 0 auto;" onclick="openLinkModal()">Cadastrar Primeiro Link</button>
         </div>
       </section>
+
+      <!-- Access Statistics (Analytics) Card -->
+      <section class="panel-card" id="analytics-card" style="display: none;">
+        <h3 class="section-title" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span>📈 Estatísticas de Acesso</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <select id="stats-filter-select" onchange="onStatsFilterChange()" style="padding: 4px 8px; font-size: 11px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main);">
+              <option value="today">Hoje</option>
+              <option value="7days">Últimos 7 dias</option>
+              <option value="month" selected>Este Mês</option>
+              <option value="all">Todo o período</option>
+              <option value="custom">Período personalizado</option>
+            </select>
+            <button onclick="refreshAnalyticsFromServer()" class="btn-secondary" style="padding: 4px 8px; font-size: 11px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 4px;" title="Atualizar Estatísticas">
+              <span>🔄 Atualizar</span>
+            </button>
+          </div>
+        </h3>
+
+        <!-- Custom period date inputs (hidden by default) -->
+        <div id="stats-custom-dates" style="display: none; gap: 8px; align-items: center; margin-bottom: 12px; font-size: 11px; background-color: var(--bg-light); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Início</span>
+            <input type="date" id="stats-start-date" onchange="renderFilteredStats()" style="width: 100%; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; font-size: 11px;">
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Fim</span>
+            <input type="date" id="stats-end-date" onchange="renderFilteredStats()" style="width: 100%; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; font-size: 11px;">
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center; margin-bottom: 16px;">
+          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Visualizações</div>
+            <div id="stats-views" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
+          </div>
+          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Cliques Totais</div>
+            <div id="stats-clicks" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
+          </div>
+          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Taxa (CTR)</div>
+            <div id="stats-ctr" style="font-size: 18px; font-weight: 800; color: var(--brand-purple); margin-top: 4px;">0%</div>
+          </div>
+        </div>
+        
+        <div id="stats-links-breakdown" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Populated dynamically with clicks per link -->
+        </div>
+      </section>
     </main>
+
+    <!-- Live Preview Panel (Desktop) -->
+    <aside class="preview-panel">
+      <div class="device-smartphone">
+        <div class="device-screen">
+          <iframe id="live-preview-iframe" src="" frameborder="0"></iframe>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- MODAL: Mobile Preview -->
+  <div class="modal-backdrop" id="mobile-preview-backdrop">
+    <div class="modal" style="max-width: 360px; padding: 12px; background: transparent; border: none; box-shadow: none;">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+        <button onclick="closeMobilePreviewModal()" style="background: rgba(15, 23, 42, 0.6); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: bold;">&times;</button>
+      </div>
+      <div class="device-smartphone" style="margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+        <div class="device-screen">
+          <iframe id="mobile-preview-iframe" src="" frameborder="0" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+      </div>
+    </div>
   </div>
 
 
@@ -1943,6 +2095,16 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     initDropzone();
     initCustomIconDropzone();
     initBgImageDropzone();
+
+    // Bind preview iframe load listeners to inject the config as soon as they render
+    const desktopIframe = document.getElementById('live-preview-iframe');
+    if (desktopIframe) {
+      desktopIframe.addEventListener('load', sendConfigToPreview);
+    }
+    const mobileIframe = document.getElementById('mobile-preview-iframe');
+    if (mobileIframe) {
+      mobileIframe.addEventListener('load', sendConfigToPreview);
+    }
   });
 
   // TOAST
@@ -2225,8 +2387,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           dropdown.appendChild(option);
         });
 
-        if (!activeStore || !stores.find(s => s.id === activeStore)) {
+        const savedStore = localStorage.getItem('linksvi_active_store');
+        if (savedStore && stores.find(s => s.id === savedStore)) {
+          activeStore = savedStore;
+        } else if (!activeStore || !stores.find(s => s.id === activeStore)) {
           activeStore = stores[0].id;
+          localStorage.setItem('linksvi_active_store', activeStore);
         }
         dropdown.value = activeStore;
         await loadStoreConfig(activeStore);
@@ -2274,6 +2440,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const dropdown = document.getElementById('store-select');
     if (dropdown.value) {
       activeStore = dropdown.value;
+      localStorage.setItem('linksvi_active_store', activeStore);
       await loadStoreConfig(activeStore);
     }
   }
@@ -2386,6 +2553,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         previewLogo();
         updatePublicLinkDisplay();
         renderLinksList();
+        updatePreviewIframe();
+        loadAnalyticsData();
       }
     } catch(e) {
       console.error(e);
@@ -2721,6 +2890,252 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
   }
 
+  // LIVE PREVIEW & MOBILE PREVIEW MODAL LOGIC
+  function updatePreviewIframe() {
+    if (!activeStore) return;
+    const domain = window.location.origin;
+    const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) || '';
+    const previewUrl = `${domain}${basePath}/cliente.html?store=${activeStore}&preview=true`;
+    
+    const desktopIframe = document.getElementById('live-preview-iframe');
+    if (desktopIframe) {
+      desktopIframe.src = previewUrl;
+    }
+    const mobileIframe = document.getElementById('mobile-preview-iframe');
+    if (mobileIframe) {
+      mobileIframe.src = previewUrl;
+    }
+  }
+
+  function sendConfigToPreview() {
+    const desktopIframe = document.getElementById('live-preview-iframe');
+    const mobileIframe = document.getElementById('mobile-preview-iframe');
+    
+    const currentConfig = {
+      logoUrl: document.getElementById('store-logo-url').value.trim(),
+      logoSize: document.getElementById('store-logo-size').value,
+      themeColor: document.getElementById('store-theme-color').value,
+      textColor: document.getElementById('store-text-color').value,
+      bgColor: document.getElementById('store-bg-color').value,
+      btnColor: document.getElementById('store-btn-color').value,
+      btnTextColor: document.getElementById('store-btn-text-color').value,
+      pillText: document.getElementById('store-pill-text').value.trim(),
+      title: document.getElementById('store-title-text').value.trim(),
+      description: document.getElementById('store-desc-text').value.trim(),
+      ctaTitle: document.getElementById('store-cta-text').value.trim(),
+      subText: document.getElementById('store-sub-text').value.trim(),
+      bgType: activeBgTab,
+      bgGradient: document.getElementById('store-bg-gradient').value.trim(),
+      bgImageUrl: document.getElementById('store-bg-image-url').value.trim(),
+      bgBlur: parseInt(document.getElementById('store-bg-blur').value) || 0,
+      bgOverlay: parseFloat(document.getElementById('store-bg-overlay').value) || 0,
+      links: storeConfig.links || []
+    };
+
+    if (desktopIframe && desktopIframe.contentWindow) {
+      desktopIframe.contentWindow.postMessage({
+        type: 'updateConfig',
+        config: currentConfig
+      }, '*');
+    }
+    if (mobileIframe && mobileIframe.contentWindow) {
+      mobileIframe.contentWindow.postMessage({
+        type: 'updateConfig',
+        config: currentConfig
+      }, '*');
+    }
+  }
+
+  function openMobilePreviewModal() {
+    const modal = document.getElementById('mobile-preview-backdrop');
+    if (modal) {
+      modal.classList.add('open');
+      updatePreviewIframe();
+    }
+  }
+
+  function closeMobilePreviewModal() {
+    const modal = document.getElementById('mobile-preview-backdrop');
+    if (modal) {
+      modal.classList.remove('open');
+    }
+  }
+
+  // ACCESS METRICS & ANALYTICS
+  async function refreshAnalyticsFromServer() {
+    if (!activeStore || !supabaseClient) return;
+    const btn = document.querySelector('#analytics-card .btn-secondary');
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = "<span>⏳ Carregando...</span>";
+    }
+    
+    try {
+      const { data, error } = await supabaseClient
+        .from("stores")
+        .select("config")
+        .eq("id", activeStore)
+        .single();
+        
+      if (error) throw error;
+      if (data && data.config) {
+        let parsed = data.config;
+        if (typeof parsed === 'string') {
+          parsed = JSON.parse(parsed);
+        }
+        storeConfig.stats = parsed.stats || { views: 0, clicks: {} };
+        loadAnalyticsData();
+        showToast("Estatísticas atualizadas!");
+      }
+    } catch (e) {
+      console.error("Erro ao atualizar métricas:", e);
+      showToast("Erro ao carregar dados do banco.", "error");
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = "<span>🔄 Atualizar</span>";
+      }
+    }
+  }
+
+  function onStatsFilterChange() {
+    const filterSelect = document.getElementById('stats-filter-select');
+    const customDatesDiv = document.getElementById('stats-custom-dates');
+    if (!filterSelect || !customDatesDiv) return;
+
+    if (filterSelect.value === 'custom') {
+      customDatesDiv.style.display = 'flex';
+      
+      const today = new Date();
+      const offset = today.getTimezoneOffset();
+      const localToday = new Date(today.getTime() - (offset * 60 * 1000));
+      const todayStr = localToday.toISOString().split('T')[0];
+      const startOfMonthStr = todayStr.substring(0, 8) + '01';
+      
+      document.getElementById('stats-start-date').value = startOfMonthStr;
+      document.getElementById('stats-end-date').value = todayStr;
+    } else {
+      customDatesDiv.style.display = 'none';
+    }
+    renderFilteredStats();
+  }
+
+  function renderFilteredStats() {
+    if (!storeConfig) return;
+    
+    const filterSelectEl = document.getElementById('stats-filter-select');
+    const filterSelect = filterSelectEl ? filterSelectEl.value : 'month';
+    const stats = storeConfig.stats || { views: 0, clicks: {} };
+    const daily = stats.daily || {};
+    
+    let startDateStr = null;
+    let endDateStr = null;
+    
+    const today = new Date();
+    const offset = today.getTimezoneOffset();
+    const localToday = new Date(today.getTime() - (offset * 60 * 1000));
+    const todayStr = localToday.toISOString().split('T')[0];
+
+    if (filterSelect === 'today') {
+      startDateStr = todayStr;
+      endDateStr = todayStr;
+    } else if (filterSelect === '7days') {
+      const start = new Date(today.getTime() - 6 * 24 * 60 * 60 * 1000);
+      const localStart = new Date(start.getTime() - (offset * 60 * 1000));
+      startDateStr = localStart.toISOString().split('T')[0];
+      endDateStr = todayStr;
+    } else if (filterSelect === 'month') {
+      startDateStr = todayStr.substring(0, 8) + '01';
+      endDateStr = todayStr;
+    } else if (filterSelect === 'custom') {
+      startDateStr = document.getElementById('stats-start-date').value;
+      endDateStr = document.getElementById('stats-end-date').value;
+    }
+    
+    let filteredViews = 0;
+    let filteredClicks = {};
+
+    if (filterSelect === 'all') {
+      filteredViews = stats.views || 0;
+      filteredClicks = Object.assign({}, stats.clicks || {});
+    } else {
+      Object.keys(daily).forEach(dateKey => {
+        if ((!startDateStr || dateKey >= startDateStr) && (!endDateStr || dateKey <= endDateStr)) {
+          const dayData = daily[dateKey];
+          filteredViews += parseInt(dayData.views) || 0;
+          
+          const dayClicks = dayData.clicks || {};
+          Object.keys(dayClicks).forEach(linkIdx => {
+            filteredClicks[linkIdx] = (filteredClicks[linkIdx] || 0) + (parseInt(dayClicks[linkIdx]) || 0);
+          });
+        }
+      });
+    }
+
+    let totalClicks = 0;
+    Object.values(filteredClicks).forEach(val => {
+      totalClicks += parseInt(val) || 0;
+    });
+
+    const ctr = filteredViews > 0 ? ((totalClicks / filteredViews) * 100).toFixed(1) : '0.0';
+
+    document.getElementById('stats-views').textContent = filteredViews.toLocaleString();
+    document.getElementById('stats-clicks').textContent = totalClicks.toLocaleString();
+    document.getElementById('stats-ctr').textContent = `${ctr}%`;
+
+    const listContainer = document.getElementById('stats-links-breakdown');
+    if (!listContainer) return;
+    listContainer.innerHTML = "";
+
+    const links = storeConfig.links || [];
+    if (links.length === 0) {
+      listContainer.innerHTML = `<div style="text-align: center; font-size: 11px; color: var(--text-muted); padding: 8px;">Nenhum link configurado para rastrear.</div>`;
+      return;
+    }
+
+    links.forEach((link, index) => {
+      const linkClicks = parseInt(filteredClicks[index]) || 0;
+      const linkCtr = filteredViews > 0 ? ((linkClicks / filteredViews) * 100).toFixed(1) : '0.0';
+      
+      const item = document.createElement('div');
+      item.style.display = 'flex';
+      item.style.alignItems = 'center';
+      item.style.justifyContent = 'space-between';
+      item.style.padding = '8px 10px';
+      item.style.backgroundColor = 'var(--panel-white)';
+      item.style.border = '1px solid var(--border-color)';
+      item.style.borderRadius = '6px';
+      item.style.fontSize = '12px';
+      
+      item.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+          <span style="font-size: 13px; flex-shrink: 0;">🔗</span>
+          <span style="font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${link.label}</span>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-shrink: 0; font-weight: 700;">
+          <span style="color: var(--text-main);">${linkClicks} <span style="font-size: 9px; font-weight: 500; color: var(--text-muted);">cliq.</span></span>
+          <span style="color: var(--brand-purple); font-size: 11.5px;">${linkCtr}%</span>
+        </div>
+      `;
+      listContainer.appendChild(item);
+    });
+  }
+
+  function loadAnalyticsData() {
+    if (!storeConfig) return;
+    
+    const statsCard = document.getElementById('analytics-card');
+    if (!statsCard) return;
+    
+    if (!activeStore) {
+      statsCard.style.display = 'none';
+      return;
+    }
+    statsCard.style.display = 'block';
+
+    renderFilteredStats();
+  }
+
   // AUTOSAVE LOGIC
   let autosaveTimeout = null;
 
@@ -2744,6 +3159,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function triggerAutosave(instant = false) {
     if (!activeStore) return;
     updateSaveStatus('saving');
+    sendConfigToPreview(); // Live update preview iframe
     
     if (autosaveTimeout) {
       clearTimeout(autosaveTimeout);
@@ -2787,6 +3203,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
       if (error) throw error;
       updateSaveStatus('saved');
+      loadAnalyticsData();
     } catch(e) {
       console.error(e);
       updateSaveStatus('error');
@@ -2910,6 +3327,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         
         if (activeStore === storeId) {
           activeStore = "";
+          localStorage.removeItem('linksvi_active_store');
         }
         
         await loadStoresForAdmin();
@@ -2982,6 +3400,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
       showToast(`Loja '${storeId}' cadastrada!`);
       activeStore = storeId;
+      localStorage.setItem('linksvi_active_store', storeId);
       await loadStoresForAdmin();
       closeAdminManageModal();
     } catch (e) {

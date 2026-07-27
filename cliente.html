@@ -55,6 +55,18 @@
     width: 100%;
     box-sizing: border-box;
   }
+
+  /* Notch spacer inside virtual phone iframe */
+  body.in-preview nav, body.in-preview nav.scrolled {
+    padding-top: 40px !important;
+  }
+
+  /* Notch spacer on real mobile/tablet devices in production */
+  @media (max-width: 768px) {
+    nav, nav.scrolled {
+      padding-top: 40px !important;
+    }
+  }
   
   nav.scrolled {
     padding: 10px 20px;
@@ -809,6 +821,98 @@
     }, 400);
   }
 
+  async function trackStoreView(storeName, currentConfig) {
+    try {
+      if (!supabaseClient) return;
+      const { data } = await supabaseClient
+        .from("stores")
+        .select("config")
+        .eq("id", storeName)
+        .single();
+      
+      let config = currentConfig;
+      if (data && data.config) {
+        config = data.config;
+        if (typeof config === 'string') {
+          config = JSON.parse(config);
+        }
+      }
+      
+      if (!config.stats) {
+        config.stats = { views: 0, clicks: {} };
+      }
+      
+      // Increment total views
+      config.stats.views = (config.stats.views || 0) + 1;
+      
+      // Daily tracking (local timezone)
+      config.stats.daily = config.stats.daily || {};
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const localNow = new Date(now.getTime() - (offset * 60 * 1000));
+      const todayStr = localNow.toISOString().split('T')[0];
+      
+      config.stats.daily[todayStr] = config.stats.daily[todayStr] || { views: 0, clicks: {} };
+      config.stats.daily[todayStr].views = (config.stats.daily[todayStr].views || 0) + 1;
+      
+      await supabaseClient
+        .from("stores")
+        .update({ config: config })
+        .eq("id", storeName);
+    } catch (e) {
+      console.error("Erro ao registrar visualização:", e);
+    }
+  }
+
+  async function trackStoreClick(linkIndex, linkUrl) {
+    const isPreview = window.location.search.includes('preview=true');
+    if (isPreview) return;
+    
+    const storeName = getStoreName();
+    if (!storeName || !supabaseClient) return;
+
+    try {
+      const { data } = await supabaseClient
+        .from("stores")
+        .select("config")
+        .eq("id", storeName)
+        .single();
+      
+      if (data && data.config) {
+        let config = data.config;
+        if (typeof config === 'string') {
+          config = JSON.parse(config);
+        }
+        
+        if (!config.stats) {
+          config.stats = { views: 0, clicks: {} };
+        }
+        
+        // Increment total clicks
+        config.stats.clicks = config.stats.clicks || {};
+        config.stats.clicks[linkIndex] = (config.stats.clicks[linkIndex] || 0) + 1;
+        
+        // Daily tracking (local timezone)
+        config.stats.daily = config.stats.daily || {};
+        const now = new Date();
+        const offset = now.getTimezoneOffset();
+        const localNow = new Date(now.getTime() - (offset * 60 * 1000));
+        const todayStr = localNow.toISOString().split('T')[0];
+        
+        config.stats.daily[todayStr] = config.stats.daily[todayStr] || { views: 0, clicks: {} };
+        config.stats.daily[todayStr].clicks = config.stats.daily[todayStr].clicks || {};
+        config.stats.daily[todayStr].clicks[linkIndex] = (config.stats.daily[todayStr].clicks[linkIndex] || 0) + 1;
+        
+        await supabaseClient
+          .from("stores")
+          .update({ config: config })
+          .eq("id", storeName);
+      }
+    } catch (e) {
+      console.error("Erro ao registrar clique:", e);
+    }
+  }
+
   async function loadStoreData() {
     const storeName = getStoreName();
     if (!storeName) {
@@ -843,186 +947,11 @@
         }
 
         if (config) {
-          // Apply custom theme color if present
-          if (config.themeColor) {
-            const themeColor = config.themeColor;
-            document.documentElement.style.setProperty('--gold-deep', themeColor);
-            
-            // Generate a very soft alpha/translucent version for the pill background
-            if (themeColor.startsWith("#") && themeColor.length === 7) {
-              const pillBg = themeColor + "12"; // ~7% opacity hex representation
-              document.documentElement.style.setProperty('--pill-bg', pillBg);
-            }
+          const isPreview = window.location.search.includes('preview=true');
+          if (!isPreview) {
+            trackStoreView(storeName, config);
           }
-
-          if (config.textColor) {
-            const textColor = config.textColor;
-            document.documentElement.style.setProperty('--navy', textColor);
-            if (textColor.startsWith("#") && textColor.length === 7) {
-              document.documentElement.style.setProperty('--navy-soft', textColor + "b3"); // ~70% opacity
-            } else {
-              document.documentElement.style.setProperty('--navy-soft', textColor);
-            }
-          }
-
-          // Background configuration
-          const bgType = config.bgType || 'solid';
-          const bgLayer = document.getElementById('custom-bg-layer');
-          const bgOverlay = document.getElementById('custom-bg-overlay');
-          let currentBgCache = '#ffffff';
-          
-          if (bgType === 'solid') {
-            document.body.classList.remove('has-bg-image');
-            const bgColor = config.bgColor || '#ffffff';
-            document.documentElement.style.setProperty('--bg', bgColor);
-            if (bgLayer) {
-              bgLayer.style.background = bgColor;
-              bgLayer.style.filter = 'none';
-            }
-            if (bgOverlay) bgOverlay.style.background = 'transparent';
-            currentBgCache = bgColor;
-          } else if (bgType === 'gradient') {
-            document.body.classList.remove('has-bg-image');
-            const bgGradient = config.bgGradient || 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
-            document.documentElement.style.setProperty('--bg', bgGradient);
-            if (bgLayer) {
-              bgLayer.style.background = bgGradient;
-              bgLayer.style.filter = 'none';
-            }
-            if (bgOverlay) bgOverlay.style.background = 'transparent';
-            currentBgCache = bgGradient;
-          } else if (bgType === 'image') {
-            document.body.classList.add('has-bg-image');
-            const bgImageUrl = config.bgImageUrl || '';
-            const fallbackColor = config.bgColor || '#ffffff';
-            document.documentElement.style.setProperty('--bg', fallbackColor);
-            if (bgLayer) {
-              bgLayer.style.backgroundImage = `url("${bgImageUrl}")`;
-              if (config.bgBlur) {
-                bgLayer.style.filter = `blur(${config.bgBlur}px) scale(1.05)`;
-              } else {
-                bgLayer.style.filter = 'none';
-              }
-            }
-            if (bgOverlay) {
-              const opacity = config.bgOverlay !== undefined ? config.bgOverlay : 0;
-              bgOverlay.style.background = `rgba(0, 0, 0, ${opacity})`;
-            }
-            currentBgCache = fallbackColor;
-          }
-
-          if (config.btnColor) {
-            document.documentElement.style.setProperty('--btn-bg', config.btnColor);
-          }
-
-          if (config.btnTextColor) {
-            document.documentElement.style.setProperty('--btn-text', config.btnTextColor);
-          }
-
-          // Set mobile status bar theme-color dynamically
-          let metaTheme = document.querySelector('meta[name="theme-color"]');
-          if (metaTheme) {
-            metaTheme.setAttribute('content', bgType === 'solid' ? (config.bgColor || '#ffffff') : (config.themeColor || '#7c3aed'));
-          }
-
-          // Cache theme configuration locally to prevent flashes on next load
-          localStorage.setItem('last_bg_' + storeName, currentBgCache);
-          localStorage.setItem('last_text_' + storeName, config.textColor || "#0f172a");
-          localStorage.setItem('last_highlight_' + storeName, config.themeColor || "#7c3aed");
-          localStorage.setItem('last_btn_bg_' + storeName, config.btnColor || "#ffffff");
-          localStorage.setItem('last_btn_text_' + storeName, config.btnTextColor || "#0f172a");
-
-          // 1. Logo
-          const logoImg = document.getElementById('store-logo');
-          
-          // Set logo height dynamically based on size config
-          const logoSize = config.logoSize || "medium";
-          if (logoSize === 'small') {
-            logoImg.style.height = '70px';
-          } else if (logoSize === 'large') {
-            logoImg.style.height = '130px';
-          } else {
-            logoImg.style.height = '100px'; // medium (default)
-          }
-
-          if (config.logoUrl) {
-            logoImg.src = config.logoUrl;
-            logoImg.alt = config.title || storeName;
-            logoImg.style.display = 'block';
-          } else {
-            logoImg.src = "https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/logo.png";
-            logoImg.alt = "LinksVi";
-            logoImg.style.display = 'block';
-          }
-
-          // 2. Document Title & Navbar Store Title
-          document.title = config.title ? `${config.title} — Links` : `${storeName} — Links`;
-          const navStoreName = document.getElementById('navbar-store-name');
-          if (navStoreName) {
-            navStoreName.textContent = config.title || storeName;
-          }
-
-          // Calculate navbar background color (translucent version of base background color)
-          let baseBgColor = '#ffffff';
-          if (config.bgColor) {
-            baseBgColor = config.bgColor;
-          }
-          let navBg = 'rgba(255, 255, 255, 0.85)';
-          if (baseBgColor.startsWith('#')) {
-            navBg = hexToRgba(baseBgColor, 0.85);
-          }
-          document.documentElement.style.setProperty('--nav-bg', navBg);
-
-          // 3. Pill
-          const pillSpan = document.getElementById('store-pill');
-          if (config.pillText) {
-            pillSpan.textContent = config.pillText;
-            pillSpan.style.display = 'inline-block';
-          } else {
-            pillSpan.style.display = 'none';
-          }
-
-          // 4. Main Title
-          const titleH1 = document.getElementById('store-title');
-          if (config.title) {
-            titleH1.innerHTML = config.title.replace(/\n/g, '<br>');
-            titleH1.style.display = 'block';
-          } else {
-            titleH1.style.display = 'none';
-          }
-
-          // 5. Description
-          const descP = document.getElementById('store-desc');
-          if (config.description) {
-            descP.textContent = config.description;
-            descP.style.display = 'block';
-          } else {
-            descP.style.display = 'none';
-          }
-
-          // 6. CTA Title
-          const ctaH2 = document.getElementById('store-cta');
-          if (config.ctaTitle) {
-            ctaH2.textContent = config.ctaTitle;
-            ctaH2.style.display = 'block';
-          } else {
-            ctaH2.style.display = 'none';
-          }
-
-          // 7. Sub CTA Text
-          const subP = document.getElementById('store-sub');
-          if (config.subText) {
-            subP.innerHTML = config.subText.replace(/\n/g, '<br>');
-            subP.style.display = 'block';
-          } else {
-            subP.style.display = 'none';
-          }
-
-          // 8. Render Links
-          if (config.links && Array.isArray(config.links)) {
-            renderLinks(config.links);
-          }
-          
+          applyConfig(config, storeName);
           showApp();
         } else {
           showNotFound();
@@ -1033,6 +962,196 @@
     } catch (err) {
       console.error("Erro ao carregar dados do Supabase:", err);
       showNotFound();
+    }
+  }
+
+  function applyConfig(config, storeName = '') {
+    if (!config) return;
+
+    // Apply custom theme color if present
+    if (config.themeColor) {
+      const themeColor = config.themeColor;
+      document.documentElement.style.setProperty('--gold-deep', themeColor);
+      
+      // Generate a very soft alpha/translucent version for the pill background
+      if (themeColor.startsWith("#") && themeColor.length === 7) {
+        const pillBg = themeColor + "12"; // ~7% opacity hex representation
+        document.documentElement.style.setProperty('--pill-bg', pillBg);
+      }
+    }
+
+    if (config.textColor) {
+      const textColor = config.textColor;
+      document.documentElement.style.setProperty('--navy', textColor);
+      if (textColor.startsWith("#") && textColor.length === 7) {
+        document.documentElement.style.setProperty('--navy-soft', textColor + "b3"); // ~70% opacity
+      } else {
+        document.documentElement.style.setProperty('--navy-soft', textColor);
+      }
+    }
+
+    // Background configuration
+    const bgType = config.bgType || 'solid';
+    const bgLayer = document.getElementById('custom-bg-layer');
+    const bgOverlay = document.getElementById('custom-bg-overlay');
+    let currentBgCache = '#ffffff';
+    
+    if (bgType === 'solid') {
+      document.body.classList.remove('has-bg-image');
+      const bgColor = config.bgColor || '#ffffff';
+      document.documentElement.style.setProperty('--bg', bgColor);
+      if (bgLayer) {
+        bgLayer.style.background = bgColor;
+        bgLayer.style.backgroundImage = 'none';
+        bgLayer.style.filter = 'none';
+      }
+      if (bgOverlay) bgOverlay.style.background = 'transparent';
+      currentBgCache = bgColor;
+    } else if (bgType === 'gradient') {
+      document.body.classList.remove('has-bg-image');
+      const bgGradient = config.bgGradient || 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+      document.documentElement.style.setProperty('--bg', bgGradient);
+      if (bgLayer) {
+        bgLayer.style.background = bgGradient;
+        bgLayer.style.backgroundImage = 'none';
+        bgLayer.style.filter = 'none';
+      }
+      if (bgOverlay) bgOverlay.style.background = 'transparent';
+      currentBgCache = bgGradient;
+    } else if (bgType === 'image') {
+      document.body.classList.add('has-bg-image');
+      const bgImageUrl = config.bgImageUrl || '';
+      const fallbackColor = config.bgColor || '#ffffff';
+      document.documentElement.style.setProperty('--bg', fallbackColor);
+      if (bgLayer) {
+        bgLayer.style.background = 'transparent';
+        bgLayer.style.backgroundImage = `url("${bgImageUrl}")`;
+        if (config.bgBlur) {
+          bgLayer.style.filter = `blur(${config.bgBlur}px) scale(1.05)`;
+        } else {
+          bgLayer.style.filter = 'none';
+        }
+      }
+      if (bgOverlay) {
+        const opacity = config.bgOverlay !== undefined ? config.bgOverlay : 0;
+        bgOverlay.style.background = `rgba(0, 0, 0, ${opacity})`;
+      }
+      currentBgCache = fallbackColor;
+    }
+
+    if (config.btnColor) {
+      document.documentElement.style.setProperty('--btn-bg', config.btnColor);
+    }
+
+    if (config.btnTextColor) {
+      document.documentElement.style.setProperty('--btn-text', config.btnTextColor);
+    }
+
+    // Set mobile status bar theme-color dynamically
+    let metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', bgType === 'solid' ? (config.bgColor || '#ffffff') : (config.themeColor || '#7c3aed'));
+    }
+
+    if (storeName) {
+      // Cache theme configuration locally to prevent flashes on next load
+      localStorage.setItem('last_bg_' + storeName, currentBgCache);
+      localStorage.setItem('last_text_' + storeName, config.textColor || "#0f172a");
+      localStorage.setItem('last_highlight_' + storeName, config.themeColor || "#7c3aed");
+      localStorage.setItem('last_btn_bg_' + storeName, config.btnColor || "#ffffff");
+      localStorage.setItem('last_btn_text_' + storeName, config.btnTextColor || "#0f172a");
+    }
+
+    // 1. Logo
+    const logoImg = document.getElementById('store-logo');
+    
+    // Set logo height dynamically based on size config
+    const logoSize = config.logoSize || "medium";
+    if (logoSize === 'small') {
+      logoImg.style.height = '70px';
+    } else if (logoSize === 'large') {
+      logoImg.style.height = '130px';
+    } else {
+      logoImg.style.height = '100px'; // medium (default)
+    }
+
+    const displayStoreName = storeName || getStoreName() || "Links";
+    if (config.logoUrl) {
+      logoImg.src = config.logoUrl;
+      logoImg.alt = config.title || displayStoreName;
+      logoImg.style.display = 'block';
+    } else {
+      logoImg.src = "https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/logo.png";
+      logoImg.alt = "LinksVi";
+      logoImg.style.display = 'block';
+    }
+
+    // 2. Document Title & Navbar Store Title
+    document.title = config.title ? `${config.title} — Links` : `${displayStoreName} — Links`;
+    const navStoreName = document.getElementById('navbar-store-name');
+    if (navStoreName) {
+      navStoreName.textContent = config.title || displayStoreName;
+    }
+
+    // Calculate navbar background color (translucent version of base background color)
+    let baseBgColor = '#ffffff';
+    if (config.bgColor) {
+      baseBgColor = config.bgColor;
+    }
+    let navBg = 'rgba(255, 255, 255, 0.85)';
+    if (baseBgColor.startsWith('#')) {
+      navBg = hexToRgba(baseBgColor, 0.85);
+    }
+    document.documentElement.style.setProperty('--nav-bg', navBg);
+
+    // 3. Pill
+    const pillSpan = document.getElementById('store-pill');
+    if (config.pillText) {
+      pillSpan.textContent = config.pillText;
+      pillSpan.style.display = 'inline-block';
+    } else {
+      pillSpan.style.display = 'none';
+    }
+
+    // 4. Main Title
+    const titleH1 = document.getElementById('store-title');
+    if (config.title) {
+      titleH1.innerHTML = config.title.replace(/\n/g, '<br>');
+      titleH1.style.display = 'block';
+    } else {
+      titleH1.style.display = 'none';
+    }
+
+    // 5. Description
+    const descP = document.getElementById('store-desc');
+    if (config.description) {
+      descP.textContent = config.description;
+      descP.style.display = 'block';
+    } else {
+      descP.style.display = 'none';
+    }
+
+    // 6. CTA Title
+    const ctaH2 = document.getElementById('store-cta');
+    if (config.ctaTitle) {
+      ctaH2.textContent = config.ctaTitle;
+      ctaH2.style.display = 'block';
+    } else {
+      ctaH2.style.display = 'none';
+    }
+
+    // 7. Sub CTA Text
+    const subP = document.getElementById('store-sub');
+    if (config.subText) {
+      subP.innerHTML = config.subText.replace(/\n/g, '<br>');
+      subP.style.display = 'block';
+    } else {
+      subP.style.display = 'none';
+    }
+
+    // 8. Render Links
+    if (config.links && Array.isArray(config.links)) {
+      renderLinks(config.links);
     }
   }
 
@@ -1077,6 +1196,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          trackStoreClick(index, link.url);
           openPdfModal(link.url, link.label);
         });
       } else if (link.image === 'construcao' && !link.url) {
@@ -1090,6 +1210,9 @@
         a.href = link.url;
         a.target = '_blank';
         a.rel = 'noopener';
+        a.addEventListener('click', (e) => {
+          trackStoreClick(index, link.url);
+        });
       }
       
       const iconSpan = document.createElement('span');
@@ -1124,6 +1247,18 @@
       
       container.appendChild(a);
     });
+  }
+
+  // Live Preview listener
+  window.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'updateConfig') {
+      applyConfig(event.data.config);
+    }
+  });
+
+  // Check preview mode to offset phone camera notch
+  if (window.location.search.includes('preview=true')) {
+    document.body.classList.add('in-preview');
   }
 
   // PDF.js controller logic
