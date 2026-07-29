@@ -1362,6 +1362,25 @@
       height: 24px;
     }
   }
+
+  /* Analytics Premium Styles */
+  .analytics-link-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background-color: var(--panel-white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 12px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .analytics-link-item:hover {
+    border-color: var(--brand-purple);
+    background-color: rgba(124, 58, 237, 0.03);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  }
 </style>
 </head>
 <body>
@@ -2074,7 +2093,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     bgGradient: "",
     bgImageUrl: "",
     bgBlur: 0,
-    bgOverlay: 0
+    bgOverlay: 0,
+    stats: { views: 0, clicks: {} }
   };
   let selectedIconType = "fallback";
 
@@ -2485,7 +2505,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           bgGradient: parsed.bgGradient || "",
           bgImageUrl: parsed.bgImageUrl || "",
           bgBlur: parsed.bgBlur || 0,
-          bgOverlay: parsed.bgOverlay || 0
+          bgOverlay: parsed.bgOverlay || 0,
+          stats: parsed.stats || { views: 0, clicks: {} }
         };
 
         // Populate fields
@@ -2591,25 +2612,49 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const input = document.getElementById('public-link-url');
     if (!input.value) return;
     input.select();
-    navigator.clipboard.writeText(input.value);
-    showToast("Link copiado para a área de transferência!");
+    input.setSelectionRange(0, 99999); // For mobile devices
+    
+    let success = false;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(input.value);
+        success = true;
+      }
+    } catch (e) {
+      console.warn("navigator.clipboard failed, trying document.execCommand");
+    }
+    
+    if (!success) {
+      try {
+        document.execCommand('copy');
+        success = true;
+      } catch (err) {
+        console.error("Fallback copy failed", err);
+      }
+    }
 
-    // Visual feedback on the button
-    const btn = document.querySelector('.btn-copy');
-    if (btn) {
-      const originalText = btn.innerHTML;
-      btn.innerHTML = `
-        <span>Copiado!</span>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      `;
-      btn.style.borderColor = '#22c55e';
-      btn.style.color = '#22c55e';
-      
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.borderColor = '';
-        btn.style.color = '';
-      }, 2000);
+    if (success) {
+      showToast("Link copiado para a área de transferência!");
+
+      // Visual feedback on the button
+      const btn = document.querySelector('.btn-copy');
+      if (btn) {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `
+          <span>Copiado!</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        `;
+        btn.style.borderColor = '#22c55e';
+        btn.style.color = '#22c55e';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.borderColor = '';
+          btn.style.color = '';
+        }, 2000);
+      }
+    } else {
+      showToast("Não foi possível copiar automaticamente. Copie manualmente a URL acima.", "error");
     }
   }
 
@@ -2617,8 +2662,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const current = localStorage.getItem('linksvi_domain') || window.location.origin;
     const domain = prompt("Digite o domínio principal da sua Vercel (ex: https://vitrinelinks.vercel.app):", current);
     if (domain !== null) {
-      const formattedDomain = domain.trim().replace(/\/$/, "");
+      let formattedDomain = domain.trim().replace(/\/$/, "");
       if (formattedDomain) {
+        if (!/^https?:\/\//i.test(formattedDomain)) {
+          formattedDomain = 'https://' + formattedDomain;
+        }
         localStorage.setItem('linksvi_domain', formattedDomain);
         updatePublicLinkDisplay();
         showToast("Domínio principal atualizado com sucesso!");
@@ -2697,6 +2745,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
+    if (file.size > 5 * 1024 * 1024) {
+      showAlert("Arquivo Muito Grande", "O logotipo deve ter no máximo 5MB para garantir um bom desempenho.");
+      return;
+    }
+
     const dropzone = document.getElementById('logo-dropzone');
     dropzone.style.pointerEvents = 'none';
     
@@ -2763,6 +2816,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     
     if (file.type !== 'application/pdf') {
       showAlert("Arquivo Inválido", "Por favor, selecione apenas arquivos em formato PDF.");
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      showAlert("Arquivo Muito Grande", "O arquivo PDF deve ter no máximo 25MB para evitar lentidão no carregamento.");
       return;
     }
 
@@ -3079,9 +3137,18 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
     const ctr = filteredViews > 0 ? ((totalClicks / filteredViews) * 100).toFixed(1) : '0.0';
 
-    document.getElementById('stats-views').textContent = filteredViews.toLocaleString();
-    document.getElementById('stats-clicks').textContent = totalClicks.toLocaleString();
-    document.getElementById('stats-ctr').textContent = `${ctr}%`;
+    const prevViewsText = document.getElementById('stats-views').textContent || '0';
+    const prevViews = parseInt(prevViewsText.replace(/\D/g, '')) || 0;
+
+    const prevClicksText = document.getElementById('stats-clicks').textContent || '0';
+    const prevClicks = parseInt(prevClicksText.replace(/\D/g, '')) || 0;
+
+    const prevCtrText = document.getElementById('stats-ctr').textContent || '0.0%';
+    const prevCtr = parseFloat(prevCtrText.replace('%', '').replace(',', '.')) || 0.0;
+
+    animateValue('stats-views', prevViews, filteredViews, 500, false);
+    animateValue('stats-clicks', prevClicks, totalClicks, 500, false);
+    animateValue('stats-ctr', prevCtr, parseFloat(ctr), 500, true);
 
     const listContainer = document.getElementById('stats-links-breakdown');
     if (!listContainer) return;
@@ -3098,14 +3165,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       const linkCtr = filteredViews > 0 ? ((linkClicks / filteredViews) * 100).toFixed(1) : '0.0';
       
       const item = document.createElement('div');
-      item.style.display = 'flex';
-      item.style.alignItems = 'center';
-      item.style.justifyContent = 'space-between';
-      item.style.padding = '8px 10px';
-      item.style.backgroundColor = 'var(--panel-white)';
-      item.style.border = '1px solid var(--border-color)';
-      item.style.borderRadius = '6px';
-      item.style.fontSize = '12px';
+      item.className = 'analytics-link-item';
       
       item.innerHTML = `
         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
@@ -3119,6 +3179,39 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       `;
       listContainer.appendChild(item);
     });
+  }
+
+  function animateValue(id, start, end, duration, isCtr = false) {
+    const obj = document.getElementById(id);
+    if (!obj) return;
+    
+    const startNum = parseFloat(start) || 0;
+    const endNum = parseFloat(end) || 0;
+    
+    if (startNum === endNum) {
+      obj.textContent = isCtr ? `${endNum.toFixed(1)}%` : endNum.toLocaleString();
+      return;
+    }
+
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const current = progress * (endNum - startNum) + startNum;
+      
+      if (isCtr) {
+        obj.textContent = `${current.toFixed(1)}%`;
+      } else {
+        obj.textContent = Math.floor(current).toLocaleString();
+      }
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        obj.textContent = isCtr ? `${endNum.toFixed(1)}%` : endNum.toLocaleString();
+      }
+    };
+    window.requestAnimationFrame(step);
   }
 
   function loadAnalyticsData() {
@@ -3802,6 +3895,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
+    if (file.size > 2 * 1024 * 1024) {
+      showAlert("Arquivo Muito Grande", "O ícone personalizado deve ter no máximo 2MB.");
+      return;
+    }
+
     const dropzone = document.getElementById('custom-icon-dropzone');
     const label = document.getElementById('custom-icon-upload-label');
     
@@ -3981,6 +4079,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
+    if (file.size > 10 * 1024 * 1024) {
+      showAlert("Arquivo Muito Grande", "A imagem de fundo deve ter no máximo 10MB para não comprometer o tempo de carregamento da página.");
+      return;
+    }
+
     const dropzone = document.getElementById('bg-image-dropzone');
     const label = document.getElementById('bg-image-upload-label');
     
@@ -4040,12 +4143,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function submitLinkModal() {
     const index = parseInt(document.getElementById('modal-link-index').value);
     const label = document.getElementById('modal-link-label').value.trim();
-    const url = document.getElementById('modal-link-url').value.trim();
+    let url = document.getElementById('modal-link-url').value.trim();
     const badge = document.getElementById('modal-link-badge').value.trim();
 
     if (!label || (selectedIconType !== 'construcao' && !url)) {
       showAlert("Campos Incompletos", "Por favor, preencha o título e a URL do link.");
       return;
+    }
+
+    // Automatically prepend https:// if it is a standard web URL and lacks a protocol
+    if (url && !/^https?:\/\//i.test(url) && !/^mailto:/i.test(url) && !/^tel:/i.test(url) && !/^javascript:/i.test(url) && !url.startsWith('#')) {
+      url = 'https://' + url;
     }
 
     const linkData = {
