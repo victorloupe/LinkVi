@@ -260,6 +260,9 @@
 
   .btn-outline {
     background: var(--btn-bg);
+    background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
     color: var(--btn-text);
     border: 1.4px solid var(--line);
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
@@ -273,6 +276,7 @@
     .btn-outline:hover {
       border-color: var(--gold-deep);
       background: var(--btn-bg);
+      background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
       transform: translateY(-3px) scale(1.015);
       box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04);
     }
@@ -709,6 +713,7 @@
   const supabaseUrl = "https://lujsstahllhcrkfgjmcw.supabase.co";
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
   const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+  let currentConfigCache = null;
 
   // Synchronous theme cache loader to prevent white flashes on dark mode pages
   (function() {
@@ -971,6 +976,7 @@
 
   function applyConfig(config, storeName = '') {
     if (!config) return;
+    currentConfigCache = config;
 
     // Apply custom theme color if present
     if (config.themeColor) {
@@ -1008,6 +1014,9 @@
         bgLayer.style.background = bgColor;
         bgLayer.style.backgroundImage = 'none';
         bgLayer.style.filter = 'none';
+        bgLayer.style.backgroundPosition = '';
+        bgLayer.style.backgroundSize = '';
+        bgLayer.style.backgroundRepeat = '';
       }
       if (bgOverlay) bgOverlay.style.background = 'transparent';
       currentBgCache = bgColor;
@@ -1019,6 +1028,9 @@
         bgLayer.style.background = bgGradient;
         bgLayer.style.backgroundImage = 'none';
         bgLayer.style.filter = 'none';
+        bgLayer.style.backgroundPosition = '';
+        bgLayer.style.backgroundSize = '';
+        bgLayer.style.backgroundRepeat = '';
       }
       if (bgOverlay) bgOverlay.style.background = 'transparent';
       currentBgCache = bgGradient;
@@ -1030,6 +1042,24 @@
       if (bgLayer) {
         bgLayer.style.background = 'transparent';
         bgLayer.style.backgroundImage = `url("${bgImageUrl}")`;
+        
+        // Posição
+        const posX = config.bgPositionX !== undefined ? config.bgPositionX + '%' : '50%';
+        const posY = config.bgPositionY !== undefined ? config.bgPositionY + '%' : '50%';
+        bgLayer.style.backgroundPosition = `${posX} ${posY}`;
+        
+        // Tamanho
+        const bgSize = config.bgSize || 'cover';
+        if (bgSize === 'custom') {
+          const bgZoom = config.bgZoom !== undefined ? config.bgZoom : 100;
+          bgLayer.style.backgroundSize = `${bgZoom}%`;
+        } else {
+          bgLayer.style.backgroundSize = bgSize;
+        }
+
+        // Repetição
+        bgLayer.style.backgroundRepeat = config.bgRepeat ? 'repeat' : 'no-repeat';
+
         if (config.bgBlur) {
           bgLayer.style.filter = `blur(${config.bgBlur}px) scale(1.05)`;
         } else {
@@ -1049,6 +1079,16 @@
 
     if (config.btnTextColor) {
       document.documentElement.style.setProperty('--btn-text', config.btnTextColor);
+    }
+
+    // Apply button opacity & blur variables
+    const btnOpacity = config.btnOpacity !== undefined ? config.btnOpacity : 100;
+    document.documentElement.style.setProperty('--btn-opacity', `${btnOpacity}%`);
+    document.documentElement.style.setProperty('--btn-blur', btnOpacity < 100 ? '12px' : '0px');
+
+    // Trigger parallax immediately to apply standard scale/position
+    if (typeof applyParallax === 'function') {
+      applyParallax(window.scrollY);
     }
 
     // Set mobile status bar theme-color dynamically
@@ -1430,13 +1470,48 @@
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
+  let lastScrollY = 0;
+  let ticking = false;
+
+  function applyParallax(scrollPos) {
+    const bgLayer = document.getElementById('custom-bg-layer');
+    if (!bgLayer) return;
+    
+    const config = currentConfigCache;
+    const isParallax = config && config.bgParallax;
+    const hasBlur = config && config.bgBlur > 0;
+    
+    let transformStr = '';
+    if (isParallax && config.bgType === 'image') {
+      const translateY = scrollPos * 0.12;
+      const baseScale = hasBlur ? 1.15 : 1.08;
+      transformStr = `translateY(${translateY}px) scale(${baseScale})`;
+    } else if (hasBlur) {
+      transformStr = 'scale(1.05)';
+    } else {
+      transformStr = 'scale(1)';
+    }
+    
+    bgLayer.style.transform = transformStr;
+  }
+
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
-    if (!navbar) return;
-    if (window.scrollY > 150) {
-      navbar.classList.add('scrolled');
-    } else if (window.scrollY < 20) {
-      navbar.classList.remove('scrolled');
+    if (navbar) {
+      if (window.scrollY > 150) {
+        navbar.classList.add('scrolled');
+      } else if (window.scrollY < 20) {
+        navbar.classList.remove('scrolled');
+      }
+    }
+    
+    lastScrollY = window.scrollY;
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        applyParallax(lastScrollY);
+        ticking = false;
+      });
+      ticking = true;
     }
   });
 

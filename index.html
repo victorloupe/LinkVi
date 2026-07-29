@@ -1543,6 +1543,15 @@
             <input type="text" id="store-btn-text-color-hex" value="#0F172A" placeholder="#0F172A" style="flex: 1; min-width: 0; padding: 6px 8px; font-family: monospace; font-size: 12px; font-weight: 600; text-align: center; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase;" oninput="const val = this.value.trim(); if(val.startsWith('#') && val.length === 7) { document.getElementById('store-btn-text-color').value = val; triggerAutosave(); }">
           </div>
         </div>
+
+        <!-- Opacidade do Balão -->
+        <div class="form-group" style="margin-bottom: 0; grid-column: span 2; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 4px;">
+          <label for="store-btn-opacity" style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span>Opacidade do Balão:</span>
+            <span id="store-btn-opacity-val">100%</span>
+          </label>
+          <input type="range" id="store-btn-opacity" min="10" max="100" step="5" value="100" style="width: 100%; accent-color: var(--border-focus); margin-top: 4px;" oninput="document.getElementById('store-btn-opacity-val').textContent = this.value + '%'; handleBtnOpacityChange(this.value);">
+        </div>
       </div>
 
       <!-- ESTILO DO FUNDO DA PÁGINA -->
@@ -1610,6 +1619,56 @@
                 <span id="store-bg-overlay-val">0%</span>
               </label>
               <input type="range" id="store-bg-overlay" min="0" max="1" step="0.05" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-overlay-val').textContent = Math.round(this.value * 100) + '%'; handleBgOverlayChange(this.value);">
+            </div>
+          </div>
+
+          <!-- Novos controles para posicionamento e escala da imagem -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="store-bg-size" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">
+                Ajuste da Imagem:
+              </label>
+              <select id="store-bg-size" style="padding: 4px 6px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main); width: 100%;" onchange="handleBgSizeChange(this.value)">
+                <option value="cover">Preencher Tela (Cover)</option>
+                <option value="contain">Ajustar à Tela (Contain)</option>
+                <option value="custom">Zoom Personalizado</option>
+              </select>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 0; display: none;" id="bg-zoom-container">
+              <label for="store-bg-zoom" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>Zoom / Escala:</span>
+                <span id="store-bg-zoom-val">100%</span>
+              </label>
+              <input type="range" id="store-bg-zoom" min="50" max="300" step="5" value="100" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-zoom-val').textContent = this.value + '%'; handleBgZoomChange(this.value);">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="store-bg-position-x" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>Posição Horizontal (X):</span>
+                <span id="store-bg-position-x-val">50%</span>
+              </label>
+              <input type="range" id="store-bg-position-x" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-x-val').textContent = this.value + '%'; handleBgPositionXChange(this.value);">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="store-bg-position-y" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                <span>Posição Vertical (Y):</span>
+                <span id="store-bg-position-y-val">50%</span>
+              </label>
+              <input type="range" id="store-bg-position-y" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-y-val').textContent = this.value + '%'; handleBgPositionYChange(this.value);">
+            </div>
+          </div>
+
+          <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <input type="checkbox" id="store-bg-repeat" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgRepeatChange(this.checked)">
+              <label for="store-bg-repeat" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Repetir imagem de fundo</label>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <input type="checkbox" id="store-bg-parallax" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgParallaxChange(this.checked)">
+              <label for="store-bg-parallax" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Efeito Parallax (Rolagem sutil do fundo)</label>
             </div>
           </div>
         </div>
@@ -2094,6 +2153,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     bgImageUrl: "",
     bgBlur: 0,
     bgOverlay: 0,
+    bgSize: "cover",
+    bgZoom: 100,
+    bgPositionX: 50,
+    bgPositionY: 50,
+    bgRepeat: false,
+    btnOpacity: 100,
+    bgParallax: false,
     stats: { views: 0, clicks: {} }
   };
   let selectedIconType = "fallback";
@@ -2506,6 +2572,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           bgImageUrl: parsed.bgImageUrl || "",
           bgBlur: parsed.bgBlur || 0,
           bgOverlay: parsed.bgOverlay || 0,
+          bgSize: parsed.bgSize || "cover",
+          bgZoom: parsed.bgZoom !== undefined ? parsed.bgZoom : 100,
+          bgPositionX: parsed.bgPositionX !== undefined ? parsed.bgPositionX : 50,
+          bgPositionY: parsed.bgPositionY !== undefined ? parsed.bgPositionY : 50,
+          bgRepeat: parsed.bgRepeat || false,
+          btnOpacity: parsed.btnOpacity !== undefined ? parsed.btnOpacity : 100,
+          bgParallax: parsed.bgParallax || false,
           stats: parsed.stats || { views: 0, clicks: {} }
         };
 
@@ -2557,6 +2630,40 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         const bgOverlay = storeConfig.bgOverlay || 0;
         document.getElementById('store-bg-overlay').value = bgOverlay;
         document.getElementById('store-bg-overlay-val').textContent = Math.round(bgOverlay * 100) + '%';
+
+        // Size loading
+        const bgSize = storeConfig.bgSize || "cover";
+        document.getElementById('store-bg-size').value = bgSize;
+        const zoomContainer = document.getElementById('bg-zoom-container');
+        if (zoomContainer) {
+          zoomContainer.style.display = bgSize === 'custom' ? 'block' : 'none';
+        }
+
+        // Zoom/Scale loading
+        const bgZoom = storeConfig.bgZoom !== undefined ? storeConfig.bgZoom : 100;
+        document.getElementById('store-bg-zoom').value = bgZoom;
+        document.getElementById('store-bg-zoom-val').textContent = bgZoom + '%';
+
+        // Position loading
+        const bgPositionX = storeConfig.bgPositionX !== undefined ? storeConfig.bgPositionX : 50;
+        document.getElementById('store-bg-position-x').value = bgPositionX;
+        document.getElementById('store-bg-position-x-val').textContent = bgPositionX + '%';
+
+        const bgPositionY = storeConfig.bgPositionY !== undefined ? storeConfig.bgPositionY : 50;
+        document.getElementById('store-bg-position-y').value = bgPositionY;
+        document.getElementById('store-bg-position-y-val').textContent = bgPositionY + '%';
+
+        // Repeat and Parallax loading
+        const bgRepeat = storeConfig.bgRepeat || false;
+        document.getElementById('store-bg-repeat').checked = bgRepeat;
+
+        const bgParallax = storeConfig.bgParallax || false;
+        document.getElementById('store-bg-parallax').checked = bgParallax;
+
+        // Button opacity loading
+        const btnOpacity = storeConfig.btnOpacity !== undefined ? storeConfig.btnOpacity : 100;
+        document.getElementById('store-btn-opacity').value = btnOpacity;
+        document.getElementById('store-btn-opacity-val').textContent = btnOpacity + '%';
 
         // Switch to the correct tab silently (so it doesn't trigger autosave during load)
         const bgType = storeConfig.bgType || 'solid';
@@ -2987,6 +3094,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       bgImageUrl: document.getElementById('store-bg-image-url').value.trim(),
       bgBlur: parseInt(document.getElementById('store-bg-blur').value) || 0,
       bgOverlay: parseFloat(document.getElementById('store-bg-overlay').value) || 0,
+      bgSize: document.getElementById('store-bg-size').value,
+      bgZoom: parseInt(document.getElementById('store-bg-zoom').value) || 100,
+      bgPositionX: parseInt(document.getElementById('store-bg-position-x').value) || 50,
+      bgPositionY: parseInt(document.getElementById('store-bg-position-y').value) || 50,
+      bgRepeat: document.getElementById('store-bg-repeat').checked,
+      bgParallax: document.getElementById('store-bg-parallax').checked,
+      btnOpacity: parseInt(document.getElementById('store-btn-opacity').value) || 100,
       links: storeConfig.links || []
     };
 
@@ -3287,6 +3401,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.bgImageUrl = document.getElementById('store-bg-image-url').value.trim();
     storeConfig.bgBlur = parseInt(document.getElementById('store-bg-blur').value) || 0;
     storeConfig.bgOverlay = parseFloat(document.getElementById('store-bg-overlay').value) || 0;
+    storeConfig.bgSize = document.getElementById('store-bg-size').value;
+    storeConfig.bgZoom = parseInt(document.getElementById('store-bg-zoom').value) || 100;
+    storeConfig.bgPositionX = parseInt(document.getElementById('store-bg-position-x').value) || 50;
+    storeConfig.bgPositionY = parseInt(document.getElementById('store-bg-position-y').value) || 50;
+    storeConfig.bgRepeat = document.getElementById('store-bg-repeat').checked;
+    storeConfig.bgParallax = document.getElementById('store-bg-parallax').checked;
+    storeConfig.btnOpacity = parseInt(document.getElementById('store-btn-opacity').value) || 100;
 
     try {
       const { error } = await supabaseClient
@@ -3482,7 +3603,14 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         bgGradient: "",
         bgImageUrl: "",
         bgBlur: 0,
-        bgOverlay: 0
+        bgOverlay: 0,
+        bgSize: "cover",
+        bgZoom: 100,
+        bgPositionX: 50,
+        bgPositionY: 50,
+        bgRepeat: false,
+        btnOpacity: 100,
+        bgParallax: false
       };
 
       const { error } = await supabaseClient
@@ -4026,6 +4154,59 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function handleBgOverlayChange(val) {
     if (storeConfig) {
       storeConfig.bgOverlay = parseFloat(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBgSizeChange(val) {
+    if (storeConfig) {
+      storeConfig.bgSize = val;
+      triggerAutosave();
+    }
+    const zoomContainer = document.getElementById('bg-zoom-container');
+    if (zoomContainer) {
+      zoomContainer.style.display = val === 'custom' ? 'block' : 'none';
+    }
+  }
+
+  function handleBgZoomChange(val) {
+    if (storeConfig) {
+      storeConfig.bgZoom = parseInt(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBgPositionXChange(val) {
+    if (storeConfig) {
+      storeConfig.bgPositionX = parseInt(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBgPositionYChange(val) {
+    if (storeConfig) {
+      storeConfig.bgPositionY = parseInt(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBgRepeatChange(val) {
+    if (storeConfig) {
+      storeConfig.bgRepeat = val;
+      triggerAutosave();
+    }
+  }
+
+  function handleBgParallaxChange(val) {
+    if (storeConfig) {
+      storeConfig.bgParallax = val;
+      triggerAutosave();
+    }
+  }
+
+  function handleBtnOpacityChange(val) {
+    if (storeConfig) {
+      storeConfig.btnOpacity = parseInt(val);
       triggerAutosave();
     }
   }
