@@ -347,6 +347,209 @@
     border-radius: 8px;
   }
 
+  /* Animated photo carousel — same card shell as .map-card so it inherits
+     the store's theme colors automatically. */
+  .carousel-card {
+    background: var(--btn-bg);
+    background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
+    border: 1.4px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .carousel-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+  }
+  .carousel-slide {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    padding: 0 3px;
+  }
+  .carousel-slide-inner {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.55);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.15s ease;
+    padding: 0;
+  }
+  .carousel-arrow:hover {
+    background: rgba(15, 23, 42, 0.8);
+  }
+  .carousel-arrow.prev {
+    left: 2px;
+  }
+  .carousel-arrow.next {
+    right: 2px;
+  }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding-top: 10px;
+  }
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--line);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .carousel-dot.active {
+    width: 16px;
+    border-radius: 3px;
+    background: var(--btn-text);
+    opacity: 0.85;
+  }
+  .carousel-lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 15, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .carousel-lightbox-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .carousel-lightbox {
+    position: relative;
+    max-width: 460px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .carousel-lightbox img {
+    max-width: 100%;
+    max-height: 72vh;
+    border-radius: 12px;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+  .carousel-lightbox-caption {
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.45;
+    margin-top: 14px;
+    padding: 0 8px;
+  }
+  .carousel-lightbox-link {
+    color: #fff;
+    opacity: 0.7;
+    font-size: 12.5px;
+    text-align: center;
+    margin-top: 8px;
+    text-decoration: underline;
+  }
+  .carousel-lightbox-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(15, 23, 42, 0.55);
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .share-btn {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top));
+    right: max(16px, env(safe-area-inset-right));
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(15, 23, 42, 0.28);
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0.75;
+    transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+  }
+  .share-btn:hover {
+    background: rgba(15, 23, 42, 0.45);
+    opacity: 1;
+  }
+  .share-btn:active {
+    transform: scale(0.92);
+  }
+  .share-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: rgba(15, 23, 42, 0.9);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .share-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   /* Loading Spinner */
   #loader-container {
     position: fixed;
@@ -622,6 +825,18 @@
 <div id="custom-bg-layer" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background-size: cover; background-position: center; transition: background 0.3s ease, filter 0.3s ease; pointer-events: none;"></div>
 <div id="custom-bg-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; transition: background 0.3s ease; pointer-events: none;"></div>
 
+<!-- Share Button -->
+<button type="button" class="share-btn" id="share-btn" aria-label="Compartilhar esta página" style="display: none;">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"></circle>
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="19" r="3"></circle>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+  </svg>
+</button>
+<div class="share-toast" id="share-toast">Link copiado!</div>
+
 <!-- Loader Screen -->
 <div id="loader-container">
   <div class="spinner"></div>
@@ -778,6 +993,7 @@
     youtube: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>`,
     linkedin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`,
     construcao: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18 M9 22V5 M12 22V5 M9 17h3 M9 12h3 M9 7h3 M9 22l3-5 M12 22l-3-5 M9 17l3-5 M12 17l-3-5 M9 12l3-5 M12 12l-3-5 M2 5h20 M19 5v8 M17 13a2 2 0 0 0 4 0"/><rect x="9" y="2" width="4" height="3" rx="0.5" fill="currentColor" fill-opacity="0.1"/></svg>`,
+    carousel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>`,
     fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
   };
 
@@ -827,8 +1043,43 @@
       document.getElementById('navbar').style.display = 'flex';
       document.getElementById('main-content').style.display = 'block';
       document.getElementById('footer').style.display = 'block';
+      document.getElementById('share-btn').style.display = 'flex';
     }, 400);
   }
+
+  function showShareToast(message) {
+    const toast = document.getElementById('share-toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showShareToast._timer);
+    showShareToast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  async function handleShareClick() {
+    const shareData = {
+      title: document.title,
+      text: document.getElementById('store-title') ? document.getElementById('store-title').textContent : document.title,
+      url: window.location.href
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // User cancelled the native share sheet — not an error, do nothing.
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showShareToast('Link copiado!');
+    } catch (err) {
+      showShareToast('Não foi possível copiar o link');
+    }
+  }
+
+  document.getElementById('share-btn').addEventListener('click', handleShareClick);
 
   async function trackStoreView(storeName, currentConfig) {
     try {
@@ -937,7 +1188,7 @@
     try {
       const { data, error } = await supabaseClient
         .from("stores")
-        .select("*")
+        .select("id, config")
         .eq("id", storeName)
         .single();
       
@@ -1199,6 +1450,233 @@
     }
   }
 
+  // Singleton lightbox overlay reused by every carousel card on the page.
+  // Shows the clicked photo enlarged, its optional caption, and — if the
+  // link itself has a URL set — a "Ver mais" link through to it.
+  let carouselLightboxEls = null;
+  function getCarouselLightbox() {
+    if (carouselLightboxEls) return carouselLightboxEls;
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'carousel-lightbox-backdrop';
+
+    const box = document.createElement('div');
+    box.className = 'carousel-lightbox';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'carousel-lightbox-close';
+    closeBtn.setAttribute('aria-label', 'Fechar');
+    closeBtn.innerHTML = '&times;';
+
+    const img = document.createElement('img');
+    img.alt = '';
+
+    const caption = document.createElement('div');
+    caption.className = 'carousel-lightbox-caption';
+
+    const link = document.createElement('a');
+    link.className = 'carousel-lightbox-link';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'Ver mais →';
+
+    box.appendChild(closeBtn);
+    box.appendChild(img);
+    box.appendChild(caption);
+    box.appendChild(link);
+    backdrop.appendChild(box);
+    document.body.appendChild(backdrop);
+
+    function close() {
+      backdrop.classList.remove('open');
+    }
+    closeBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+
+    carouselLightboxEls = { backdrop, img, caption, link, close };
+    return carouselLightboxEls;
+  }
+
+  function openCarouselLightbox(photo, link, index) {
+    const lb = getCarouselLightbox();
+    lb.img.src = photo.url;
+    lb.img.alt = photo.caption || link.label || 'Foto ampliada';
+    lb.caption.textContent = photo.caption || '';
+    lb.caption.style.display = photo.caption ? 'block' : 'none';
+
+    if (link && link.url) {
+      lb.link.href = link.url;
+      lb.link.style.display = 'block';
+      lb.link.onclick = () => trackStoreClick(index, link.url);
+    } else {
+      lb.link.style.display = 'none';
+      lb.link.onclick = null;
+    }
+
+    lb.backdrop.classList.add('open');
+  }
+
+  // Builds a self-contained animated carousel card: swipeable/clickable
+  // slides, prev/next arrows, dot indicators, and autoplay — all vanilla,
+  // no external library.
+  function buildCarouselCard(link, index) {
+    // Backward-compatible: older saved links stored `images` as a plain
+    // string[]; newer ones store `{ url, caption }[]` to support captions.
+    const images = link.images.map((img) =>
+      typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' }
+    );
+    const total = images.length;
+    const visible = Math.min(3, total); // how many photos show at once — smaller thumbnails, 3-up window
+    const slideBasisPct = 100 / visible;
+    const isInfinite = total > visible;
+    let autoplayTimer = null;
+    const dotEls = [];
+
+    const card = document.createElement('div');
+    card.className = 'carousel-card';
+
+    const viewport = document.createElement('div');
+    viewport.className = 'carousel-viewport';
+
+    const track = document.createElement('div');
+    track.className = 'carousel-track';
+
+    function makeSlide(photo) {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-slide';
+      slide.style.flexBasis = `${slideBasisPct}%`;
+
+      const inner = document.createElement('div');
+      inner.className = 'carousel-slide-inner';
+      inner.style.backgroundImage = `url('${photo.url}')`;
+      inner.style.cursor = 'pointer';
+      inner.addEventListener('click', () => openCarouselLightbox(photo, link, index));
+
+      slide.appendChild(inner);
+      return slide;
+    }
+
+    // For a seamless infinite loop, pad the real photos with a few cloned
+    // slides on each side (as many as fit in the visible window). Scrolling
+    // past the real edge glides into a clone that looks identical to the
+    // real slide — once that scroll animation finishes we silently jump the
+    // track back into the real range with no transition, so the loop never
+    // visibly "resets".
+    const domImages = isInfinite
+      ? [...images.slice(-visible), ...images, ...images.slice(0, visible)]
+      : images;
+    domImages.forEach((photo) => track.appendChild(makeSlide(photo)));
+
+    viewport.appendChild(track);
+    card.appendChild(viewport);
+
+    let pos = isInfinite ? visible : 0; // index of the leading visible slide within domImages
+
+    function applyTransform(withTransition) {
+      if (!withTransition) {
+        track.style.transition = 'none';
+      }
+      track.style.transform = `translateX(-${pos * slideBasisPct}%)`;
+      if (!withTransition) {
+        void track.offsetHeight; // force reflow so the jump is instant, not animated
+        track.style.transition = '';
+      }
+    }
+
+    function updateDots() {
+      if (!dotEls.length) return;
+      const realIndex = isInfinite ? (((pos - visible) % total) + total) % total : pos;
+      dotEls.forEach((dot, di) => dot.classList.toggle('active', di === realIndex));
+    }
+
+    function goTo(newPos) {
+      pos = newPos;
+      applyTransform(true);
+      updateDots();
+    }
+
+    // After sliding into a cloned edge, snap back into the real range once
+    // the animation is done — this is what makes the loop feel endless.
+    track.addEventListener('transitionend', () => {
+      if (!isInfinite) return;
+      if (pos >= visible + total) {
+        pos -= total;
+        applyTransform(false);
+      } else if (pos < visible) {
+        pos += total;
+        applyTransform(false);
+      }
+    });
+
+    function stopAutoplay() {
+      if (autoplayTimer) clearInterval(autoplayTimer);
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(() => goTo(pos + 1), 4000);
+    }
+
+    if (isInfinite) {
+      const prevBtn = document.createElement('button');
+      prevBtn.type = 'button';
+      prevBtn.className = 'carousel-arrow prev';
+      prevBtn.setAttribute('aria-label', 'Foto anterior');
+      prevBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+      prevBtn.addEventListener('click', () => { goTo(pos - 1); startAutoplay(); });
+
+      const nextBtn = document.createElement('button');
+      nextBtn.type = 'button';
+      nextBtn.className = 'carousel-arrow next';
+      nextBtn.setAttribute('aria-label', 'Próxima foto');
+      nextBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+      nextBtn.addEventListener('click', () => { goTo(pos + 1); startAutoplay(); });
+
+      viewport.appendChild(prevBtn);
+      viewport.appendChild(nextBtn);
+
+      const dots = document.createElement('div');
+      dots.className = 'carousel-dots';
+      for (let di = 0; di < total; di++) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'carousel-dot' + (di === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Ir para foto ${di + 1}`);
+        dot.addEventListener('click', () => { goTo(visible + di); startAutoplay(); });
+        dots.appendChild(dot);
+        dotEls.push(dot);
+      }
+      card.appendChild(dots);
+
+      // Touch swipe
+      let touchStartX = 0;
+      viewport.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+      viewport.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(dx) > 40) {
+          goTo(dx < 0 ? pos + 1 : pos - 1);
+          startAutoplay();
+        }
+      }, { passive: true });
+
+      viewport.addEventListener('mouseenter', stopAutoplay);
+      viewport.addEventListener('mouseleave', startAutoplay);
+
+      applyTransform(false); // place the track at the starting real slide with no animation
+      startAutoplay();
+    }
+
+    return card;
+  }
+
   function renderLinks(links) {
     const container = document.getElementById('links-container');
     if (!container || !links || links.length === 0) return;
@@ -1231,11 +1709,20 @@
         container.appendChild(card);
         return;
       }
-      
+
+      // Animated photo carousel — uploaded/linked photos instead of a
+      // single clickable button.
+      if (link.type === 'carousel' && Array.isArray(link.images) && link.images.length > 0) {
+        const card = buildCarouselCard(link, index);
+        card.style.animationDelay = `${0.38 + index * 0.08}s`;
+        container.appendChild(card);
+        return;
+      }
+
       const a = document.createElement('a');
       a.className = 'btn btn-outline';
       a.style.animationDelay = `${0.38 + index * 0.08}s`;
-      
+
       if (link.image === 'catalago_web') {
         a.href = '#';
         a.addEventListener('click', (e) => {

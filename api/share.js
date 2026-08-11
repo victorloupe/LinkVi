@@ -1,6 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
+// Escapes text so it can be safely placed inside HTML attribute values / text nodes.
+// Prevents stored data (store title/description/logoUrl) from breaking out of the
+// meta tags and injecting markup or scripts into the response.
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export default async function handler(req, res) {
   const { store } = req.query;
 
@@ -50,21 +62,29 @@ export default async function handler(req, res) {
     const filePath = path.join(process.cwd(), 'cliente.html');
     let html = fs.readFileSync(filePath, 'utf8');
 
+    // Escape everything that came from the database (or the URL) before it touches
+    // the HTML string below — otherwise a store title/description containing markup
+    // could inject a script into every visitor's page (reflected XSS).
+    const safeTitle = escapeHtml(title);
+    const safeDescription = escapeHtml(description);
+    const safeLogoUrl = escapeHtml(logoUrl);
+    const safeStoreUrl = encodeURIComponent(store);
+
     // Create custom Open Graph meta tags to feed to WhatsApp, Facebook, Telegram crawlers
     const metaTags = `
-  <title>${title} — Links</title>
-  <meta name="description" content="${description}">
+  <title>${safeTitle} — Links</title>
+  <meta name="description" content="${safeDescription}">
   <!-- Open Graph / Facebook / WhatsApp -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${description}">
-  <meta property="og:image" content="${logoUrl}">
-  <meta property="og:url" content="https://linksvi.vercel.app/${store}">
+  <meta property="og:title" content="${safeTitle}">
+  <meta property="og:description" content="${safeDescription}">
+  <meta property="og:image" content="${safeLogoUrl}">
+  <meta property="og:url" content="https://linksvi.vercel.app/${safeStoreUrl}">
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="${title}">
-  <meta property="twitter:description" content="${description}">
-  <meta property="twitter:image" content="${logoUrl}">
+  <meta property="twitter:title" content="${safeTitle}">
+  <meta property="twitter:description" content="${safeDescription}">
+  <meta property="twitter:image" content="${safeLogoUrl}">
 `;
 
     // Remove the static title tag from cliente.html to prevent duplicate titles

@@ -9,16 +9,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root {
     --bg-light: #f8fafc;
     --panel-white: #ffffff;
     --border-color: #e2e8f0;
-    --border-focus: #0f172a;
     --text-main: #0f172a;
     --text-muted: #64748b;
     --brand-indigo: #6366f1;
-    --brand-purple: #7c3aed;
+    --brand-purple: #372f6b;
+    --brand-purple-hover: #453c85;
+    --border-focus: var(--brand-purple);
     --gradient-brand: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
     --success: #10b981;
     --danger: #ef4444;
@@ -298,7 +300,7 @@
   }
 
   .btn-admin-manage {
-    background-color: var(--text-main);
+    background-color: var(--brand-purple);
     color: white;
     border: none;
     padding: 6px 12px;
@@ -313,7 +315,7 @@
   }
 
   .btn-admin-manage:hover {
-    background-color: #1e293b;
+    background-color: var(--brand-purple-hover);
   }
 
   .user-tag {
@@ -387,13 +389,188 @@
     gap: 20px;
   }
 
+  /* Top-level tabs: separates the "Aparência" (identity/colors/background)
+     editor, the "Links" list and "Estatísticas" so each screen stays
+     focused instead of everything piling into one long scroll.
+     Built as a pill-shaped selector with a sliding highlight: a filled
+     duplicate row of the same buttons sits on top, clipped via JS to only
+     reveal the slice behind whichever tab is active, and animates between
+     positions with a CSS transition on clip-path — no external library. */
+  .main-tabs-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: fit-content;
+    max-width: 100%;
+    flex-shrink: 0;
+    padding: 5px;
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+  }
+
+  /* Lives inside the header, between the logo and the account/actions
+     cluster — takes the remaining space and centers the tabs + quick copy
+     button within it. */
+  .header-tabs-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    padding: 0 16px;
+  }
+
+  .btn-copy-quick {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--brand-purple);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .btn-copy-quick:hover {
+    background-color: var(--brand-purple-hover);
+  }
+
+  .btn-copy-quick svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  .main-tab-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: none;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .main-tab-btn svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .main-tab-btn:hover {
+    color: var(--text-main);
+  }
+
+  .main-tab-btn.active {
+    color: var(--text-main);
+  }
+
+  /* The clipped highlight layer: an exact copy of the tab row, painted
+     brand-purple with white text, positioned over the real row and
+     revealed only within the active tab's bounds. */
+  .main-tabs-clip {
+    position: absolute;
+    inset: 5px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    pointer-events: none;
+    clip-path: inset(0 100% 0 0 round 999px);
+    transition: clip-path 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .main-tabs-clip .main-tab-btn {
+    background-color: var(--brand-purple);
+    color: #ffffff;
+    cursor: default;
+  }
+
+  /* Applied/removed by switchMainTab() — kept as a class (not inline
+     style) so the underlying display value (flex vs the 2-column block
+     layout below) stays fully controlled by CSS/media queries. */
+  .tab-panel-hidden { display: none !important; }
+
+  /* Aparência has a lot of fields — split deliberately into two columns on
+     wide screens: left = identity/colors/background, right = texts. Falls
+     back to a single stacked column below 900px. */
+  .profile-columns {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  @media (min-width: 900px) {
+    .profile-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 28px;
+      align-items: start;
+    }
+  }
+
+  .profile-col {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  /* Estatísticas de Acesso + Melhor Dia da Semana side by side on wide
+     screens, stacked on narrow ones — the monthly trend chart stays
+     full-width below either way. */
+  .stats-two-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  @media (min-width: 860px) {
+    .stats-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+
   /* Cards in clean design */
   .panel-card {
     background: var(--panel-white);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 14px;
     padding: 24px;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Thin brand-colored accent along the top edge of every card — a small
+     recurring detail that ties the cards back to the product's identity
+     without repainting large surfaces purple. */
+  .panel-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--brand-purple);
   }
 
   .profile-panel {
@@ -465,8 +642,12 @@
     width: 375px;
     height: 781px;
     border: none;
-    transform: scale(0.7146);
     transform-origin: top left;
+    /* Scale factor is computed and set in JS (see scaleDevicePreviewIframes)
+       from the container's real measured size, instead of a hardcoded
+       constant — a fixed number here silently drifts out of sync with the
+       actual mockup size (e.g. on real mobile browsers) and leaves a blank
+       gap on one side. */
   }
 
   .section-title {
@@ -507,12 +688,26 @@
 
   .form-group input:focus, .form-group textarea:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 0 0 2px rgba(55, 47, 107, 0.12);
   }
 
   .form-group textarea {
     resize: vertical;
     min-height: 70px;
+  }
+
+  /* Custom select arrow — replaces the browser's default dropdown chevron
+     everywhere so <select> elements match the rest of the (custom-icon) UI
+     instead of looking like an unstyled native control. */
+  select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 8px center !important;
+    background-size: 12px !important;
+    padding-right: 26px !important;
   }
 
   #store-title-text, #store-cta-text {
@@ -635,7 +830,7 @@
   }
 
   .btn-copy {
-    background-color: var(--text-main);
+    background-color: var(--brand-purple);
     color: white;
     border: none;
     border-radius: 6px;
@@ -650,7 +845,7 @@
   }
 
   .btn-copy:hover {
-    background-color: #1e293b;
+    background-color: var(--brand-purple-hover);
   }
 
   /* Links List */
@@ -669,7 +864,7 @@
   }
 
   .btn-add-link {
-    background-color: var(--text-main);
+    background-color: var(--brand-purple);
     color: #ffffff;
     border: none;
     padding: 6px 14px;
@@ -684,7 +879,7 @@
   }
 
   .btn-add-link:hover {
-    background-color: #1e293b;
+    background-color: var(--brand-purple-hover);
   }
 
   .links-list {
@@ -832,7 +1027,7 @@
   }
 
   .btn-save-all {
-    background-color: var(--text-main);
+    background-color: var(--brand-purple);
     color: white;
     border: none;
     padding: 10px 24px;
@@ -844,7 +1039,7 @@
   }
 
   .btn-save-all:hover {
-    background-color: #1e293b;
+    background-color: var(--brand-purple-hover);
   }
 
   /* Modals */
@@ -935,7 +1130,7 @@
   }
 
   .btn-primary-modal {
-    background-color: var(--text-main);
+    background-color: var(--brand-purple);
     color: white;
     border: none;
     padding: 8px 14px;
@@ -946,7 +1141,7 @@
   }
 
   .btn-primary-modal:hover {
-    background-color: #1e293b;
+    background-color: var(--brand-purple-hover);
   }
 
   /* Icons selector */
@@ -1020,7 +1215,7 @@
 
   .icon-option.selected {
     border-color: var(--border-focus);
-    background-color: rgba(15, 23, 42, 0.05);
+    background-color: rgba(55, 47, 107, 0.08);
     color: var(--text-main);
   }
 
@@ -1178,7 +1373,7 @@
 
   .bg-tab-btn:hover {
     color: var(--text-main);
-    background-color: rgba(15, 23, 42, 0.03);
+    background-color: rgba(55, 47, 107, 0.06);
   }
 
   .bg-tab-btn.active {
@@ -1209,8 +1404,36 @@
     transform: scale(1.04);
   }
 
+  /* Floating "preview" button — only relevant on screens narrow enough
+     that the sticky phone mockup (.preview-panel) is hidden. Fixed to the
+     bottom-right corner, out of the way of the rest of the UI, icon-only. */
   #mobile-preview-btn {
     display: none;
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: var(--brand-purple);
+    color: #ffffff;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -6px rgba(55, 47, 107, 0.5), 0 4px 8px -2px rgba(15, 23, 42, 0.15);
+    z-index: 400;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  #mobile-preview-btn:hover {
+    background-color: var(--brand-purple-hover);
+    transform: scale(1.05);
+  }
+
+  #mobile-preview-btn svg {
+    width: 22px;
+    height: 22px;
   }
 
   @media (max-width: 1024px) {
@@ -1235,6 +1458,7 @@
       grid-template-areas:
         "logo user"
         "logo save"
+        "tabs tabs"
         "admin admin";
       height: auto;
       padding: 12px 16px;
@@ -1251,6 +1475,42 @@
       display: flex;
       justify-content: flex-start;
       align-items: center;
+    }
+
+    .header-tabs-group {
+      grid-area: tabs;
+      flex: none;
+      width: 100%;
+      padding: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      row-gap: 8px;
+    }
+
+    .main-tabs-bar {
+      flex-shrink: 1;
+      min-width: 0;
+      padding: 4px;
+    }
+
+    .header-tabs-group .main-tab-btn {
+      padding: 9px 15px;
+      font-size: 12.5px;
+    }
+
+    .header-tabs-group .main-tab-btn svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    .btn-copy-quick span {
+      display: none;
+    }
+
+    .btn-copy-quick {
+      padding: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
     .header-actions {
@@ -1403,12 +1663,12 @@
     <div class="form-body" style="display: flex; flex-direction: column; gap: 16px;">
       <div class="form-group">
         <label for="login-username">Identificador da Loja (ou admin)</label>
-        <input type="text" id="login-username" placeholder="ex: sualoja ou admin">
+        <input type="text" id="login-username" placeholder="ex: sualoja ou admin" autocomplete="username" autocapitalize="none" spellcheck="false" onkeydown="if(event.key === 'Enter') handleLogin()">
       </div>
       <div class="form-group">
         <label for="login-password">Senha de Acesso</label>
         <div class="password-input-wrapper">
-          <input type="password" id="login-password" placeholder="••••••••">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key === 'Enter') handleLogin()">
           <button type="button" class="btn-toggle-password" onclick="togglePasswordVisibility()" title="Mostrar/ocultar senha">
             <svg id="eye-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
             <svg id="eye-icon-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px; display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
@@ -1430,7 +1690,50 @@
     <div class="logo-area">
       <img src="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/logo.png" alt="LinksVi">
     </div>
-    
+
+    <div class="header-tabs-group" id="header-tabs-group">
+      <nav class="main-tabs-bar" id="main-tabs-bar">
+        <!-- Filled "pill" layer, clipped via JS to only reveal the region
+             behind the active tab — creates the sliding-highlight animation
+             without any external animation library. -->
+        <div class="main-tabs-clip" id="main-tabs-clip">
+          <button class="main-tab-btn is-ghost" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+            <span>Aparência</span>
+          </button>
+          <button class="main-tab-btn is-ghost" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            <span>Links</span>
+          </button>
+          <button class="main-tab-btn is-ghost" tabindex="-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Estatísticas</span>
+          </button>
+        </div>
+
+        <!-- Real, clickable tabs (transparent bg, sit under the clip layer) -->
+        <button class="main-tab-btn" id="main-tab-btn-appearance" onclick="switchMainTab('appearance')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
+          <span>Aparência</span>
+        </button>
+        <button class="main-tab-btn active" id="main-tab-btn-links" onclick="switchMainTab('links')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <span>Links</span>
+        </button>
+        <button class="main-tab-btn" id="main-tab-btn-stats" onclick="switchMainTab('stats')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Estatísticas</span>
+        </button>
+      </nav>
+
+      <!-- Quick-access copy button — same public page link as the copier
+           inside the Links tab, but reachable without switching tabs. -->
+      <button type="button" class="btn-copy-quick" id="header-copy-link-btn" onclick="copyLink()" title="Copiar link da página">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>Copiar Link</span>
+      </button>
+    </div>
+
     <div class="header-actions">
       <!-- Autosave Status Indicator -->
       <div id="save-status" style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text-muted); font-weight: 600; margin-right: 8px;">
@@ -1444,14 +1747,10 @@
           <!-- Populated dynamically -->
         </select>
         <button class="btn-admin-manage" onclick="openAdminManageModal()">
-          <span>⚙️ Gerenciar Lojas</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Gerenciar Lojas</span>
         </button>
       </div>
-
-      <!-- Mobile Preview Button -->
-      <button class="btn-secondary" id="mobile-preview-btn" style="align-items: center; gap: 6px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; border-color: var(--border-color); cursor: pointer;" onclick="openMobilePreviewModal()">
-        <span>👁️ Visualizar</span>
-      </button>
 
       <!-- User capsule tag -->
       <div class="user-tag">
@@ -1468,11 +1767,14 @@
 
   <!-- Layout -->
   <div class="dashboard-container">
-    
+
     <!-- Profile Info Editor -->
-    <aside class="panel-card profile-panel">
+    <aside class="panel-card profile-panel tab-panel-hidden" id="tab-panel-appearance">
       <h3 class="section-title">Perfil da Página</h3>
-      
+
+      <div class="profile-columns">
+        <div class="profile-col">
+
       <div class="form-group">
         <label for="store-id-display">Identificador da Loja (URL)</label>
         <input type="text" id="store-id-display" disabled style="background-color: var(--bg-light); cursor: not-allowed; opacity: 0.7; font-weight: 600;">
@@ -1598,7 +1900,7 @@
             </div>
             <div id="bg-image-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
               <img id="bg-image-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-              <div id="bg-image-preview-placeholder" style="color: var(--text-muted); font-size: 14px;">🖼️</div>
+              <div id="bg-image-preview-placeholder" style="color: var(--text-muted); display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>
             </div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
@@ -1673,7 +1975,10 @@
           </div>
         </div>
       </div>
-      
+
+        </div>
+        <div class="profile-col">
+
       <div class="form-group">
         <label for="store-pill-text">Texto da Tag (Pill superior)</label>
         <input type="text" id="store-pill-text" placeholder="Ex: Novidades, Destaque, Promoção (Opcional)" oninput="triggerAutosave()">
@@ -1698,11 +2003,14 @@
         <label for="store-sub-text">Sub-título da Chamada</label>
         <textarea id="store-sub-text" placeholder="Ex: Selecione uma das opções abaixo para falar conosco" oninput="triggerAutosave()"></textarea>
       </div>
+
+        </div>
+      </div>
     </aside>
 
     <!-- Links list & Copy URL -->
-    <main class="links-panel">
-      
+    <main class="links-panel" id="tab-panel-links">
+
       <!-- Link URL display and copier -->
       <section class="panel-card">
         <div class="url-copier-box">
@@ -1714,7 +2022,21 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </button>
           </div>
+        </div>
 
+        <div style="display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
+          <div id="store-qr-placeholder" style="width: 84px; height: 84px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><line x1="14" y1="14" x2="14" y2="21"></line><line x1="21" y1="14" x2="21" y2="21"></line><line x1="14" y1="17.5" x2="21" y2="17.5"></line></svg>
+          </div>
+          <img id="store-qr-img" src="" alt="QR Code do link da loja" style="display: none; width: 84px; height: 84px; border-radius: 8px; border: 1px solid var(--border-color); flex-shrink: 0;">
+          <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
+            <span style="font-size: 11.5px; font-weight: 700; color: var(--text-main);">QR Code da Loja</span>
+            <span style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4;">Use em cardápios, embalagens ou material impresso para levar direto à sua página de links.</span>
+            <button type="button" id="store-qr-download-btn" onclick="downloadStoreQrCode()" class="btn-secondary" style="display: none; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; width: fit-content; margin-top: 4px; cursor: pointer;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Baixar QR Code</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -1736,21 +2058,25 @@
           <button class="btn-add-link" style="margin: 0 auto;" onclick="openLinkModal()">Cadastrar Primeiro Link</button>
         </div>
       </section>
+    </main>
 
+    <!-- Access Statistics tab -->
+    <main class="links-panel tab-panel-hidden" id="tab-panel-stats">
+      <div class="stats-two-col">
       <!-- Access Statistics (Analytics) Card -->
       <section class="panel-card" id="analytics-card" style="display: none;">
-        <h3 class="section-title" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <span>📈 Estatísticas de Acesso</span>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <select id="stats-filter-select" onchange="onStatsFilterChange()" style="padding: 4px 8px; font-size: 11px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main);">
+        <h3 class="section-title" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px;">
+          <span style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Estatísticas de Acesso</span>
+          <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+            <select id="stats-filter-select" onchange="onStatsFilterChange()" style="padding: 4px 6px; font-size: 10.5px; border: 1px solid var(--border-color); border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main);">
               <option value="today">Hoje</option>
               <option value="7days">Últimos 7 dias</option>
               <option value="month" selected>Este Mês</option>
               <option value="all">Todo o período</option>
               <option value="custom">Período personalizado</option>
             </select>
-            <button onclick="refreshAnalyticsFromServer()" class="btn-secondary" style="padding: 4px 8px; font-size: 11px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 4px;" title="Atualizar Estatísticas">
-              <span>🔄 Atualizar</span>
+            <button onclick="refreshAnalyticsFromServer()" class="btn-secondary" style="width: 26px; height: 26px; padding: 0; font-size: 11px; font-weight: 600; margin: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Atualizar Estatísticas">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
             </button>
           </div>
         </h3>
@@ -1770,19 +2096,51 @@
           <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
             <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Visualizações</div>
             <div id="stats-views" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
+            <div id="stats-views-delta" style="font-size: 9.5px; font-weight: 700; margin-top: 3px; min-height: 12px;"></div>
           </div>
           <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
             <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Cliques Totais</div>
             <div id="stats-clicks" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
+            <div id="stats-clicks-delta" style="font-size: 9.5px; font-weight: 700; margin-top: 3px; min-height: 12px;"></div>
           </div>
-          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Taxa (CTR)</div>
+          <div style="background-color: #f2effc; padding: 12px 8px; border-radius: 6px; border: 1px solid #ddd3f8;">
+            <div style="font-size: 10px; font-weight: 700; color: #7c5cd6; text-transform: uppercase; letter-spacing: 0.5px;">Taxa (CTR)</div>
             <div id="stats-ctr" style="font-size: 18px; font-weight: 800; color: var(--brand-purple); margin-top: 4px;">0%</div>
           </div>
         </div>
         
         <div id="stats-links-breakdown" style="display: flex; flex-direction: column; gap: 8px;">
           <!-- Populated dynamically with clicks per link -->
+        </div>
+      </section>
+
+      <!-- Weekday click pattern -->
+      <section class="panel-card" id="weekday-chart-card" style="display: none;">
+        <h3 class="section-title" style="margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Melhor Dia da Semana</span>
+        </h3>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Total de cliques acumulados em cada dia da semana — ajuda a saber quando postar ou promover algo novo.</p>
+        <div id="weekday-chart-bars" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Populated dynamically -->
+        </div>
+        <div id="weekday-chart-empty" style="display: none; text-align: center; font-size: 11.5px; color: var(--text-muted); padding: 24px 8px;">
+          Ainda não há cliques suficientes para identificar um padrão semanal.
+        </div>
+      </section>
+      </div>
+
+      <!-- Monthly per-link click trend -->
+      <section class="panel-card" id="monthly-chart-card" style="display: none;">
+        <h3 class="section-title" style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18.7 8l-5.1 5.1-3-3L3 17.4"></path></svg>
+          <span>Cliques por Mês (por Link)</span>
+        </h3>
+        <div style="position: relative; height: 260px;">
+          <canvas id="monthly-clicks-chart"></canvas>
+        </div>
+        <div id="monthly-chart-empty" style="display: none; text-align: center; font-size: 11.5px; color: var(--text-muted); padding: 24px 8px;">
+          Ainda não há dados suficientes para mostrar a tendência mensal. Volte aqui depois de acumular alguns dias de cliques.
         </div>
       </section>
     </main>
@@ -1797,6 +2155,12 @@
     </aside>
   </div>
 
+  <!-- Floating preview button — only visible on screens narrow enough that
+       the sticky phone mockup above is hidden (see @media max-width:1024px). -->
+  <button id="mobile-preview-btn" onclick="openMobilePreviewModal()" title="Visualizar página">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+  </button>
+
   <!-- MODAL: Mobile Preview -->
   <div class="modal-backdrop" id="mobile-preview-backdrop">
     <div class="modal" style="max-width: 360px; padding: 12px; background: transparent; border: none; box-shadow: none;">
@@ -1805,7 +2169,7 @@
       </div>
       <div class="device-smartphone" style="margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div class="device-screen">
-          <iframe id="mobile-preview-iframe" src="" frameborder="0" style="width: 100%; height: 100%; border: none;"></iframe>
+          <iframe id="mobile-preview-iframe" src="" frameborder="0"></iframe>
         </div>
       </div>
     </div>
@@ -1825,7 +2189,8 @@
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
         <span style="font-size: 14px; font-weight: 600; color: var(--text-muted)">Lojas Ativas</span>
         <button class="btn-admin-manage" style="padding: 8px 16px; font-size: 13px;" onclick="openNewStoreModal()">
-          <span>➕ Criar Nova Loja</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:2px;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Criar Nova Loja</span>
         </button>
       </div>
 
@@ -1925,6 +2290,9 @@
           <div class="icon-option" data-icon="custom" data-title="Imagem Externa" onclick="selectIcon('custom')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           </div>
+          <div class="icon-option" data-icon="carousel" data-title="Carrossel de Fotos" onclick="selectIcon('carousel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>
+          </div>
           <div class="icon-option" data-icon="fallback" data-title="Outro Link" onclick="selectIcon('fallback')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           </div>
@@ -1935,7 +2303,7 @@
       <div id="whatsapp-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
         <div class="form-group">
           <label for="wa-phone" style="font-size: 11px; font-weight: 700;">Número do WhatsApp (com DDD)</label>
-          <input type="text" id="wa-phone" placeholder="Ex: (11) 99999-9999" oninput="handlePhoneInput(this)">
+          <input type="tel" inputmode="tel" id="wa-phone" placeholder="Ex: (11) 99999-9999" oninput="handlePhoneInput(this)">
         </div>
         <div class="form-group">
           <label for="wa-message" style="font-size: 11px; font-weight: 700;">Mensagem Inicial (Opcional)</label>
@@ -1959,7 +2327,7 @@
       <div id="telefone-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
         <div class="form-group">
           <label for="tel-number" style="font-size: 11px; font-weight: 700;">Número do Telefone (com DDD)</label>
-          <input type="text" id="tel-number" placeholder="Ex: (11) 99999-9999" oninput="handleTelInput(this)">
+          <input type="tel" inputmode="tel" id="tel-number" placeholder="Ex: (11) 99999-9999" oninput="handleTelInput(this)">
         </div>
       </div>
 
@@ -1976,7 +2344,7 @@
             </div>
             <div id="custom-icon-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
               <img id="custom-icon-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: contain;">
-              <div id="custom-icon-preview-placeholder" style="color: var(--text-muted); font-size: 14px;">🖼️</div>
+              <div id="custom-icon-preview-placeholder" style="color: var(--text-muted); display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>
             </div>
           </div>
           <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px;">
@@ -1986,12 +2354,12 @@
         </div>
       </div>
       
-      <div class="form-group">
+      <div class="form-group" id="label-field-group">
         <label for="modal-link-label">Texto do Link</label>
         <input type="text" id="modal-link-label" placeholder="ex: Instagram Oficial">
       </div>
-      
-      <div class="form-group">
+
+      <div class="form-group" id="url-field-group">
         <label for="modal-link-url">URL do Link</label>
         <input type="text" id="modal-link-url" placeholder="https://...">
         <div id="map-helper-text" style="display: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 6px;">
@@ -1999,7 +2367,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" id="badge-field-group">
         <label for="modal-link-badge">Etiqueta do Link (ex: Em Breve, Novo)</label>
         <input type="text" id="modal-link-badge" placeholder="Opcional. Ex: Em Breve">
       </div>
@@ -2019,6 +2387,30 @@
             O arquivo PDF será carregado e preencherá a URL do link automaticamente.
           </div>
         </div>
+      </div>
+
+      <!-- Photo carousel helper (only shown for the carousel icon) -->
+      <div id="carousel-upload-container" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 8px; margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 2px;">
+          Fotos do Carrossel
+        </label>
+        <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+          Adicione fotos do seu computador ou cole o link de uma imagem. Elas aparecem como um carrossel animado (com setas e troca automática) na página de links. Máximo de 9 fotos, 5MB cada.
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <button type="button" class="btn-secondary" onclick="document.getElementById('carousel-file-input').click()" style="padding: 8px 12px; font-size: 12px; border-radius: 6px; cursor: pointer; flex-shrink: 0; border: 1px solid var(--border-color); background: #fff; font-weight: 600;">
+            Enviar do Computador
+          </button>
+          <input type="file" id="carousel-file-input" accept="image/*" multiple style="display: none;" onchange="handleCarouselUpload(event)">
+          <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="carousel-upload-status"></span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="carousel-image-url-input" placeholder="Ou cole o link de uma imagem (https://...)" style="flex: 1; font-size: 11.5px; padding: 6px 10px;" onkeydown="if(event.key === 'Enter') { event.preventDefault(); addCarouselImageUrl(); }">
+          <button type="button" class="btn-secondary" onclick="addCarouselImageUrl()" style="padding: 6px 10px; font-size: 11.5px; border-radius: 6px; cursor: pointer; flex-shrink: 0; border: 1px solid var(--border-color); background: #fff; font-weight: 600;">
+            Adicionar
+          </button>
+        </div>
+        <div id="carousel-thumbs-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 2px;"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -2074,12 +2466,18 @@ insert into stores (id, password, config)
 values ('contato@linksvi.com.br', 'admin123', '{}'::jsonb)
 on conflict (id) do nothing;
 
--- Políticas de RLS Públicas
+-- RLS: leitura pública de id/config (necessário para as páginas de link),
+-- mas a coluna password NUNCA é lida diretamente — veja supabase_security_hardening.sql
+-- na raiz do projeto para as funções de login_store / admin_reveal_password
+-- e para as políticas completas (incluindo escrita).
 alter table stores enable row level security;
 create policy "Allow public read access" on stores for select using (true);
 create policy "Allow public insert access" on stores for insert with check (true);
 create policy "Allow public update access" on stores for update using (true);
 create policy "Allow public delete access" on stores for delete using (true);
+revoke select on stores from anon, authenticated;
+grant select (id, config) on stores to anon, authenticated;
+-- Depois de rodar isso, rode também o conteúdo de supabase_security_hardening.sql.
         </pre>
         <p style="margin-top: 12px; font-weight: 600; font-size: 12px; color: #854d0e; border-top: 1px dashed #fed7aa; padding-top: 10px;">
           📦 SUPABASE STORAGE: Crie um bucket público chamado <code>logos</code> (Storage -> New Bucket -> Nome: "logos" -> Marque como "Public").
@@ -2101,7 +2499,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 </div>
 
 <!-- Toast -->
-<div id="toast" class="toast"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <!-- Supabase Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -2133,6 +2531,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     linkedin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`,
     construcao: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18 M9 22V5 M12 22V5 M9 17h3 M9 12h3 M9 7h3 M9 22l3-5 M12 22l-3-5 M9 17l3-5 M12 17l-3-5 M9 12l3-5 M12 12l-3-5 M2 5h20 M19 5v8 M17 13a2 2 0 0 0 4 0"/><rect x="9" y="2" width="4" height="3" rx="0.5" fill="currentColor" fill-opacity="0.1"/></svg>`,
     custom: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>`,
+    carousel: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>`,
     fallback: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`
   };
 
@@ -2140,6 +2539,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   let currentUser = null; // { id: '...', role: 'admin'|'store' }
   let activeStore = "";
   let allStoresList = []; // Used in Admin view
+  let currentUserPasswordCache = null; // logged-in user's password kept in memory only (never persisted) — required by the password-gated write RPCs (save, create/delete store, change password)
+
+  // All writes to the `stores` table go through SECURITY DEFINER RPCs that
+  // re-check a password server-side (see supabase_security_hardening.sql) —
+  // the anon key alone is no longer enough to write. We keep the password
+  // used at login in memory to pass along automatically; if a page refresh
+  // restored the session without a fresh login, this asks for it once.
+  async function ensureCurrentPassword(title, msg) {
+    if (currentUserPasswordCache) return currentUserPasswordCache;
+    const typed = await showPrompt(title || "Confirmar Identidade", msg || "Sua sessão foi restaurada. Digite sua senha para continuar:", "Sua senha", true);
+    if (typed === null) return null;
+    const pwd = typed.trim();
+    if (!pwd) return null;
+    currentUserPasswordCache = pwd;
+    return pwd;
+  }
   let storeConfig = {
     logoUrl: "",
     pillText: "",
@@ -2163,6 +2578,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     stats: { views: 0, clicks: {} }
   };
   let selectedIconType = "fallback";
+  let currentCarouselImages = []; // photos attached to the link currently open in the link modal (photo carousel)
 
   document.addEventListener('DOMContentLoaded', () => {
     // Domain setting setup
@@ -2191,7 +2607,77 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (mobileIframe) {
       mobileIframe.addEventListener('load', sendConfigToPreview);
     }
+
+    // Restore whichever top-level tab (Aparência / Links / Estatísticas)
+    // the user was on last.
+    switchMainTab(localStorage.getItem('linksvi_admin_tab') || 'links');
+
+    // Fit the phone-mockup iframes to their frame right away, and again on
+    // resize (the sticky desktop preview's frame size doesn't change, but
+    // this keeps it correct if the layout shifts for any reason).
+    scaleDevicePreviewIframes();
+    window.addEventListener('resize', () => {
+      clearTimeout(scaleDevicePreviewIframes._timer);
+      scaleDevicePreviewIframes._timer = setTimeout(scaleDevicePreviewIframes, 120);
+    });
   });
+
+  // Scales each phone-mockup iframe to exactly fill its frame, based on the
+  // frame's real measured size rather than a hardcoded constant. The
+  // iframes always render their document at a fixed 375x781 "design"
+  // resolution (so cliente.html looks like a true phone regardless of the
+  // mockup's on-screen size), then get visually shrunk to fit whatever
+  // physical size the frame actually ends up being.
+  function scaleDevicePreviewIframes() {
+    document.querySelectorAll('.device-screen iframe').forEach((iframe) => {
+      const frame = iframe.parentElement;
+      if (!frame || !frame.clientWidth) return; // frame is hidden (e.g. modal closed) — skip, no size to measure
+      const scale = frame.clientWidth / 375;
+      iframe.style.transform = `scale(${scale})`;
+    });
+  }
+
+  // Re-measure the sliding tab highlight after web fonts finish loading
+  // (they can reflow the button widths slightly) and on window resize.
+  window.addEventListener('load', () => updateTabsClipPosition(getActiveMainTabBtn()));
+  let tabsResizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(tabsResizeTimer);
+    tabsResizeTimer = setTimeout(() => updateTabsClipPosition(getActiveMainTabBtn()), 120);
+  });
+
+  function getActiveMainTabBtn() {
+    return document.querySelector('.main-tabs-bar > .main-tab-btn.active');
+  }
+
+  // Top-level tabs: "Aparência" (identity/colors/background), "Links"
+  // (link list) and "Estatísticas" — only one is shown at a time so each
+  // screen stays focused; the live phone preview stays visible either way.
+  function switchMainTab(tab) {
+    ['appearance', 'links', 'stats'].forEach((t) => {
+      document.getElementById(`tab-panel-${t}`).classList.toggle('tab-panel-hidden', t !== tab);
+      document.getElementById(`main-tab-btn-${t}`).classList.toggle('active', t === tab);
+    });
+    localStorage.setItem('linksvi_admin_tab', tab);
+    updateTabsClipPosition(document.getElementById(`main-tab-btn-${tab}`));
+  }
+
+  // Moves the filled "pill" highlight layer to sit exactly behind the given
+  // real tab button, via an animated CSS clip-path inset — the same visual
+  // technique used by pill-style animated tab components, reimplemented
+  // here in plain JS since this project has no React/build step.
+  function updateTabsClipPosition(activeBtn) {
+    const clip = document.getElementById('main-tabs-clip');
+    if (!clip || !activeBtn) return;
+    const clipRect = clip.getBoundingClientRect();
+    if (clipRect.width <= 0) return;
+    const btnRect = activeBtn.getBoundingClientRect();
+    const left = btnRect.left - clipRect.left;
+    const right = btnRect.right - clipRect.left;
+    const insetLeft = Math.max(0, (left / clipRect.width) * 100);
+    const insetRight = Math.max(0, 100 - (right / clipRect.width) * 100);
+    clip.style.clipPath = `inset(0 ${insetRight.toFixed(2)}% 0 ${insetLeft.toFixed(2)}% round 999px)`;
+  }
 
   // TOAST
   function showToast(message, type = 'success') {
@@ -2215,7 +2701,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       modal.innerHTML = `
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
-          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(124, 58, 237, 0.08); display: flex; align-items: center; justify-content: center; color: #7C3AED;">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(55, 47, 107, 0.08); display: flex; align-items: center; justify-content: center; color: var(--brand-purple);">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -2226,7 +2712,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
             <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
             <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0;">${message}</p>
           </div>
-          <button class="btn-primary-modal" style="width: 100%; padding: 11px; font-size: 13.5px; font-weight: 600; background-color: #7C3AED; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px;" id="alert-btn-close">${buttonText}</button>
+          <button class="btn-primary-modal" style="width: 100%; padding: 11px; font-size: 13.5px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px;" id="alert-btn-close">${buttonText}</button>
         </div>
       `;
       
@@ -2253,7 +2739,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       modal.innerHTML = `
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
-          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(124, 58, 237, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : '#7C3AED'};">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(55, 47, 107, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : 'var(--brand-purple)'};">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
               <line x1="12" y1="9" x2="12" y2="13"></line>
@@ -2266,7 +2752,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           </div>
           <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
             <button class="btn-secondary" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600;" id="confirm-btn-cancel">${cancelText}</button>
-            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; background-color: ${isDanger ? '#ef4444' : '#7C3AED'}; color: white; border: none; border-radius: 6px; cursor: pointer;" id="confirm-btn-ok">${confirmText}</button>
+            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; background-color: ${isDanger ? '#ef4444' : 'var(--brand-purple)'}; color: white; border: none; border-radius: 6px; cursor: pointer;" id="confirm-btn-ok">${confirmText}</button>
           </div>
         </div>
       `;
@@ -2289,33 +2775,34 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     });
   }
 
-  function showPrompt(title, message, placeholder = "", isPassword = false) {
+  function showPrompt(title, message, placeholder = "", isPassword = false, defaultValue = "", previewImageUrl = "") {
     return new Promise((resolve) => {
       const backdrop = document.createElement('div');
       backdrop.className = 'modal-backdrop open';
       backdrop.style.zIndex = '9999';
-      
+
       const modal = document.createElement('div');
       modal.className = 'modal';
       modal.style.maxWidth = '380px';
       modal.style.padding = '24px';
-      
+
       modal.innerHTML = `
         <div style="display: flex; flex-direction: column; gap: 14px;">
+          ${previewImageUrl ? `<img src="${previewImageUrl}" alt="" style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);">` : ''}
           <div style="display: flex; flex-direction: column; gap: 4px;">
             <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
             <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin: 0;">${message}</p>
           </div>
           <div class="form-group">
-            <input type="${isPassword ? 'password' : 'text'}" id="prompt-input-field" placeholder="${placeholder}" style="width: 100%; padding: 10px 12px; border: 1.4px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; outline: none; transition: border-color 0.15s;" autofocus>
+            <input type="${isPassword ? 'password' : 'text'}" id="prompt-input-field" placeholder="${placeholder}" value="${defaultValue.replace(/"/g, '&quot;')}" style="width: 100%; padding: 10px 12px; border: 1.4px solid #cbd5e1; border-radius: 6px; font-size: 13.5px; outline: none; transition: border-color 0.15s;" autofocus>
           </div>
           <div style="display: flex; gap: 10px; width: 100%; margin-top: 4px;">
             <button class="btn-secondary" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600;" id="prompt-btn-cancel">Cancelar</button>
-            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; background-color: #7C3AED; color: white; border: none; border-radius: 6px; cursor: pointer;" id="prompt-btn-ok">Confirmar</button>
+            <button class="btn-primary-modal" style="flex: 1; padding: 10px; font-size: 13px; font-weight: 600; color: white; border: none; border-radius: 6px; cursor: pointer;" id="prompt-btn-ok">Confirmar</button>
           </div>
         </div>
       `;
-      
+
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
       
@@ -2357,7 +2844,6 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
 
     // Map "admin" username to the master email
-    const isAdminUser = usernameInput === 'admin' || usernameInput === 'contato@linksvi.com.br' || usernameInput === 'contato@linkvi.com.br';
     if (usernameInput === 'admin') {
       usernameInput = 'contato@linksvi.com.br';
     }
@@ -2365,36 +2851,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     toggleLoader(true);
 
     try {
-      let loginQuery = supabaseClient
-        .from("stores")
-        .select("id, password")
-        .eq("password", passwordInput);
-
-      if (usernameInput === 'contato@linksvi.com.br') {
-        loginQuery = loginQuery.or('id.eq.contato@linksvi.com.br,id.eq.contato@linkvi.com.br');
-      } else {
-        loginQuery = loginQuery.eq("id", usernameInput);
-      }
-
-      let { data, error } = await loginQuery.single();
-
-      // Fallback for admin password migration: if failed and password typed was admin1234, try with admin123
-      if ((error || !data) && isAdminUser && passwordInput === 'admin1234') {
-        const fallbackQuery = supabaseClient
-          .from("stores")
-          .select("id, password")
-          .eq("password", "admin123")
-          .or('id.eq.contato@linksvi.com.br,id.eq.contato@linkvi.com.br');
-        
-        const fallbackRes = await fallbackQuery.single();
-        if (fallbackRes.data) {
-          data = fallbackRes.data;
-          error = null;
-        }
-      }
+      // Login goes through the login_store() database function instead of a raw
+      // SELECT with the password as a filter — the password value never travels
+      // back to the browser this way, and it can't be bulk-read via the public API.
+      const { data, error } = await supabaseClient
+        .rpc('login_store', { p_username: usernameInput, p_password: passwordInput })
+        .maybeSingle();
 
       if (error || !data) {
-        if (error && (error.message.includes("relation") || error.message.includes("does not exist"))) {
+        if (error && (error.message.includes("relation") || error.message.includes("does not exist") || error.message.includes("function"))) {
           document.getElementById('sql-setup-backdrop').classList.add('open');
           throw error;
         }
@@ -2409,6 +2874,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         role: (data.id === 'contato@linksvi.com.br' || data.id === 'contato@linkvi.com.br') ? 'admin' : 'store'
       };
 
+      currentUserPasswordCache = passwordInput; // kept in memory only, powers the password-gated write RPCs for the rest of this session
       sessionStorage.setItem('linksvi_user', JSON.stringify(currentUser));
       enterDashboard();
       showToast("Acesso concedido!");
@@ -2422,6 +2888,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   async function enterDashboard() {
     document.getElementById('login-container').style.display = 'none';
     document.getElementById('app-container').style.display = 'flex';
+    // The device-mockup frames and the tab bar were invisible (0 size) until
+    // now, so the measurements taken at page load were skipped — redo them
+    // now that everything actually has a size.
+    scaleDevicePreviewIframes();
+    updateTabsClipPosition(getActiveMainTabBtn());
     if (currentUser.role === 'admin') {
       document.getElementById('welcome-badge').textContent = 'ADMIN';
     } else {
@@ -2443,6 +2914,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function handleLogout() {
     sessionStorage.removeItem('linksvi_user');
     currentUser = null;
+    currentUserPasswordCache = null;
     activeStore = "";
     document.getElementById('app-container').style.display = 'none';
     document.getElementById('login-container').style.display = 'flex';
@@ -2455,7 +2927,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     try {
       const { data, error } = await supabaseClient
         .from("stores")
-        .select("id, password");
+        .select("id");
 
       if (error) throw error;
 
@@ -2698,12 +3170,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const urlInput = document.getElementById('public-link-url');
     if (!activeStore) {
       urlInput.value = "";
+      updateStoreQrCode("");
       return;
     }
 
     // Check if it's local development (e.g. 127.0.0.1 or localhost)
     const isLocal = domain.includes("127.0.0.1") || domain.includes("localhost") || window.location.hostname.includes("127.0.0.1") || window.location.hostname.includes("localhost");
-    
+
     if (isLocal) {
       // For local testing, use query param URL that actually works on local servers (like Live Server)
       // Extract subfolder base path (e.g. /LinkVi) if running Live Server from a parent directory
@@ -2712,6 +3185,54 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     } else {
       // For production, use clean Vercel rewrite URL path
       urlInput.value = `${domain}/${activeStore}`;
+    }
+    updateStoreQrCode(urlInput.value);
+  }
+
+  // QR CODE — generated on the fly via a free public API (goqr.me), no
+  // extra dependency needed. Kept in sync with the public link automatically
+  // since it's driven from updatePublicLinkDisplay().
+  function updateStoreQrCode(url) {
+    const placeholder = document.getElementById('store-qr-placeholder');
+    const img = document.getElementById('store-qr-img');
+    const downloadBtn = document.getElementById('store-qr-download-btn');
+    if (!placeholder || !img || !downloadBtn) return;
+
+    if (!url) {
+      img.style.display = 'none';
+      img.src = '';
+      downloadBtn.style.display = 'none';
+      placeholder.style.display = 'flex';
+      return;
+    }
+
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(url)}`;
+    img.style.display = 'block';
+    placeholder.style.display = 'none';
+    downloadBtn.style.display = 'flex';
+  }
+
+  // Downloads the QR code image via fetch+blob rather than a plain <a
+  // download> link — the image comes from a different origin, and browsers
+  // don't reliably honor the download attribute for cross-origin resources.
+  async function downloadStoreQrCode() {
+    const img = document.getElementById('store-qr-img');
+    if (!img || !img.src) return;
+
+    try {
+      const response = await fetch(img.src);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `qrcode-${activeStore || 'linksvi'}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+      console.error("Erro ao baixar QR Code:", e);
+      showToast("Não foi possível baixar o QR Code.", "error");
     }
   }
 
@@ -2969,6 +3490,181 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
   }
 
+  // PHOTO CAROUSEL (upload from computer or paste an image URL)
+  const CAROUSEL_MAX_PHOTOS = 9;
+
+  function handleCarouselUpload(event) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    uploadCarouselFiles(Array.from(files));
+    event.target.value = ""; // allow re-selecting the same file later
+  }
+
+  async function uploadCarouselFiles(files) {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de enviar fotos.", "error");
+      return;
+    }
+
+    const remainingSlots = CAROUSEL_MAX_PHOTOS - currentCarouselImages.length;
+    if (remainingSlots <= 0) {
+      showAlert("Limite Atingido", `Você pode adicionar no máximo ${CAROUSEL_MAX_PHOTOS} fotos neste carrossel.`);
+      return;
+    }
+
+    const filesToUpload = files.slice(0, remainingSlots);
+    if (files.length > remainingSlots) {
+      showToast(`Só cabem mais ${remainingSlots} foto(s) neste carrossel — o restante foi ignorado.`, "error");
+    }
+
+    const statusLabel = document.getElementById('carousel-upload-status');
+
+    for (let i = 0; i < filesToUpload.length; i++) {
+      const file = filesToUpload[i];
+
+      if (!file.type.startsWith('image/')) {
+        showToast(`"${file.name}" não é uma imagem e foi ignorado.`, "error");
+        continue;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast(`"${file.name}" passa de 5MB e foi ignorado.`, "error");
+        continue;
+      }
+
+      statusLabel.textContent = `Enviando ${i + 1}/${filesToUpload.length}...`;
+      statusLabel.style.color = "var(--brand-purple)";
+
+      try {
+        const fileExt = file.name.split('.').pop();
+        const cleanFileName = `carousel-${activeStore}-${Date.now()}-${i}.${fileExt}`;
+
+        const { error } = await supabaseClient
+          .storage
+          .from('logos')
+          .upload(cleanFileName, file, {
+            cacheControl: '3600',
+            upsert: true
+          });
+
+        if (error) throw error;
+
+        const { data: urlData } = supabaseClient
+          .storage
+          .from('logos')
+          .getPublicUrl(cleanFileName);
+
+        if (urlData && urlData.publicUrl) {
+          currentCarouselImages.push({ url: urlData.publicUrl, caption: "" });
+          renderCarouselThumbnails();
+        }
+      } catch (e) {
+        console.error(e);
+        showToast(`Erro ao enviar "${file.name}".`, "error");
+      }
+    }
+
+    statusLabel.textContent = currentCarouselImages.length > 0 ? `${currentCarouselImages.length} foto(s) no carrossel` : "";
+    statusLabel.style.color = "var(--text-muted)";
+  }
+
+  function addCarouselImageUrl() {
+    const input = document.getElementById('carousel-image-url-input');
+    const url = input.value.trim();
+    if (!url) return;
+
+    if (!/^https?:\/\//i.test(url)) {
+      showAlert("Link Inválido", "Cole um link completo de imagem, começando com http:// ou https://.");
+      return;
+    }
+    if (currentCarouselImages.length >= CAROUSEL_MAX_PHOTOS) {
+      showAlert("Limite Atingido", `Você pode adicionar no máximo ${CAROUSEL_MAX_PHOTOS} fotos neste carrossel.`);
+      return;
+    }
+
+    currentCarouselImages.push({ url: url, caption: "" });
+    input.value = "";
+    renderCarouselThumbnails();
+    const statusLabel = document.getElementById('carousel-upload-status');
+    statusLabel.textContent = `${currentCarouselImages.length} foto(s) no carrossel`;
+    statusLabel.style.color = "var(--text-muted)";
+  }
+
+  async function removeCarouselImage(idx) {
+    const confirmed = await showConfirm("Remover Foto", "Tem certeza que deseja remover esta foto do carrossel?", "Remover", "Cancelar", true);
+    if (!confirmed) return;
+    currentCarouselImages.splice(idx, 1);
+    renderCarouselThumbnails();
+    const statusLabel = document.getElementById('carousel-upload-status');
+    statusLabel.textContent = currentCarouselImages.length > 0 ? `${currentCarouselImages.length} foto(s) no carrossel` : "";
+  }
+
+  async function editCarouselCaption(idx) {
+    const photo = currentCarouselImages[idx];
+    if (!photo) return;
+    const newCaption = await showPrompt("Legenda da Foto", "Aparece quando o visitante clica na foto para ampliar (deixe em branco para não ter legenda).", "Ex: Nosso ambiente", false, photo.caption || "", photo.url);
+    if (newCaption === null) return;
+    photo.caption = newCaption.trim();
+    renderCarouselThumbnails();
+  }
+
+  let carouselDragFromIdx = null;
+
+  function renderCarouselThumbnails() {
+    const grid = document.getElementById('carousel-thumbs-grid');
+    if (!grid) return;
+    grid.innerHTML = "";
+    currentCarouselImages.forEach((photo, idx) => {
+      const thumb = document.createElement('div');
+      thumb.draggable = currentCarouselImages.length > 1;
+      thumb.style.cssText = "position: relative; aspect-ratio: 1 / 1; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); cursor: pointer; transition: opacity 0.15s ease, box-shadow 0.15s ease;";
+      thumb.title = currentCarouselImages.length > 1
+        ? "Arraste para reordenar. Clique para adicionar/editar a legenda desta foto."
+        : "Clique para adicionar/editar a legenda desta foto";
+      thumb.innerHTML = `
+        <img src="${photo.url}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none;">
+        ${photo.caption ? `<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 3px 4px; font-size: 8.5px; line-height: 1.2; color: #fff; background: rgba(15, 23, 42, 0.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;">${photo.caption}</div>` : ''}
+        ${currentCarouselImages.length > 1 ? `<div style="position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 4px; background: rgba(15, 23, 42, 0.5); color: #fff; display: flex; align-items: center; justify-content: center; pointer-events: none;"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="6" r="2"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="8" cy="18" r="2"/><circle cx="16" cy="18" r="2"/></svg></div>` : ''}
+        <button type="button" title="Remover foto" style="position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; border: none; background: rgba(15, 23, 42, 0.65); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;">&times;</button>
+      `;
+      thumb.querySelector('button').addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeCarouselImage(idx);
+      });
+      thumb.addEventListener('click', () => {
+        if (carouselDragFromIdx !== null) return; // suppress the click that follows a drag
+        editCarouselCaption(idx);
+      });
+
+      thumb.addEventListener('dragstart', (e) => {
+        carouselDragFromIdx = idx;
+        thumb.style.opacity = '0.4';
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      thumb.addEventListener('dragend', () => {
+        thumb.style.opacity = '';
+        setTimeout(() => { carouselDragFromIdx = null; }, 0);
+      });
+      thumb.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        thumb.style.boxShadow = '0 0 0 2px var(--brand-purple)';
+      });
+      thumb.addEventListener('dragleave', () => {
+        thumb.style.boxShadow = '';
+      });
+      thumb.addEventListener('drop', (e) => {
+        e.preventDefault();
+        thumb.style.boxShadow = '';
+        if (carouselDragFromIdx === null || carouselDragFromIdx === idx) return;
+        const [moved] = currentCarouselImages.splice(carouselDragFromIdx, 1);
+        currentCarouselImages.splice(idx, 0, moved);
+        renderCarouselThumbnails();
+      });
+
+      grid.appendChild(thumb);
+    });
+  }
+
   function getLinkIconHTML(imageKeyOrUrl, label = "") {
     if (!imageKeyOrUrl) {
       return LINK_ICONS.fallback;
@@ -3014,8 +3710,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           <div class="link-item-title">
             ${link.label}
             ${link.badge ? `<span class="link-item-badge">${link.badge}</span>` : ''}
+            ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''}</span>` : ''}
           </div>
-          <div class="link-item-url">${link.url || 'Sem link (Em Construção)'}</div>
+          <div class="link-item-url">${link.url || (link.type === 'carousel' ? '' : 'Sem link (Em Construção)')}</div>
         </div>
         <div class="link-item-controls">
           <button class="btn-control" onclick="moveLink(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
@@ -3123,6 +3820,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (modal) {
       modal.classList.add('open');
       updatePreviewIframe();
+      scaleDevicePreviewIframes();
     }
   }
 
@@ -3134,21 +3832,23 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   }
 
   // ACCESS METRICS & ANALYTICS
+  const REFRESH_STATS_ICON = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>';
+
   async function refreshAnalyticsFromServer() {
     if (!activeStore || !supabaseClient) return;
     const btn = document.querySelector('#analytics-card .btn-secondary');
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = "<span>⏳ Carregando...</span>";
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 0.8s linear infinite;"><path d="M21 12a9 9 0 1 1-9-9"></path></svg>';
     }
-    
+
     try {
       const { data, error } = await supabaseClient
         .from("stores")
         .select("config")
         .eq("id", activeStore)
         .single();
-        
+
       if (error) throw error;
       if (data && data.config) {
         let parsed = data.config;
@@ -3165,7 +3865,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     } finally {
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = "<span>🔄 Atualizar</span>";
+        btn.innerHTML = REFRESH_STATS_ICON;
       }
     }
   }
@@ -3283,7 +3983,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       item.innerHTML = `
         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
-          <span style="font-size: 13px; flex-shrink: 0;">🔗</span>
+          <span style="flex-shrink: 0; display: inline-flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>
           <span style="font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${link.label}</span>
         </div>
         <div style="display: flex; gap: 12px; align-items: center; flex-shrink: 0; font-weight: 700;">
@@ -3330,10 +4030,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   function loadAnalyticsData() {
     if (!storeConfig) return;
-    
+
     const statsCard = document.getElementById('analytics-card');
     if (!statsCard) return;
-    
+
     if (!activeStore) {
       statsCard.style.display = 'none';
       return;
@@ -3341,6 +4041,235 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     statsCard.style.display = 'block';
 
     renderFilteredStats();
+    renderMonthlyClicksChart();
+    renderMonthOverMonthDelta();
+    renderWeekdayChart();
+  }
+
+  // MONTH-OVER-MONTH DELTA (next to the Visualizações / Cliques Totais cards)
+  function renderMonthOverMonthDelta() {
+    const viewsDeltaEl = document.getElementById('stats-views-delta');
+    const clicksDeltaEl = document.getElementById('stats-clicks-delta');
+    if (!viewsDeltaEl || !clicksDeltaEl || !storeConfig) return;
+
+    const daily = (storeConfig.stats && storeConfig.stats.daily) || {};
+
+    const now = new Date();
+    const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonthKey = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+
+    let currentViews = 0, currentClicks = 0, prevViews = 0, prevClicks = 0;
+    Object.keys(daily).forEach((dateKey) => {
+      const month = dateKey.slice(0, 7);
+      if (month !== currentMonthKey && month !== prevMonthKey) return;
+      const day = daily[dateKey] || {};
+      const dayClicksTotal = Object.values(day.clicks || {}).reduce((sum, v) => sum + (parseInt(v) || 0), 0);
+      if (month === currentMonthKey) {
+        currentViews += parseInt(day.views) || 0;
+        currentClicks += dayClicksTotal;
+      } else {
+        prevViews += parseInt(day.views) || 0;
+        prevClicks += dayClicksTotal;
+      }
+    });
+
+    renderDeltaBadge(viewsDeltaEl, currentViews, prevViews);
+    renderDeltaBadge(clicksDeltaEl, currentClicks, prevClicks);
+  }
+
+  function renderDeltaBadge(el, current, previous) {
+    if (previous === 0 && current === 0) {
+      el.textContent = '';
+      return;
+    }
+    if (previous === 0) {
+      el.textContent = 'Novo esse mês';
+      el.style.color = 'var(--success)';
+      return;
+    }
+    const pct = ((current - previous) / previous) * 100;
+    const rounded = Math.round(Math.abs(pct));
+    if (pct > 0.5) {
+      el.textContent = `↑ ${rounded}% vs mês passado`;
+      el.style.color = 'var(--success)';
+    } else if (pct < -0.5) {
+      el.textContent = `↓ ${rounded}% vs mês passado`;
+      el.style.color = 'var(--danger)';
+    } else {
+      el.textContent = '— igual ao mês passado';
+      el.style.color = 'var(--text-muted)';
+    }
+  }
+
+  // WEEKDAY CLICK PATTERN
+  const WEEKDAY_LABELS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+
+  function renderWeekdayChart() {
+    const card = document.getElementById('weekday-chart-card');
+    const barsContainer = document.getElementById('weekday-chart-bars');
+    const emptyState = document.getElementById('weekday-chart-empty');
+    if (!card || !barsContainer || !emptyState || !storeConfig) return;
+
+    if (!activeStore) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+
+    const daily = (storeConfig.stats && storeConfig.stats.daily) || {};
+    const totals = [0, 0, 0, 0, 0, 0, 0]; // index 0 = Mon ... 6 = Sun
+    let grandTotal = 0;
+
+    Object.keys(daily).forEach((dateKey) => {
+      const dayClicks = (daily[dateKey] && daily[dateKey].clicks) || {};
+      const dayTotal = Object.values(dayClicks).reduce((sum, v) => sum + (parseInt(v) || 0), 0);
+      if (dayTotal === 0) return;
+      const jsDay = new Date(dateKey + 'T00:00:00').getDay(); // 0=Sun..6=Sat
+      const idx = jsDay === 0 ? 6 : jsDay - 1; // shift to Monday-first
+      totals[idx] += dayTotal;
+      grandTotal += dayTotal;
+    });
+
+    barsContainer.innerHTML = '';
+
+    if (grandTotal === 0) {
+      barsContainer.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    barsContainer.style.display = 'flex';
+    emptyState.style.display = 'none';
+
+    const maxVal = Math.max(...totals);
+
+    WEEKDAY_LABELS.forEach((label, idx) => {
+      const value = totals[idx];
+      const isBest = value === maxVal && value > 0;
+      const pct = maxVal > 0 ? (value / maxVal) * 100 : 0;
+
+      const row = document.createElement('div');
+      row.style.cssText = 'display: flex; align-items: center; gap: 10px;';
+      row.innerHTML = `
+        <span style="width: 30px; flex-shrink: 0; font-size: 11px; font-weight: ${isBest ? '800' : '600'}; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-muted)'};">${label}</span>
+        <div style="flex: 1; background-color: var(--bg-light); border-radius: 4px; height: 16px; overflow: hidden;">
+          <div style="width: ${pct}%; height: 100%; border-radius: 4px; background-color: ${isBest ? 'var(--brand-purple)' : '#cbd5e1'}; transition: width 0.4s ease;"></div>
+        </div>
+        <span style="width: 34px; flex-shrink: 0; text-align: right; font-size: 11px; font-weight: 700; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-main)'};">${value}</span>
+      `;
+      barsContainer.appendChild(row);
+    });
+  }
+
+  // MONTHLY PER-LINK CLICK TREND
+  let monthlyChartInstance = null;
+  const MONTHLY_CHART_COLORS = ['#372f6b', '#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
+  const MONTHLY_CHART_MONTH_NAMES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+  // Builds a month-by-month click trend per link, aggregated client-side
+  // from the daily click counts already saved in storeConfig.stats.daily
+  // (config.stats.daily['YYYY-MM-DD'].clicks[linkIndex]) — no extra queries.
+  function renderMonthlyClicksChart() {
+    const card = document.getElementById('monthly-chart-card');
+    const emptyState = document.getElementById('monthly-chart-empty');
+    const canvas = document.getElementById('monthly-clicks-chart');
+    if (!card || !canvas || !emptyState || !storeConfig) return;
+
+    if (!activeStore || typeof Chart === 'undefined') {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+
+    const links = storeConfig.links || [];
+    const daily = (storeConfig.stats && storeConfig.stats.daily) || {};
+
+    // { 'YYYY-MM': { [linkIndex]: totalClicksThatMonth } }
+    const monthTotals = {};
+    Object.keys(daily).forEach((dateKey) => {
+      const month = dateKey.slice(0, 7);
+      const dayClicks = (daily[dateKey] && daily[dateKey].clicks) || {};
+      if (!Object.keys(dayClicks).length) return;
+      monthTotals[month] = monthTotals[month] || {};
+      Object.keys(dayClicks).forEach((linkIdx) => {
+        monthTotals[month][linkIdx] = (monthTotals[month][linkIdx] || 0) + (parseInt(dayClicks[linkIdx]) || 0);
+      });
+    });
+
+    let months = Object.keys(monthTotals).sort();
+    if (months.length > 12) months = months.slice(-12); // keep the chart readable — last 12 months with data
+
+    if (links.length === 0 || months.length === 0) {
+      canvas.style.display = 'none';
+      emptyState.style.display = 'block';
+      if (monthlyChartInstance) {
+        monthlyChartInstance.destroy();
+        monthlyChartInstance = null;
+      }
+      return;
+    }
+    canvas.style.display = 'block';
+    emptyState.style.display = 'none';
+
+    const monthLabels = months.map((m) => {
+      const [year, mo] = m.split('-');
+      return `${MONTHLY_CHART_MONTH_NAMES[parseInt(mo, 10) - 1]}/${year.slice(2)}`;
+    });
+
+    const datasets = links.map((link, index) => {
+      const color = MONTHLY_CHART_COLORS[index % MONTHLY_CHART_COLORS.length];
+      return {
+        label: link.label || `Link ${index + 1}`,
+        data: months.map((m) => (monthTotals[m] && monthTotals[m][index]) || 0),
+        borderColor: color,
+        backgroundColor: color,
+        pointBackgroundColor: '#ffffff',
+        pointBorderColor: color,
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2.5,
+        tension: 0.35,
+        fill: false,
+      };
+    });
+
+    if (monthlyChartInstance) {
+      monthlyChartInstance.destroy();
+    }
+
+    monthlyChartInstance = new Chart(canvas.getContext('2d'), {
+      type: 'line',
+      data: { labels: monthLabels, datasets },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0, color: '#64748b', font: { size: 10.5 } },
+            grid: { color: '#e2e8f0' },
+          },
+          x: {
+            ticks: { color: '#64748b', font: { size: 10.5 } },
+            grid: { display: false },
+          },
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { color: '#0f172a', font: { size: 11, weight: '600' }, usePointStyle: true, pointStyle: 'circle', padding: 14 },
+          },
+          tooltip: {
+            backgroundColor: '#0f172a',
+            padding: 10,
+            titleFont: { size: 12, weight: '700' },
+            bodyFont: { size: 11.5 },
+          },
+        },
+      },
+    });
   }
 
   // AUTOSAVE LOGIC
@@ -3409,13 +4338,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.bgParallax = document.getElementById('store-bg-parallax').checked;
     storeConfig.btnOpacity = parseInt(document.getElementById('store-btn-opacity').value) || 100;
 
+    const pwd = await ensureCurrentPassword("Confirmar Identidade", "Sua sessão foi restaurada. Digite sua senha para continuar salvando:");
+    if (!pwd) {
+      updateSaveStatus('error');
+      return;
+    }
+
     try {
-      const { error } = await supabaseClient
-        .from("stores")
-        .update({ config: storeConfig })
-        .eq("id", activeStore);
+      const { data, error } = await supabaseClient
+        .rpc('update_store_config', { p_store_id: activeStore, p_password: pwd, p_new_config: storeConfig });
 
       if (error) throw error;
+      if (!data) {
+        // Cached password no longer matches (e.g. an admin changed it elsewhere) — drop it so the next save re-prompts.
+        currentUserPasswordCache = null;
+        updateSaveStatus('error');
+        showToast("Senha inválida — não foi possível salvar. Tente novamente.", "error");
+        return;
+      }
       updateSaveStatus('saved');
       loadAnalyticsData();
     } catch(e) {
@@ -3430,7 +4370,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     try {
       const { data, error } = await supabaseClient
         .from("stores")
-        .select("id, password")
+        .select("id")
         .order("id", { ascending: true });
 
       if (error) throw error;
@@ -3449,50 +4389,107 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('admin-manage-backdrop').classList.remove('open');
   }
 
+  // Built with DOM APIs (not innerHTML string interpolation) on purpose: a store id
+  // comes from user input, so it must never be concatenated into HTML/inline-JS —
+  // that would allow a malicious store id to run script in the admin's session.
   function renderAdminStoresTable() {
     const listBody = document.getElementById('admin-stores-list');
     listBody.innerHTML = "";
-    
+
     allStoresList.forEach(store => {
       const row = document.createElement('tr');
       const isSuper = store.id === 'contato@linksvi.com.br' || store.id === 'contato@linkvi.com.br';
-      
-      row.innerHTML = `
-        <td style="font-weight: 600; color: var(--text-main); padding-top: 8px; padding-bottom: 8px;">
-          ${isSuper ? `
-            <span style="font-size: 11px; padding: 4px 8px; background-color: rgba(124, 58, 237, 0.1); color: var(--brand-purple); border-radius: 4px; font-weight: 700; display: inline-block;">Admin</span>
-          ` : `
-            <div style="word-break: break-all; line-height: 1.2;">${store.id}</div>
-          `}
-        </td>
-        <td>
-          <input type="password" readonly value="${store.password}" style="border:none; outline:none; background:none; font-family:monospace; width: 100px; color:var(--text-main);" id="pwd-${store.id}">
-          <button style="border:none; background:none; font-size:11px; color:var(--brand-indigo); cursor:pointer; font-weight:600;" onclick="toggleStorePasswordVisibility('${store.id}', this)">Exibir</button>
-        </td>
-        <td style="text-align: right; padding-right: 24px;">
-          <button class="btn-control" style="display:inline-flex;" onclick="adminResetPassword('${store.id}')" title="Alterar Senha">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5l-3.5 3.5"/></svg>
-          </button>
-          ${!isSuper ? `
-            <button class="btn-control delete" style="display:inline-flex;" onclick="adminDeleteStore('${store.id}')" title="Excluir Loja">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            </button>
-          ` : ''}
-        </td>
-      `;
+
+      const idCell = document.createElement('td');
+      idCell.style.cssText = "font-weight: 600; color: var(--text-main); padding-top: 8px; padding-bottom: 8px;";
+      if (isSuper) {
+        const badge = document.createElement('span');
+        badge.style.cssText = "font-size: 11px; padding: 4px 8px; background-color: rgba(124, 58, 237, 0.1); color: var(--brand-purple); border-radius: 4px; font-weight: 700; display: inline-block;";
+        badge.textContent = "Admin";
+        idCell.appendChild(badge);
+      } else {
+        const idDiv = document.createElement('div');
+        idDiv.style.cssText = "word-break: break-all; line-height: 1.2;";
+        idDiv.textContent = store.id;
+        idCell.appendChild(idDiv);
+      }
+
+      const pwdCell = document.createElement('td');
+      const pwdSpan = document.createElement('span');
+      pwdSpan.style.cssText = "font-family: monospace; color: var(--text-main); letter-spacing: 1px;";
+      pwdSpan.textContent = '••••••••';
+      pwdSpan.dataset.revealed = 'false';
+      const revealBtn = document.createElement('button');
+      revealBtn.type = 'button';
+      revealBtn.style.cssText = "border:none; background:none; font-size:11px; color:var(--brand-indigo); cursor:pointer; font-weight:600; margin-left:8px;";
+      revealBtn.textContent = 'Exibir';
+      revealBtn.addEventListener('click', () => toggleStorePasswordVisibility(store.id, pwdSpan, revealBtn));
+      pwdCell.appendChild(pwdSpan);
+      pwdCell.appendChild(revealBtn);
+
+      const actionsCell = document.createElement('td');
+      actionsCell.style.cssText = "text-align: right; padding-right: 24px;";
+
+      const resetBtn = document.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'btn-control';
+      resetBtn.style.display = 'inline-flex';
+      resetBtn.title = 'Alterar Senha';
+      resetBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5l-3.5 3.5"/></svg>`;
+      resetBtn.addEventListener('click', () => adminResetPassword(store.id));
+      actionsCell.appendChild(resetBtn);
+
+      if (!isSuper) {
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'btn-control delete';
+        delBtn.style.display = 'inline-flex';
+        delBtn.title = 'Excluir Loja';
+        delBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+        delBtn.addEventListener('click', () => adminDeleteStore(store.id));
+        actionsCell.appendChild(delBtn);
+      }
+
+      row.appendChild(idCell);
+      row.appendChild(pwdCell);
+      row.appendChild(actionsCell);
       listBody.appendChild(row);
     });
   }
 
-  function toggleStorePasswordVisibility(storeId, btn) {
-    const input = document.getElementById(`pwd-${storeId}`);
-    if (!input) return;
-    if (input.type === 'password') {
-      input.type = 'text';
-      btn.textContent = 'Ocultar';
-    } else {
-      input.type = 'password';
+  // Passwords are no longer bulk-loaded with the store list — they're fetched one at
+  // a time, on demand, through the admin_reveal_password() RPC, which re-checks the
+  // admin's own password server-side before returning anything.
+  async function toggleStorePasswordVisibility(storeId, span, btn) {
+    if (span.dataset.revealed === 'true') {
+      span.textContent = '••••••••';
+      span.dataset.revealed = 'false';
       btn.textContent = 'Exibir';
+      return;
+    }
+
+    const adminPwd = await ensureCurrentPassword("Confirmar Identidade", "Digite sua senha de admin para revelar a senha desta loja:");
+    if (!adminPwd) return;
+
+    toggleLoader(true);
+    try {
+      const { data, error } = await supabaseClient
+        .rpc('admin_reveal_password', { p_admin_password: adminPwd, p_target_id: storeId });
+
+      if (error || !data) {
+        showToast("Senha de admin incorreta.", "error");
+        currentUserPasswordCache = null;
+        return;
+      }
+
+      span.textContent = data;
+      span.dataset.revealed = 'true';
+      btn.textContent = 'Ocultar';
+    } catch (e) {
+      console.error(e);
+      showToast("Erro ao revelar senha.", "error");
+    } finally {
+      toggleLoader(false);
     }
   }
 
@@ -3506,14 +4503,21 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         return;
       }
 
+      const adminPwd = await ensureCurrentPassword("Confirmar Identidade", "Digite sua senha de admin para confirmar:");
+      if (!adminPwd) return;
+
       toggleLoader(true);
       try {
-        const { error } = await supabaseClient
-          .from("stores")
-          .update({ password: pwd })
-          .eq("id", storeId);
+        const { data, error } = await supabaseClient
+          .rpc('update_store_password', { p_admin_password: adminPwd, p_target_id: storeId, p_new_password: pwd });
 
         if (error) throw error;
+        if (!data) {
+          currentUserPasswordCache = null;
+          showToast("Senha de admin incorreta.", "error");
+          toggleLoader(false);
+          return;
+        }
         showToast("Senha alterada com sucesso!");
         await openAdminManageModal();
       } catch (e) {
@@ -3528,15 +4532,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   async function adminDeleteStore(storeId) {
     const confirmed = await showConfirm("Excluir Loja", `Deseja REALMENTE excluir a loja '${storeId}'? Todos os links e configurações serão apagados permanentemente.`, "Excluir Loja", "Cancelar", true);
     if (confirmed) {
+      const adminPwd = await ensureCurrentPassword("Confirmar Identidade", "Digite sua senha de admin para confirmar a exclusão:");
+      if (!adminPwd) return;
+
       toggleLoader(true);
       try {
-        const { error } = await supabaseClient
-          .from("stores")
-          .delete()
-          .eq("id", storeId);
+        const { data, error } = await supabaseClient
+          .rpc('delete_store', { p_admin_password: adminPwd, p_target_id: storeId });
 
         if (error) throw error;
-        
+        if (!data) {
+          currentUserPasswordCache = null;
+          showToast("Senha de admin incorreta.", "error");
+          toggleLoader(false);
+          return;
+        }
+
         showToast(`Loja '${storeId}' excluída.`);
         
         if (activeStore === storeId) {
@@ -3581,6 +4592,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
+    const adminPwd = await ensureCurrentPassword("Confirmar Identidade", "Digite sua senha de admin para criar a loja:");
+    if (!adminPwd) return;
+
     toggleLoader(true);
     closeNewStoreModal();
 
@@ -3613,11 +4627,16 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         bgParallax: false
       };
 
-      const { error } = await supabaseClient
-        .from("stores")
-        .insert([{ id: storeId, password: storePwd, config: defaultConf }]);
+      const { data, error } = await supabaseClient
+        .rpc('create_store', { p_admin_password: adminPwd, p_store_id: storeId, p_store_password: storePwd, p_config: defaultConf });
 
       if (error) throw error;
+      if (!data) {
+        currentUserPasswordCache = null;
+        showToast("Senha de admin incorreta.", "error");
+        toggleLoader(false);
+        return;
+      }
 
       showToast(`Loja '${storeId}' cadastrada!`);
       activeStore = storeId;
@@ -3652,11 +4671,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('custom-icon-preview-img').src = "";
     document.getElementById('custom-icon-preview-placeholder').style.display = 'block';
     document.getElementById('modal-link-badge').value = "";
+    document.getElementById('carousel-image-url-input').value = "";
+    document.getElementById('carousel-upload-status').textContent = "";
 
     if (index === -1) {
       title.textContent = "Adicionar Link";
       labelInput.value = "";
       urlInput.value = "";
+      currentCarouselImages = [];
+      renderCarouselThumbnails();
       selectIcon("fallback");
     } else {
       title.textContent = "Editar Link";
@@ -3664,7 +4687,14 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       labelInput.value = link.label;
       urlInput.value = link.url;
       document.getElementById('modal-link-badge').value = link.badge || "";
-      
+      currentCarouselImages = (link.type === 'carousel' && Array.isArray(link.images))
+        ? link.images.map((img) => typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' })
+        : [];
+      renderCarouselThumbnails();
+      if (currentCarouselImages.length > 0) {
+        document.getElementById('carousel-upload-status').textContent = `${currentCarouselImages.length} foto(s) no carrossel`;
+      }
+
       // Populate helper fields based on icon type
       if (link.image === 'whatsapp') {
         const parsed = parseWhatsAppUrl(link.url);
@@ -3735,6 +4765,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'linkedin') labelInput.value = "LinkedIn";
       else if (iconName === 'construcao') labelInput.value = "Em Construção";
       else if (iconName === 'custom') labelInput.value = "Link";
+      else if (iconName === 'carousel') labelInput.value = "Fotos";
       else if (iconName === 'fallback') labelInput.value = "Link";
     }
 
@@ -3821,6 +4852,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         pdfFields.style.display = 'none';
       }
     }
+
+    // Show/Hide Photo carousel helper
+    const carouselFields = document.getElementById('carousel-upload-container');
+    if (carouselFields) {
+      carouselFields.style.display = (iconName === 'carousel') ? 'flex' : 'none';
+    }
+
+    // Carousel links are just photos — no destination link, custom label,
+    // or badge to fill in, so hide those fields entirely for this type.
+    const isCarousel = iconName === 'carousel';
+    const labelGroup = document.getElementById('label-field-group');
+    const urlGroup = document.getElementById('url-field-group');
+    const badgeGroup = document.getElementById('badge-field-group');
+    if (labelGroup) labelGroup.style.display = isCarousel ? 'none' : 'flex';
+    if (urlGroup) urlGroup.style.display = isCarousel ? 'none' : 'flex';
+    if (badgeGroup) badgeGroup.style.display = isCarousel ? 'none' : 'flex';
   }
 
   function maskPhone(value) {
@@ -4327,7 +5374,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     let url = document.getElementById('modal-link-url').value.trim();
     const badge = document.getElementById('modal-link-badge').value.trim();
 
-    if (!label || (selectedIconType !== 'construcao' && !url)) {
+    if (selectedIconType === 'carousel' && currentCarouselImages.length === 0) {
+      showAlert("Faltam Fotos", "Adicione pelo menos uma foto para o carrossel (do computador ou por link).");
+      return;
+    }
+
+    if (!label || (selectedIconType !== 'construcao' && selectedIconType !== 'carousel' && !url)) {
       showAlert("Campos Incompletos", "Por favor, preencha o título e a URL do link.");
       return;
     }
@@ -4343,6 +5395,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       image: selectedIconType,
       badge: badge
     };
+
+    if (selectedIconType === 'carousel') {
+      linkData.type = 'carousel';
+      linkData.images = [...currentCarouselImages];
+    }
 
     if (index === -1) {
       storeConfig.links.push(linkData);
