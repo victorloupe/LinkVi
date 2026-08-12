@@ -46,7 +46,7 @@
     display: none; /* Shown after load */
     align-items: center;
     justify-content: center;
-    padding: 24px 20px;
+    padding: 24px 20px 8px;
     background: var(--bg);
     position: relative;
     z-index: 100;
@@ -129,7 +129,7 @@
     display: none; /* Shown after load */
     max-width: 480px;
     margin: 0 auto;
-    padding: 16px 24px 40px;
+    padding: 4px 24px 40px;
     text-align: center;
     flex: 1 0 auto;
     width: 100%;
@@ -155,7 +155,7 @@
     font-weight: 800;
     font-size: 24px;
     line-height: 1.25;
-    margin: 16px 0 8px;
+    margin: 8px 0 8px;
     opacity: 0;
     transform: translateY(8px);
     animation: fadeUp .5s ease forwards .1s;
@@ -216,7 +216,7 @@
     gap: 12px;
     width: 100%;
     padding: 16px 20px;
-    border-radius: 12px;
+    border-radius: var(--btn-radius, 12px);
     font-family: 'Inter', sans-serif;
     font-weight: 600;
     font-size: 15.5px;
@@ -324,7 +324,7 @@
   .map-card {
     background: var(--btn-bg);
     border: 1.4px solid var(--line);
-    border-radius: 12px;
+    border-radius: var(--btn-radius, 12px);
     padding: 16px;
     text-align: left;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
@@ -353,7 +353,7 @@
     background: var(--btn-bg);
     background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
     border: 1.4px solid var(--line);
-    border-radius: 12px;
+    border-radius: var(--btn-radius, 12px);
     padding: 10px;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
     opacity: 0;
@@ -503,7 +503,7 @@
     z-index: 1;
   }
   .share-btn {
-    position: absolute;
+    position: fixed;
     top: max(16px, env(safe-area-inset-top));
     right: max(16px, env(safe-area-inset-right));
     width: 30px;
@@ -946,6 +946,7 @@
       const cachedHighlight = localStorage.getItem('last_highlight_' + storeName);
       const cachedBtnBg = localStorage.getItem('last_btn_bg_' + storeName);
       const cachedBtnText = localStorage.getItem('last_btn_text_' + storeName);
+      const cachedBtnRadius = localStorage.getItem('last_btn_radius_' + storeName);
 
       if (cachedBg) {
         document.documentElement.style.setProperty('--bg', cachedBg);
@@ -970,6 +971,7 @@
       }
       if (cachedBtnBg) document.documentElement.style.setProperty('--btn-bg', cachedBtnBg);
       if (cachedBtnText) document.documentElement.style.setProperty('--btn-text', cachedBtnText);
+      if (cachedBtnRadius) document.documentElement.style.setProperty('--btn-radius', cachedBtnRadius);
     }
   })();
 
@@ -1056,6 +1058,18 @@
   }
 
   async function handleShareClick() {
+    const isPreview = window.location.search.includes('preview=true') || (window.self !== window.top);
+    if (isPreview) {
+      const storeName = getStoreName();
+      if (window.parent) {
+        window.parent.postMessage({
+          type: 'shareClick',
+          storeId: storeName
+        }, '*');
+      }
+      return;
+    }
+
     const shareData = {
       title: document.title,
       text: document.getElementById('store-title') ? document.getElementById('store-title').textContent : document.title,
@@ -1065,16 +1079,41 @@
     if (navigator.share) {
       try {
         await navigator.share(shareData);
+        return; // Compartilhado com sucesso
       } catch (err) {
-        // User cancelled the native share sheet — not an error, do nothing.
+        console.warn("navigator.share falhou ou foi bloqueado:", err);
+        // Se foi cancelado pelo usuário (AbortError), não faz nada.
+        // Qualquer outro erro (ex: bloqueado por iframe ou falta de permissão), tenta copiar para o clipboard.
+        if (err.name === 'AbortError') {
+          return;
+        }
       }
-      return;
     }
 
+    // Fallback: Copiar para a área de transferência
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      showShareToast('Link copiado!');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(window.location.href);
+        showShareToast('Link copiado!');
+      } else {
+        // Fallback antigo para contextos não seguros (HTTP ou file:///)
+        const textArea = document.createElement("textarea");
+        textArea.value = window.location.href;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          showShareToast('Link copiado!');
+        } else {
+          throw new Error('execCommand copy falhou');
+        }
+      }
     } catch (err) {
+      console.error("Falha ao copiar link:", err);
       showShareToast('Não foi possível copiar o link');
     }
   }
@@ -1084,41 +1123,16 @@
   async function trackStoreView(storeName, currentConfig) {
     try {
       if (!supabaseClient) return;
-      const { data } = await supabaseClient
-        .from("stores")
-        .select("config")
-        .eq("id", storeName)
-        .single();
-      
-      let config = currentConfig;
-      if (data && data.config) {
-        config = data.config;
-        if (typeof config === 'string') {
-          config = JSON.parse(config);
-        }
-      }
-      
-      if (!config.stats) {
-        config.stats = { views: 0, clicks: {} };
-      }
-      
-      // Increment total views
-      config.stats.views = (config.stats.views || 0) + 1;
-      
-      // Daily tracking (local timezone)
-      config.stats.daily = config.stats.daily || {};
       const now = new Date();
       const offset = now.getTimezoneOffset();
       const localNow = new Date(now.getTime() - (offset * 60 * 1000));
       const todayStr = localNow.toISOString().split('T')[0];
-      
-      config.stats.daily[todayStr] = config.stats.daily[todayStr] || { views: 0, clicks: {} };
-      config.stats.daily[todayStr].views = (config.stats.daily[todayStr].views || 0) + 1;
-      
-      await supabaseClient
-        .from("stores")
-        .update({ config: config })
-        .eq("id", storeName);
+
+      await supabaseClient.rpc('track_view_or_click', {
+        p_store_id: storeName,
+        p_action: 'view',
+        p_today_str: todayStr
+      });
     } catch (e) {
       console.error("Erro ao registrar visualização:", e);
     }
@@ -1132,42 +1146,17 @@
     if (!storeName || !supabaseClient) return;
 
     try {
-      const { data } = await supabaseClient
-        .from("stores")
-        .select("config")
-        .eq("id", storeName)
-        .single();
-      
-      if (data && data.config) {
-        let config = data.config;
-        if (typeof config === 'string') {
-          config = JSON.parse(config);
-        }
-        
-        if (!config.stats) {
-          config.stats = { views: 0, clicks: {} };
-        }
-        
-        // Increment total clicks
-        config.stats.clicks = config.stats.clicks || {};
-        config.stats.clicks[linkIndex] = (config.stats.clicks[linkIndex] || 0) + 1;
-        
-        // Daily tracking (local timezone)
-        config.stats.daily = config.stats.daily || {};
-        const now = new Date();
-        const offset = now.getTimezoneOffset();
-        const localNow = new Date(now.getTime() - (offset * 60 * 1000));
-        const todayStr = localNow.toISOString().split('T')[0];
-        
-        config.stats.daily[todayStr] = config.stats.daily[todayStr] || { views: 0, clicks: {} };
-        config.stats.daily[todayStr].clicks = config.stats.daily[todayStr].clicks || {};
-        config.stats.daily[todayStr].clicks[linkIndex] = (config.stats.daily[todayStr].clicks[linkIndex] || 0) + 1;
-        
-        await supabaseClient
-          .from("stores")
-          .update({ config: config })
-          .eq("id", storeName);
-      }
+      const now = new Date();
+      const offset = now.getTimezoneOffset();
+      const localNow = new Date(now.getTime() - (offset * 60 * 1000));
+      const todayStr = localNow.toISOString().split('T')[0];
+
+      await supabaseClient.rpc('track_view_or_click', {
+        p_store_id: storeName,
+        p_action: 'click',
+        p_today_str: todayStr,
+        p_link_index: String(linkIndex)
+      });
     } catch (e) {
       console.error("Erro ao registrar clique:", e);
     }
@@ -1332,6 +1321,8 @@
       document.documentElement.style.setProperty('--btn-text', config.btnTextColor);
     }
 
+    document.documentElement.style.setProperty('--btn-radius', config.btnBorderRadius || '30px');
+
     // Apply button opacity & blur variables
     const btnOpacity = config.btnOpacity !== undefined ? config.btnOpacity : 100;
     document.documentElement.style.setProperty('--btn-opacity', `${btnOpacity}%`);
@@ -1355,6 +1346,7 @@
       localStorage.setItem('last_highlight_' + storeName, config.themeColor || "#7c3aed");
       localStorage.setItem('last_btn_bg_' + storeName, config.btnColor || "#ffffff");
       localStorage.setItem('last_btn_text_' + storeName, config.btnTextColor || "#0f172a");
+      localStorage.setItem('last_btn_radius_' + storeName, config.btnBorderRadius || "30px");
     }
 
     // 1. Logo

@@ -200,6 +200,112 @@ grant execute on function public.delete_store(text, text) to anon, authenticated
 --    via REST usando só a chave anon.
 revoke insert, update, delete on public.stores from anon, authenticated;
 
+-- 10) Função para registrar visualizações e cliques de forma anônima e atômica.
+--     Como os acessos de escrita direta na tabela stores foram revogados, os
+--     visitantes não conseguem atualizar as estatísticas diretamente. Esta função
+--     roda com privilégios de criador (security definer) e permite o incremento.
+create or replace function public.track_view_or_click(
+  p_store_id text,
+  p_action text, -- 'view' ou 'click'
+  p_today_str text, -- 'YYYY-MM-DD'
+  p_link_index text default null -- Índice do link clicado (e.g. '0', '1')
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_config jsonb;
+  v_stats jsonb;
+  v_clicks jsonb;
+  v_daily jsonb;
+begin
+  -- Busca a configuração atual da loja
+  select config into v_config from public.stores where id = p_store_id;
+  if v_config is null then
+    return false;
+  end if;
+
+  -- Garante que o objeto 'stats' está inicializado
+  if v_config -> 'stats' is null then
+    v_config = jsonb_set(v_config, '{stats}', '{"views": 0, "clicks": {}, "daily": {}}'::jsonb);
+  end if;
+  
+  v_stats = v_config -> 'stats';
+  if v_stats -> 'clicks' is null then
+    v_stats = jsonb_set(v_stats, '{clicks}', '{}'::jsonb);
+  end if;
+  if v_stats -> 'daily' is null then
+    v_stats = jsonb_set(v_stats, '{daily}', '{}'::jsonb);
+  end if;
+
+  if p_action = 'view' then
+    -- Incrementa visualizações totais
+    v_stats = jsonb_set(v_stats, '{views}', to_jsonb(coalesce((v_stats ->> 'views')::int, 0) + 1));
+    
+    -- Garante que o registro diário existe
+    if v_stats -> 'daily' -> p_today_str is null then
+      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}}'::jsonb);
+    end if;
+    
+    -- Incrementa visualizações diárias
+    v_stats = jsonb_set(
+      v_stats, 
+      array['daily', p_today_str, 'views'], 
+      to_jsonb(coalesce((v_stats -> 'daily' -> p_today_str ->> 'views')::int, 0) + 1)
+    );
+
+  elsif p_action = 'click' and p_link_index is not null then
+    -- Incrementa cliques totais no link
+    v_clicks = v_stats -> 'clicks';
+    v_clicks = jsonb_set(
+      v_clicks, 
+      array[p_link_index], 
+      to_jsonb(coalesce((v_clicks ->> p_link_index)::int, 0) + 1)
+    );
+    v_stats = jsonb_set(v_stats, '{clicks}', v_clicks);
+
+    -- Garante que o registro diário existe
+    if v_stats -> 'daily' -> p_today_str is null then
+      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}}'::jsonb);
+    end if;
+    -- Garante que o objeto de cliques diários existe
+    if v_stats -> 'daily' -> p_today_str -> 'clicks' is null then
+      v_stats = jsonb_set(v_stats, array['daily', p_today_str, 'clicks'], '{}'::jsonb);
+    end if;
+
+    -- Incrementa cliques diários no link
+    v_stats = jsonb_set(
+      v_stats, 
+      array['daily', p_today_str, 'clicks', p_link_index], 
+      to_jsonb(coalesce((v_stats -> 'daily' -> p_today_str -> 'clicks' ->> p_link_index)::int, 0) + 1)
+    );
+  end if;
+
+  -- Remove chaves diárias antigas mantendo apenas os últimos 90 dias de estatísticas.
+  -- Isso evita o crescimento indefinido do JSONB na coluna 'config', mantendo
+  -- o carregamento da página pública sempre leve e rápido para os visitantes.
+  select jsonb_object_agg(key, value) into v_daily
+  from (
+    select key, value
+    from jsonb_each(v_stats -> 'daily')
+    order by key desc
+    limit 90
+  ) x;
+  v_stats = jsonb_set(v_stats, '{daily}', coalesce(v_daily, '{}'::jsonb));
+
+  -- Atualiza o config de volta na tabela
+  v_config = jsonb_set(v_config, '{stats}', v_stats);
+  update public.stores set config = v_config where id = p_store_id;
+
+  return true;
+end;
+$$;
+
+revoke all on function public.track_view_or_click(text, text, text, text) from public;
+grant execute on function public.track_view_or_click(text, text, text, text) to anon, authenticated;
+
 -- ============================================================================
 -- Depois de rodar este script, teste:
 --   1. Login normal (admin e de uma loja) ainda deve funcionar.
@@ -212,4 +318,8 @@ revoke insert, update, delete on public.stores from anon, authenticated;
 --   4. Rodando isto (com a chave anon, fora do app) o resultado deve ser
 --      um erro de permissão — a escrita direta não deve mais funcionar:
 --        update stores set config = '{}' where id = 'algum-id';
+--   5. A visualização das páginas públicas de links de uma loja e os cliques
+--      devem atualizar os contadores na base atomicamente através da RPC:
+--        select track_view_or_click('loja-id', 'view', '2026-08-11');
 -- ============================================================================
+

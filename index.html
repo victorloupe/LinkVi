@@ -1641,6 +1641,12 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  #bg-advanced-details[open] .details-arrow {
+    transform: rotate(90deg);
+  }
 </style>
 </head>
 <body>
@@ -1847,12 +1853,23 @@
         </div>
 
         <!-- Opacidade do Balão -->
-        <div class="form-group" style="margin-bottom: 0; grid-column: span 2; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 4px;">
+        <div class="form-group" style="margin-bottom: 0; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 4px;">
           <label for="store-btn-opacity" style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span>Opacidade do Balão:</span>
+            <span>Opacidade:</span>
             <span id="store-btn-opacity-val">100%</span>
           </label>
           <input type="range" id="store-btn-opacity" min="10" max="100" step="5" value="100" style="width: 100%; accent-color: var(--border-focus); margin-top: 4px;" oninput="document.getElementById('store-btn-opacity-val').textContent = this.value + '%'; handleBtnOpacityChange(this.value);">
+        </div>
+
+        <!-- Formato do Balão (Bordas) -->
+        <div class="form-group" style="margin-bottom: 0; border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 4px;">
+          <label for="store-btn-radius" style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Bordas do Balão</label>
+          <select id="store-btn-radius" style="padding: 4px 6px; font-size: 11.5px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main); width: 100%; height: 32px;" onchange="handleBtnRadiusChange(this.value)">
+            <option value="30px">Pílula (Sugerido)</option>
+            <option value="16px">Arredondado Médio</option>
+            <option value="8px">Arredondado Leve</option>
+            <option value="0px">Reto / Quadrado</option>
+          </select>
         </div>
       </div>
 
@@ -1907,72 +1924,81 @@
             <label for="store-bg-image-url" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">Ou cole a URL da imagem diretamente:</label>
             <input type="text" id="store-bg-image-url" placeholder="https://exemplo.com/fundo.jpg" style="font-size: 11px; padding: 6px 10px;" oninput="handleBgImageUrlChange(this.value)">
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="store-bg-blur" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>Desfoque (Blur):</span>
-                <span id="store-bg-blur-val">0px</span>
-              </label>
-              <input type="range" id="store-bg-blur" min="0" max="25" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-blur-val').textContent = this.value + 'px'; handleBgBlurChange(this.value);">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="store-bg-overlay" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>Escurecimento:</span>
-                <span id="store-bg-overlay-val">0%</span>
-              </label>
-              <input type="range" id="store-bg-overlay" min="0" max="1" step="0.05" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-overlay-val').textContent = Math.round(this.value * 100) + '%'; handleBgOverlayChange(this.value);">
-            </div>
-          </div>
-
-          <!-- Novos controles para posicionamento e escala da imagem -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="store-bg-size" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">
-                Ajuste da Imagem:
-              </label>
-              <select id="store-bg-size" style="padding: 4px 6px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main); width: 100%;" onchange="handleBgSizeChange(this.value)">
-                <option value="cover">Preencher Tela (Cover)</option>
-                <option value="contain">Ajustar à Tela (Contain)</option>
-                <option value="custom">Zoom Personalizado</option>
-              </select>
-            </div>
+          <details style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;" id="bg-advanced-details">
+            <summary style="font-size: 11px; font-weight: 700; color: var(--brand-purple); cursor: pointer; outline: none; user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+              <span>⚙️ Mais Configurações da Imagem</span>
+              <span class="details-arrow" style="font-size: 9px; transition: transform 0.2s ease; display: inline-block;">▶</span>
+            </summary>
             
-            <div class="form-group" style="margin-bottom: 0; display: none;" id="bg-zoom-container">
-              <label for="store-bg-zoom" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>Zoom / Escala:</span>
-                <span id="store-bg-zoom-val">100%</span>
-              </label>
-              <input type="range" id="store-bg-zoom" min="50" max="300" step="5" value="100" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-zoom-val').textContent = this.value + '%'; handleBgZoomChange(this.value);">
-            </div>
-          </div>
+            <div style="padding-top: 8px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="store-bg-blur" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Desfoque (Blur):</span>
+                    <span id="store-bg-blur-val">0px</span>
+                  </label>
+                  <input type="range" id="store-bg-blur" min="0" max="25" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-blur-val').textContent = this.value + 'px'; handleBgBlurChange(this.value);">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="store-bg-overlay" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Escurecimento:</span>
+                    <span id="store-bg-overlay-val">0%</span>
+                  </label>
+                  <input type="range" id="store-bg-overlay" min="0" max="1" step="0.05" value="0" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-overlay-val').textContent = Math.round(this.value * 100) + '%'; handleBgOverlayChange(this.value);">
+                </div>
+              </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="store-bg-position-x" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>Posição Horizontal (X):</span>
-                <span id="store-bg-position-x-val">50%</span>
-              </label>
-              <input type="range" id="store-bg-position-x" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-x-val').textContent = this.value + '%'; handleBgPositionXChange(this.value);">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="store-bg-position-y" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
-                <span>Posição Vertical (Y):</span>
-                <span id="store-bg-position-y-val">50%</span>
-              </label>
-              <input type="range" id="store-bg-position-y" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-y-val').textContent = this.value + '%'; handleBgPositionYChange(this.value);">
-            </div>
-          </div>
+              <!-- Novos controles para posicionamento e escala da imagem -->
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="store-bg-size" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted);">
+                    Ajuste da Imagem:
+                  </label>
+                  <select id="store-bg-size" style="padding: 4px 6px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; background: #fff; cursor: pointer; font-weight: 600; color: var(--text-main); width: 100%;" onchange="handleBgSizeChange(this.value)">
+                    <option value="cover">Preencher Tela (Cover)</option>
+                    <option value="contain">Ajustar à Tela (Contain)</option>
+                    <option value="custom">Zoom Personalizado</option>
+                  </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 0; display: none;" id="bg-zoom-container">
+                  <label for="store-bg-zoom" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Zoom / Escala:</span>
+                    <span id="store-bg-zoom-val">100%</span>
+                  </label>
+                  <input type="range" id="store-bg-zoom" min="50" max="300" step="5" value="100" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-zoom-val').textContent = this.value + '%'; handleBgZoomChange(this.value);">
+                </div>
+              </div>
 
-          <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 16px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <input type="checkbox" id="store-bg-repeat" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgRepeatChange(this.checked)">
-              <label for="store-bg-repeat" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Repetir imagem de fundo</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="store-bg-position-x" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Posição Horizontal (X):</span>
+                    <span id="store-bg-position-x-val">50%</span>
+                  </label>
+                  <input type="range" id="store-bg-position-x" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-x-val').textContent = this.value + '%'; handleBgPositionXChange(this.value);">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="store-bg-position-y" style="font-size: 9.5px; font-weight: 700; color: var(--text-muted); display: flex; justify-content: space-between;">
+                    <span>Posição Vertical (Y):</span>
+                    <span id="store-bg-position-y-val">50%</span>
+                  </label>
+                  <input type="range" id="store-bg-position-y" min="0" max="100" value="50" style="width: 100%; accent-color: var(--border-focus);" oninput="document.getElementById('store-bg-position-y-val').textContent = this.value + '%'; handleBgPositionYChange(this.value);">
+                </div>
+              </div>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 16px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <input type="checkbox" id="store-bg-repeat" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgRepeatChange(this.checked)">
+                  <label for="store-bg-repeat" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Repetir imagem de fundo</label>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <input type="checkbox" id="store-bg-parallax" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgParallaxChange(this.checked)">
+                  <label for="store-bg-parallax" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Efeito Parallax (Rolagem sutil do fundo)</label>
+                </div>
+              </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <input type="checkbox" id="store-bg-parallax" style="accent-color: var(--border-focus); width: 14px; height: 14px; cursor: pointer;" onchange="handleBgParallaxChange(this.checked)">
-              <label for="store-bg-parallax" style="font-size: 10px; font-weight: 600; color: var(--text-muted); cursor: pointer; user-select: none;">Efeito Parallax (Rolagem sutil do fundo)</label>
-            </div>
-          </div>
+          </details>
         </div>
       </div>
 
@@ -2078,6 +2104,9 @@
             <button onclick="refreshAnalyticsFromServer()" class="btn-secondary" style="width: 26px; height: 26px; padding: 0; font-size: 11px; font-weight: 600; margin: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Atualizar Estatísticas">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
             </button>
+            <button onclick="exportStatsToCSV()" class="btn-secondary" style="width: 26px; height: 26px; padding: 0; font-size: 11px; font-weight: 600; margin: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Exportar para Excel (CSV)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
           </div>
         </h3>
 
@@ -2149,7 +2178,7 @@
     <aside class="preview-panel">
       <div class="device-smartphone">
         <div class="device-screen">
-          <iframe id="live-preview-iframe" src="" frameborder="0"></iframe>
+          <iframe id="live-preview-iframe" src="" frameborder="0" allow="web-share"></iframe>
         </div>
       </div>
     </aside>
@@ -2169,7 +2198,7 @@
       </div>
       <div class="device-smartphone" style="margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div class="device-screen">
-          <iframe id="mobile-preview-iframe" src="" frameborder="0"></iframe>
+          <iframe id="mobile-preview-iframe" src="" frameborder="0" allow="web-share"></iframe>
         </div>
       </div>
     </div>
@@ -2574,6 +2603,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     bgPositionY: 50,
     bgRepeat: false,
     btnOpacity: 100,
+    btnBorderRadius: "30px",
     bgParallax: false,
     stats: { views: 0, clicks: {} }
   };
@@ -2608,6 +2638,62 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       mobileIframe.addEventListener('load', sendConfigToPreview);
     }
 
+    // Listen for messages from preview iframe (e.g. click on share button)
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'shareClick') {
+        const storeId = event.data.storeId || activeStore;
+        if (!storeId) return;
+        const domain = localStorage.getItem('linksvi_domain') || window.location.origin;
+        const cleanDomain = domain.replace(/\/$/, '');
+        const storeUrl = `${cleanDomain}/${storeId}`;
+
+        const shareData = {
+          title: storeId,
+          text: `Confira os links de ${storeId}!`,
+          url: storeUrl
+        };
+
+        if (navigator.share) {
+          navigator.share(shareData).catch(err => {
+            if (err.name !== 'AbortError') {
+              copyToClipboard(storeUrl);
+            }
+          });
+        } else {
+          copyToClipboard(storeUrl);
+        }
+      }
+    });
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("Link da loja copiado para a área de transferência!");
+        }).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textArea);
+      if (successful) {
+        showToast("Link da loja copiado para a área de transferência!");
+      } else {
+        showToast("Não foi possível copiar o link.", "error");
+      }
+    }
+
     // Restore whichever top-level tab (Aparência / Links / Estatísticas)
     // the user was on last.
     switchMainTab(localStorage.getItem('linksvi_admin_tab') || 'links');
@@ -2619,6 +2705,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     window.addEventListener('resize', () => {
       clearTimeout(scaleDevicePreviewIframes._timer);
       scaleDevicePreviewIframes._timer = setTimeout(scaleDevicePreviewIframes, 120);
+    });
+
+    // Avisar antes de fechar a aba se estiver salvando
+    window.addEventListener('beforeunload', (e) => {
+      const text = document.getElementById('save-status-text');
+      if (text && text.textContent === 'Salvando...') {
+        e.preventDefault();
+        e.returnValue = '';
+      }
     });
   });
 
@@ -3136,6 +3231,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         const btnOpacity = storeConfig.btnOpacity !== undefined ? storeConfig.btnOpacity : 100;
         document.getElementById('store-btn-opacity').value = btnOpacity;
         document.getElementById('store-btn-opacity-val').textContent = btnOpacity + '%';
+
+        // Button radius loading
+        document.getElementById('store-btn-radius').value = storeConfig.btnBorderRadius || "30px";
 
         // Switch to the correct tab silently (so it doesn't trigger autosave during load)
         const bgType = storeConfig.bgType || 'solid';
@@ -3798,6 +3896,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       bgRepeat: document.getElementById('store-bg-repeat').checked,
       bgParallax: document.getElementById('store-bg-parallax').checked,
       btnOpacity: parseInt(document.getElementById('store-btn-opacity').value) || 100,
+      btnBorderRadius: document.getElementById('store-btn-radius').value,
       links: storeConfig.links || []
     };
 
@@ -3974,21 +4073,40 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
+    // Identificar o Link Campeão do período filtrado
+    let maxClicks = 0;
+    let bestLinkIndex = -1;
+    links.forEach((_, idx) => {
+      const cliq = parseInt(filteredClicks[idx]) || 0;
+      if (cliq > maxClicks) {
+        maxClicks = cliq;
+        bestLinkIndex = idx;
+      }
+    });
+
     links.forEach((link, index) => {
       const linkClicks = parseInt(filteredClicks[index]) || 0;
       const linkCtr = filteredViews > 0 ? ((linkClicks / filteredViews) * 100).toFixed(1) : '0.0';
+      const isBest = index === bestLinkIndex && maxClicks > 0;
       
       const item = document.createElement('div');
       item.className = 'analytics-link-item';
+      if (isBest) {
+        item.style.borderColor = 'var(--gold-deep)';
+        item.style.backgroundColor = 'rgba(217, 119, 6, 0.05)';
+      }
       
       item.innerHTML = `
         <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
-          <span style="flex-shrink: 0; display: inline-flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></span>
-          <span style="font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${link.label}</span>
+          <span style="flex-shrink: 0; display: inline-flex; color: ${isBest ? 'var(--gold-deep)' : 'inherit'};">
+            ${isBest ? '⭐' : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>'}
+          </span>
+          <span style="font-weight: ${isBest ? '700' : '600'}; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${link.label}</span>
+          ${isBest ? '<span style="font-size: 8.5px; font-weight: 800; background-color: var(--gold-deep); color: #fff; padding: 2px 5px; border-radius: 20px; text-transform: uppercase; margin-left: 6px; line-height: 1; letter-spacing: 0.3px;">Campeão</span>' : ''}
         </div>
         <div style="display: flex; gap: 12px; align-items: center; flex-shrink: 0; font-weight: 700;">
           <span style="color: var(--text-main);">${linkClicks} <span style="font-size: 9px; font-weight: 500; color: var(--text-muted);">cliq.</span></span>
-          <span style="color: var(--brand-purple); font-size: 11.5px;">${linkCtr}%</span>
+          <span style="color: ${isBest ? 'var(--gold-deep)' : 'var(--brand-purple)'}; font-size: 11.5px;">${linkCtr}%</span>
         </div>
       `;
       listContainer.appendChild(item);
@@ -4161,6 +4279,52 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     });
   }
 
+  function exportStatsToCSV() {
+    if (!activeStore || !storeConfig || !storeConfig.stats) {
+      showToast("Nenhum dado disponível para exportar.", "warning");
+      return;
+    }
+    
+    const daily = storeConfig.stats.daily || {};
+    const links = storeConfig.links || [];
+    
+    // Configura o cabeçalho com UTF-8 BOM para garantir caracteres especiais no Excel
+    let csvContent = "\uFEFFData,Visualizações";
+    links.forEach((link, idx) => {
+      const label = (link.label || `Link ${idx + 1}`).replace(/"/g, '""');
+      csvContent += `,"Cliques - ${label}"`;
+    });
+    csvContent += "\r\n";
+    
+    const dates = Object.keys(daily).sort();
+    if (dates.length === 0) {
+      showToast("Sem dados históricos para exportar.", "warning");
+      return;
+    }
+    
+    dates.forEach(date => {
+      const dayData = daily[date];
+      const views = dayData.views || 0;
+      let row = `${date},${views}`;
+      
+      links.forEach((_, idx) => {
+        const clicks = (dayData.clicks && dayData.clicks[idx]) || 0;
+        row += `,${clicks}`;
+      });
+      csvContent += row + "\r\n";
+    });
+    
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `estatisticas_${activeStore}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast("Estatísticas exportadas com sucesso!");
+  }
+
   // MONTHLY PER-LINK CLICK TREND
   let monthlyChartInstance = null;
   const MONTHLY_CHART_COLORS = ['#372f6b', '#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
@@ -4318,6 +4482,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.bgColor = document.getElementById('store-bg-color').value;
     storeConfig.btnColor = document.getElementById('store-btn-color').value;
     storeConfig.btnTextColor = document.getElementById('store-btn-text-color').value;
+    storeConfig.btnBorderRadius = document.getElementById('store-btn-radius').value;
     storeConfig.pillText = document.getElementById('store-pill-text').value.trim();
     storeConfig.title = document.getElementById('store-title-text').value.trim();
     storeConfig.description = document.getElementById('store-desc-text').value.trim();
@@ -5254,6 +5419,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function handleBtnOpacityChange(val) {
     if (storeConfig) {
       storeConfig.btnOpacity = parseInt(val);
+      triggerAutosave();
+    }
+  }
+
+  function handleBtnRadiusChange(val) {
+    if (storeConfig) {
+      storeConfig.btnBorderRadius = val;
       triggerAutosave();
     }
   }
