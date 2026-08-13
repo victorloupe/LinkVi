@@ -362,6 +362,9 @@
     overflow: hidden;
     position: relative;
   }
+  .carousel-card.multi-slide {
+    padding: 6px 4px;
+  }
   .carousel-viewport {
     position: relative;
     width: 100%;
@@ -1558,14 +1561,15 @@
       typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' }
     );
     const total = images.length;
-    const visible = 1; // Show 1 full-width image at a time for a premium modern look
+    const reqVisible = link.displayCount ? parseInt(link.displayCount) : (link.visibleCount ? parseInt(link.visibleCount) : 1);
+    const visible = Math.min(reqVisible, total);
     const slideBasisPct = 100 / visible;
     const isInfinite = total > visible;
     let autoplayTimer = null;
     const dotEls = [];
 
     const card = document.createElement('div');
-    card.className = 'carousel-card';
+    card.className = 'carousel-card' + (visible > 1 ? ' multi-slide' : '');
 
     const viewport = document.createElement('div');
     viewport.className = 'carousel-viewport';
@@ -1577,11 +1581,21 @@
       const slide = document.createElement('div');
       slide.className = 'carousel-slide';
       slide.style.flexBasis = `${slideBasisPct}%`;
+      if (visible > 1) {
+        slide.style.padding = visible === 2 ? '0 3px' : '0 2px';
+      } else {
+        slide.style.padding = '0';
+      }
 
       const inner = document.createElement('div');
       inner.className = 'carousel-slide-inner';
       inner.style.backgroundImage = `url('${photo.url}')`;
       inner.style.cursor = 'pointer';
+      if (visible > 1) {
+        inner.style.borderRadius = visible === 2 ? '8px' : '6px';
+      } else {
+        inner.style.borderRadius = '0';
+      }
       inner.addEventListener('click', () => openCarouselLightbox(photo, link, index));
 
       slide.appendChild(inner);

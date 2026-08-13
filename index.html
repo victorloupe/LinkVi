@@ -2442,6 +2442,27 @@
           </button>
         </div>
         <div id="carousel-thumbs-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 2px;"></div>
+
+        <!-- Modo de exibição das fotos no carrossel -->
+        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color);">
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">
+            Tamanho das Fotos na Tela Inicial
+          </label>
+          <div style="display: flex; gap: 6px;">
+            <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; border: 1.5px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; background: #fff; text-align: center; transition: all 0.2s;" id="label-carousel-display-1">
+              <input type="radio" name="carousel-display-count" value="1" checked style="accent-color: var(--primary); margin: 0;" onchange="updateCarouselDisplayPills()">
+              <span>1 Foto (Grande)</span>
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; border: 1.5px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; background: #fff; text-align: center; transition: all 0.2s;" id="label-carousel-display-2">
+              <input type="radio" name="carousel-display-count" value="2" style="accent-color: var(--primary); margin: 0;" onchange="updateCarouselDisplayPills()">
+              <span>2 Fotos (Médio)</span>
+            </label>
+            <label style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; border: 1.5px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; background: #fff; text-align: center; transition: all 0.2s;" id="label-carousel-display-3">
+              <input type="radio" name="carousel-display-count" value="3" style="accent-color: var(--primary); margin: 0;" onchange="updateCarouselDisplayPills()">
+              <span>3 Fotos (Pequeno)</span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
@@ -3765,6 +3786,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     });
   }
 
+  function updateCarouselDisplayPills() {
+    const selected = document.querySelector('input[name="carousel-display-count"]:checked')?.value || '1';
+    [1, 2, 3].forEach((num) => {
+      const pill = document.getElementById(`label-carousel-display-${num}`);
+      if (pill) {
+        if (selected == num) {
+          pill.style.borderColor = 'var(--brand-purple, #7c3aed)';
+          pill.style.backgroundColor = 'rgba(124, 58, 237, 0.08)';
+          pill.style.color = 'var(--brand-purple, #7c3aed)';
+        } else {
+          pill.style.borderColor = 'var(--border-color, #e2e8f0)';
+          pill.style.backgroundColor = '#ffffff';
+          pill.style.color = 'var(--text-main, #0f172a)';
+        }
+      }
+    });
+  }
+
   function getLinkIconHTML(imageKeyOrUrl, label = "") {
     if (!imageKeyOrUrl) {
       return LINK_ICONS.fallback;
@@ -3810,7 +3849,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           <div class="link-item-title">
             ${link.label}
             ${link.badge ? `<span class="link-item-badge">${link.badge}</span>` : ''}
-            ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''}</span>` : ''}
+            ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''} • ${link.displayCount == 3 ? 'Pequeno' : link.displayCount == 2 ? 'Médio' : 'Grande'}</span>` : ''}
           </div>
           <div class="link-item-url">${link.url || (link.type === 'carousel' ? '' : 'Sem link (Em Construção)')}</div>
         </div>
@@ -4847,6 +4886,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       urlInput.value = "";
       currentCarouselImages = [];
       renderCarouselThumbnails();
+      const radio1 = document.querySelector('input[name="carousel-display-count"][value="1"]');
+      if (radio1) radio1.checked = true;
+      updateCarouselDisplayPills();
       selectIcon("fallback");
     } else {
       title.textContent = "Editar Link";
@@ -4858,6 +4900,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         ? link.images.map((img) => typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' })
         : [];
       renderCarouselThumbnails();
+      const displayCount = link.displayCount || link.visibleCount || 1;
+      const radio = document.querySelector(`input[name="carousel-display-count"][value="${displayCount}"]`);
+      if (radio) radio.checked = true;
+      updateCarouselDisplayPills();
       if (currentCarouselImages.length > 0) {
         document.getElementById('carousel-upload-status').textContent = `${currentCarouselImages.length} foto(s) no carrossel`;
       }
@@ -5573,6 +5619,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (selectedIconType === 'carousel') {
       linkData.type = 'carousel';
       linkData.images = [...currentCarouselImages];
+      const selectedRadio = document.querySelector('input[name="carousel-display-count"]:checked');
+      linkData.displayCount = selectedRadio ? parseInt(selectedRadio.value) : 1;
     }
 
     if (index === -1) {
