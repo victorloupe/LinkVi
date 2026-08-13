@@ -354,11 +354,13 @@
     background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
     border: 1.4px solid var(--line);
     border-radius: var(--btn-radius, 12px);
-    padding: 10px;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
     opacity: 0;
     transform: translateY(20px);
     animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    overflow: hidden;
+    position: relative;
   }
   .carousel-viewport {
     position: relative;
@@ -368,72 +370,104 @@
   }
   .carousel-track {
     display: flex;
-    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     will-change: transform;
   }
   .carousel-slide {
     flex: 0 0 auto;
     box-sizing: border-box;
-    padding: 0 3px;
+    padding: 0;
   }
   .carousel-slide-inner {
     width: 100%;
     aspect-ratio: 1 / 1;
-    border-radius: 8px;
     overflow: hidden;
     background-size: cover;
     background-position: center;
     background-color: rgba(0, 0, 0, 0.05);
+    transition: transform 0.5s ease;
+  }
+  .carousel-slide-inner:hover {
+    transform: scale(1.04);
   }
   .carousel-arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: rgba(15, 23, 42, 0.55);
+    background: rgba(15, 23, 42, 0.45);
     color: #fff;
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 2;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.2s ease, opacity 0.25s ease;
     padding: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  @media (hover: hover) {
+    .carousel-arrow {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .carousel-viewport:hover .carousel-arrow {
+      opacity: 0.6;
+      pointer-events: auto;
+    }
+  }
+  @media (hover: none) {
+    .carousel-arrow {
+      opacity: 0.6;
+      pointer-events: auto;
+    }
   }
   .carousel-arrow:hover {
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(15, 23, 42, 0.7);
+    opacity: 1 !important;
   }
   .carousel-arrow.prev {
-    left: 2px;
+    left: 12px;
   }
   .carousel-arrow.next {
-    right: 2px;
+    right: 12px;
   }
   .carousel-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6px;
-    padding-top: 10px;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 6px 10px;
+    border-radius: 99px;
+    z-index: 3;
+    pointer-events: auto;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
   .carousel-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--line);
+    background: rgba(255, 255, 255, 0.4);
     border: none;
     padding: 0;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
   }
   .carousel-dot.active {
-    width: 16px;
+    width: 14px;
     border-radius: 3px;
-    background: var(--btn-text);
-    opacity: 0.85;
+    background: #ffffff;
   }
   .carousel-lightbox-backdrop {
     position: fixed;
@@ -516,7 +550,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 5;
+    z-index: 150;
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
     opacity: 0.75;
@@ -1524,7 +1558,7 @@
       typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' }
     );
     const total = images.length;
-    const visible = Math.min(3, total); // how many photos show at once — smaller thumbnails, 3-up window
+    const visible = 1; // Show 1 full-width image at a time for a premium modern look
     const slideBasisPct = 100 / visible;
     const isInfinite = total > visible;
     let autoplayTimer = null;
