@@ -363,7 +363,7 @@
     position: relative;
   }
   .carousel-card.multi-slide {
-    padding: 6px 4px;
+    padding: 6px;
   }
   .carousel-viewport {
     position: relative;
@@ -388,6 +388,7 @@
     background-size: cover;
     background-position: center;
     background-color: rgba(0, 0, 0, 0.05);
+    border-radius: max(4px, calc(var(--btn-radius, 12px) - 6px));
     transition: transform 0.5s ease;
   }
   .carousel-slide-inner:hover {
@@ -1592,7 +1593,7 @@
       inner.style.backgroundImage = `url('${photo.url}')`;
       inner.style.cursor = 'pointer';
       if (visible > 1) {
-        inner.style.borderRadius = visible === 2 ? '8px' : '6px';
+        inner.style.borderRadius = 'max(4px, calc(var(--btn-radius, 12px) - 6px))';
       } else {
         inner.style.borderRadius = '0';
       }
