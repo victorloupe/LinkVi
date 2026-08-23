@@ -88,6 +88,8 @@ set search_path = public
 as $$
 declare
   v_authorized boolean;
+  v_existing_stats jsonb;
+  v_final_config jsonb;
 begin
   select exists(
     select 1 from public.stores s
@@ -102,7 +104,16 @@ begin
     return false;
   end if;
 
-  update public.stores set config = p_new_config where id = p_store_id;
+  -- Preserva as estatísticas em tempo real existentes no banco (evita sobrescrever métricas dos visitantes com dados antigos em memória)
+  select config -> 'stats' into v_existing_stats from public.stores where id = p_store_id;
+  
+  if v_existing_stats is not null then
+    v_final_config = jsonb_set(p_new_config, '{stats}', v_existing_stats);
+  else
+    v_final_config = p_new_config;
+  end if;
+
+  update public.stores set config = v_final_config where id = p_store_id;
   return true;
 end;
 $$;
@@ -208,7 +219,8 @@ create or replace function public.track_view_or_click(
   p_store_id text,
   p_action text, -- 'view' ou 'click'
   p_today_str text, -- 'YYYY-MM-DD'
-  p_link_index text default null -- Índice do link clicado (e.g. '0', '1')
+  p_link_index text default null, -- ID único do link ou índice (e.g. 'lnk_123' ou '0')
+  p_referrer text default null -- Origem do tráfego (e.g. 'instagram', 'tiktok', 'whatsapp', 'direct', etc.)
 )
 returns boolean
 language plpgsql
@@ -219,7 +231,9 @@ declare
   v_config jsonb;
   v_stats jsonb;
   v_clicks jsonb;
+  v_sources jsonb;
   v_daily jsonb;
+  v_ref_clean text;
 begin
   -- Busca a configuração atual da loja
   select config into v_config from public.stores where id = p_store_id;
@@ -229,12 +243,15 @@ begin
 
   -- Garante que o objeto 'stats' está inicializado
   if v_config -> 'stats' is null then
-    v_config = jsonb_set(v_config, '{stats}', '{"views": 0, "clicks": {}, "daily": {}}'::jsonb);
+    v_config = jsonb_set(v_config, '{stats}', '{"views": 0, "clicks": {}, "sources": {}, "daily": {}}'::jsonb);
   end if;
   
   v_stats = v_config -> 'stats';
   if v_stats -> 'clicks' is null then
     v_stats = jsonb_set(v_stats, '{clicks}', '{}'::jsonb);
+  end if;
+  if v_stats -> 'sources' is null then
+    v_stats = jsonb_set(v_stats, '{sources}', '{}'::jsonb);
   end if;
   if v_stats -> 'daily' is null then
     v_stats = jsonb_set(v_stats, '{daily}', '{}'::jsonb);
@@ -246,7 +263,7 @@ begin
     
     -- Garante que o registro diário existe
     if v_stats -> 'daily' -> p_today_str is null then
-      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}}'::jsonb);
+      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}, "sources": {}}'::jsonb);
     end if;
     
     -- Incrementa visualizações diárias
@@ -255,6 +272,28 @@ begin
       array['daily', p_today_str, 'views'], 
       to_jsonb(coalesce((v_stats -> 'daily' -> p_today_str ->> 'views')::int, 0) + 1)
     );
+
+    -- Rastreamento de canal/origem (se informado)
+    if p_referrer is not null and length(trim(p_referrer)) > 0 then
+      v_ref_clean = lower(trim(p_referrer));
+      v_sources = v_stats -> 'sources';
+      v_sources = jsonb_set(
+        v_sources,
+        array[v_ref_clean],
+        to_jsonb(coalesce((v_sources ->> v_ref_clean)::int, 0) + 1)
+      );
+      v_stats = jsonb_set(v_stats, '{sources}', v_sources);
+
+      if v_stats -> 'daily' -> p_today_str -> 'sources' is null then
+        v_stats = jsonb_set(v_stats, array['daily', p_today_str, 'sources'], '{}'::jsonb);
+      end if;
+
+      v_stats = jsonb_set(
+        v_stats,
+        array['daily', p_today_str, 'sources', v_ref_clean],
+        to_jsonb(coalesce((v_stats -> 'daily' -> p_today_str -> 'sources' ->> v_ref_clean)::int, 0) + 1)
+      );
+    end if;
 
   elsif p_action = 'click' and p_link_index is not null then
     -- Incrementa cliques totais no link
@@ -268,7 +307,7 @@ begin
 
     -- Garante que o registro diário existe
     if v_stats -> 'daily' -> p_today_str is null then
-      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}}'::jsonb);
+      v_stats = jsonb_set(v_stats, array['daily', p_today_str], '{"views": 0, "clicks": {}, "sources": {}}'::jsonb);
     end if;
     -- Garante que o objeto de cliques diários existe
     if v_stats -> 'daily' -> p_today_str -> 'clicks' is null then
@@ -303,8 +342,8 @@ begin
 end;
 $$;
 
-revoke all on function public.track_view_or_click(text, text, text, text) from public;
-grant execute on function public.track_view_or_click(text, text, text, text) to anon, authenticated;
+revoke all on function public.track_view_or_click(text, text, text, text, text) from public;
+grant execute on function public.track_view_or_click(text, text, text, text, text) to anon, authenticated;
 
 -- ============================================================================
 -- Depois de rodar este script, teste:

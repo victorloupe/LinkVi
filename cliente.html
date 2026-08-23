@@ -15,7 +15,6 @@
 <link rel="icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <link rel="shortcut icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <title>LinksVi — Carregando...</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -320,6 +319,148 @@
     box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
   }
   .btn-outline .btn-icon { color: var(--gold-deep); }
+
+  /* Efeito Link em Destaque (Glow / Pulse Neon) */
+  .btn.btn-highlighted {
+    border-color: var(--gold-deep, #e11d48) !important;
+    position: relative;
+    box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.6)), 0 4px 14px rgba(0, 0, 0, 0.15);
+    animation: buttonPulseGlow 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  @keyframes buttonPulseGlow {
+    0% {
+      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.6)), 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+    50% {
+      box-shadow: 0 0 0 7px rgba(225, 29, 72, 0), 0 6px 22px var(--theme-glow, rgba(225, 29, 72, 0.45));
+    }
+    100% {
+      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0)), 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* Barra de Redes Sociais Compacta (Social Bar) */
+  .social-bar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s var(--ease-out) forwards 0.25s;
+  }
+  .social-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text, #ffffff);
+    text-decoration: none;
+    transition: transform 0.2s var(--ease-out), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+  .social-icon-btn svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.2s var(--ease-out);
+  }
+  @media (hover: hover) {
+    .social-icon-btn:hover {
+      transform: translateY(-3px) scale(1.08);
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--gold-deep, #e11d48);
+      box-shadow: 0 6px 16px var(--theme-glow, rgba(225, 29, 72, 0.3));
+    }
+  }
+  .social-icon-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* Card de Cupom de Desconto Copiável */
+  .coupon-card {
+    background: var(--btn-bg, #1a1b26);
+    background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    border: 1.5px dashed var(--gold-deep, #e11d48);
+    border-radius: var(--btn-radius, 12px);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s var(--ease-out) forwards;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .coupon-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    flex: 1;
+    text-align: left;
+  }
+  .coupon-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 750;
+    color: var(--text, #ffffff);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .coupon-rules {
+    font-size: 11px;
+    color: var(--navy-soft, #94a3b8);
+    line-height: 1.3;
+  }
+  .coupon-action-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .coupon-code-badge {
+    background: var(--theme-color-tint, rgba(225, 29, 72, 0.15));
+    border: 1px solid var(--theme-border, rgba(225, 29, 72, 0.35));
+    color: var(--gold-deep, #ef4444);
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .coupon-copy-btn {
+    border: none;
+    background: var(--gold-deep, #ef4444);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: var(--btn-radius, 20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 8px var(--theme-glow, rgba(225, 29, 72, 0.3));
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .coupon-copy-btn:active {
+    transform: scale(0.94);
+  }
 
   /* Hover optimizations for desktop mouse pointers */
   @media (hover: hover) {
@@ -956,6 +1097,372 @@
   .pdf-fallback-btn:hover {
     transform: translateY(-2px);
   }
+
+  /* PIX Modal */
+  .pix-modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.25s var(--ease-out);
+    padding: 16px;
+  }
+  .pix-modal-backdrop.active {
+    display: flex;
+    opacity: 1;
+  }
+  .pix-modal-card {
+    background: var(--panel-white, #ffffff);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.2), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.25s var(--ease-out);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    color: var(--navy);
+    box-sizing: border-box;
+  }
+  .pix-modal-backdrop.active .pix-modal-card {
+    transform: translateY(0) scale(1);
+  }
+  .pix-modal-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--navy-soft);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+  }
+  .pix-modal-close:hover {
+    color: var(--navy);
+  }
+  .pix-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .pix-qr-container {
+    width: 170px;
+    height: 170px;
+    padding: 10px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px 0;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  }
+  .pix-qr-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  .pix-key-box {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin: 8px 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-sizing: border-box;
+  }
+  .pix-key-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--navy-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .pix-key-value {
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    word-break: break-all;
+    user-select: all;
+  }
+  .pix-copy-btn {
+    width: 100%;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 12px;
+    background: #10b981;
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  }
+  .pix-copy-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Real-time Business Hours Status Badge */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 9px;
+    border-radius: 9999px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-left: 6px;
+    letter-spacing: 0.2px;
+    vertical-align: middle;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+  }
+  .status-badge.open {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+  .status-badge.closed {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .status-badge.open .status-dot {
+    background-color: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: statusPulse 2s infinite;
+  }
+  .status-badge.closed .status-dot {
+    background-color: #ef4444;
+  }
+
+  @keyframes statusPulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+
+  /* Luxury Themed Modal Inheriting Store Identity */
+  .themed-modal-card {
+    background: #0f1017;
+    background: linear-gradient(165deg, rgba(20, 21, 31, 0.98) 0%, rgba(10, 11, 18, 0.99) 100%);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 390px;
+    padding: 24px 20px;
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 35px var(--theme-glow, rgba(239, 68, 68, 0.2)), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.25s var(--ease-out);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f8fafc;
+    box-sizing: border-box;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+  .pix-modal-backdrop.active .themed-modal-card {
+    transform: translateY(0) scale(1);
+  }
+
+  .themed-modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 32px; height: 32px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 20px;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s ease;
+  }
+  .themed-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: scale(1.08);
+  }
+
+  .schedule-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--theme-color-tint, rgba(239, 68, 68, 0.15));
+    color: var(--gold-deep, #ef4444);
+    border: 1px solid var(--theme-border, rgba(239, 68, 68, 0.35));
+    margin-bottom: 6px;
+    width: fit-content;
+  }
+
+  .schedule-status-banner {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight: 700;
+    margin: 8px 0 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .schedule-status-banner.open {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.12) 100%);
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    color: #34d399;
+  }
+  .schedule-status-banner.closed {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.12) 100%);
+    border: 1px solid rgba(248, 113, 113, 0.4);
+    color: #f87171;
+  }
+
+  /* Schedule Modal Day Rows */
+  .schedule-day-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 12.5px;
+    color: #cbd5e1;
+    transition: all 0.2s ease;
+  }
+  .schedule-day-row:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .schedule-day-row.today {
+    background: var(--theme-today-bg, rgba(239, 68, 68, 0.18));
+    border: 1px solid var(--gold-deep, #ef4444);
+    box-shadow: 0 4px 20px var(--theme-glow, rgba(239, 68, 68, 0.25));
+  }
+  .schedule-day-row.today .day-name {
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .schedule-day-row .today-tag {
+    font-size: 9px;
+    font-weight: 800;
+    background: var(--gold-deep, #ef4444);
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    box-shadow: 0 2px 6px var(--theme-glow, rgba(239, 68, 68, 0.4));
+  }
+
+  .themed-modal-btn {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: var(--btn-radius, 9999px);
+    border: none;
+    background: var(--gold-deep, #ef4444);
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 18px var(--theme-glow, rgba(239, 68, 68, 0.4));
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .themed-modal-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+  .themed-modal-btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Route Modal Action Buttons */
+  .route-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-family: var(--font-display);
+    font-size: 13.5px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: none;
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  }
+  .route-action-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  .route-action-btn:active {
+    transform: scale(0.98);
+  }
 </style>
 </head>
 <body>
@@ -1010,6 +1517,8 @@
   <span class="pill" id="store-pill">Nossos Links</span>
   <h1 class="brand-title" id="store-title">Carregando...</h1>
   <p class="brand-desc" id="store-desc"></p>
+
+  <div id="social-bar-top" class="social-bar-container" style="display: none;"></div>
   
   <h2 class="cta-title" id="store-cta">Onde você quer nos encontrar?</h2>
   <p class="sub" id="store-sub"></p>
@@ -1017,6 +1526,8 @@
   <div class="links" id="links-container">
     <!-- Rendered dynamically -->
   </div>
+
+  <div id="social-bar-bottom" class="social-bar-container" style="display: none;"></div>
 </main>
 
 <footer id="footer">Desenvolvido por <a href="index.html" style="text-decoration: none; color: inherit; font-weight: inherit;">Links<span class="purple-vi">Vi</span></a></footer>
@@ -1068,14 +1579,102 @@
   </div>
 </div>
 
+<!-- Modal de Chave PIX -->
+<div id="pix-modal-backdrop" class="pix-modal-backdrop">
+  <div class="pix-modal-card">
+    <button class="pix-modal-close" onclick="closePixModal()" aria-label="Fechar">&times;</button>
+    <div class="pix-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>
+      <span>Pagamento Instantâneo</span>
+    </div>
+    <h3 id="pix-modal-title" style="font-family: var(--font-display); font-size: 17px; font-weight: 700; margin: 0 0 2px; text-align: center;">Chave PIX</h3>
+    <p id="pix-modal-beneficiary" style="font-size: 12px; color: var(--navy-soft); margin: 0; text-align: center;"></p>
+    
+    <div class="pix-qr-container">
+      <img id="pix-modal-qr" class="pix-qr-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR Code PIX">
+    </div>
+
+    <div class="pix-key-box">
+      <span class="pix-key-label" id="pix-modal-key-type">Chave</span>
+      <span class="pix-key-value" id="pix-modal-key-value"></span>
+    </div>
+
+    <button id="pix-copy-action-btn" class="pix-copy-btn" onclick="copyPixKey()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      <span>Copiar Chave PIX</span>
+    </button>
+  </div>
+</div>
+
+<!-- Modal de Horários de Atendimento -->
+<div id="schedule-modal-backdrop" class="pix-modal-backdrop" onclick="if(event.target===this)closeScheduleModal()">
+  <div class="themed-modal-card" style="max-width: 390px; text-align: left;">
+    <button class="themed-modal-close" onclick="closeScheduleModal()" aria-label="Fechar">&times;</button>
+    <div class="schedule-badge-pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span>Horários Semanais</span>
+    </div>
+    <h3 id="schedule-modal-title" style="font-family: var(--font-display); font-size: 19px; font-weight: 800; margin: 0 0 2px; color: #ffffff; letter-spacing: -0.3px;">Horários de Atendimento</h3>
+    <div id="schedule-modal-current-status" style="margin: 8px 0 12px;"></div>
+    <div id="schedule-modal-list" style="display: flex; flex-direction: column; gap: 7px;"></div>
+  </div>
+</div>
+
+<!-- Modal de Rotas / Como Chegar -->
+<div id="route-modal-backdrop" class="pix-modal-backdrop" onclick="if(event.target===this)closeRouteModal()">
+  <div class="themed-modal-card" style="max-width: 390px; text-align: left;">
+    <button class="themed-modal-close" onclick="closeRouteModal()" aria-label="Fechar">&times;</button>
+    <div class="schedule-badge-pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>Como Chegar</span>
+    </div>
+    <h3 id="route-modal-title" style="font-family: var(--font-display); font-size: 19px; font-weight: 800; margin: 0 0 2px; color: #ffffff; letter-spacing: -0.3px;">Nossa Localização</h3>
+    <div id="route-modal-address" style="font-size: 12px; color: #cbd5e1; background: rgba(255, 255, 255, 0.05); padding: 11px 14px; border-radius: 12px; margin: 10px 0 14px; line-height: 1.45; border: 1px solid rgba(255, 255, 255, 0.08); font-weight: 500;"></div>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <a id="route-btn-waze" href="#" target="_blank" rel="noopener" class="route-action-btn" style="background-color: #33ccff; color: #0f172a; box-shadow: 0 4px 14px rgba(51, 204, 255, 0.3);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 11.5c0-.8-.1-1.6-.4-2.3C18.6 5.3 14.8 3 10.5 3 5.3 3 1 7.3 1 12.5c0 2.4.9 4.6 2.4 6.3L2 22l3.4-1.1c1.5.8 3.2 1.3 5.1 1.3 5.2 0 9.5-4.3 9.5-9.5 0-.4 0-.8-.1-1.2h.6zm-12.8 2c-.7 0-1.2-.5-1.2-1.2s.5-1.2 1.2-1.2 1.2.5 1.2 1.2-.5 1.2-1.2 1.2zm4.6 0c-.7 0-1.2-.5-1.2-1.2s.5-1.2 1.2-1.2 1.2.5 1.2 1.2-.5 1.2-1.2 1.2z"/></svg>
+        <span>Abrir no Waze</span>
+      </a>
+      <a id="route-btn-google" href="#" target="_blank" rel="noopener" class="route-action-btn" style="background-color: #ffffff; color: #0f172a; border: 1px solid #cbd5e1; box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ea4335"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+        <span>Abrir no Google Maps</span>
+      </a>
+      <a id="route-btn-apple" href="#" target="_blank" rel="noopener" class="route-action-btn" style="background-color: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span>Abrir no Apple Maps</span>
+      </a>
+      <button id="route-btn-copy" class="route-action-btn" onclick="copyRouteAddress()" style="background-color: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.12); margin-top: 2px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>Copiar Endereço</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Supabase JS Client Library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- GSAP 3 Animation Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
   // SUPABASE CLIENT CONFIGURATION
   const supabaseUrl = "https://lujsstahllhcrkfgjmcw.supabase.co";
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
   const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
   let currentConfigCache = null;
+
+  function hexToRgba(hex, alpha) {
+    if (!hex || typeof hex !== 'string') return `rgba(225, 29, 72, ${alpha})`;
+    let c = hex.replace('#', '');
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    if (c.length === 6) {
+      const num = parseInt(c, 16);
+      const r = (num >> 16) & 255;
+      const g = (num >> 8) & 255;
+      const b = num & 255;
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    return hex;
+  }
 
   // Synchronous theme cache loader to prevent white flashes on dark mode pages
   (function() {
@@ -1099,7 +1698,7 @@
         document.documentElement.style.setProperty('--bg', cachedBg);
         let metaTheme = document.querySelector('meta[name="theme-color"]');
         if (metaTheme) {
-          metaTheme.setAttribute('content', cachedBg.startsWith('#') ? cachedBg : (cachedHighlight || '#7c3aed'));
+          metaTheme.setAttribute('content', cachedBg.startsWith('#') ? cachedBg : (cachedHighlight || '#e11d48'));
         }
       }
       if (cachedText) {
@@ -1112,6 +1711,11 @@
       }
       if (cachedHighlight) {
         document.documentElement.style.setProperty('--gold-deep', cachedHighlight);
+        document.documentElement.style.setProperty('--theme-color', cachedHighlight);
+        document.documentElement.style.setProperty('--theme-glow', hexToRgba(cachedHighlight, 0.35));
+        document.documentElement.style.setProperty('--theme-today-bg', hexToRgba(cachedHighlight, 0.18));
+        document.documentElement.style.setProperty('--theme-color-tint', hexToRgba(cachedHighlight, 0.15));
+        document.documentElement.style.setProperty('--theme-border', hexToRgba(cachedHighlight, 0.35));
         if (cachedHighlight.startsWith("#") && cachedHighlight.length === 7) {
           document.documentElement.style.setProperty('--pill-bg', cachedHighlight + "12");
         }
@@ -1122,11 +1726,30 @@
     }
   })();
 
+  function escapeHtml(value) {
+    if (!value) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   const LINK_ICONS = {
     instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>`,
     tiktok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>`,
     shopee: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>`,
     whatsapp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+    pix: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>`,
+    cupom: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2" stroke-dasharray="2 2"></rect><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle><path d="M10 9l4 6M14 9l-4 6"></path></svg>`,
+    horario: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    vcard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>`,
+    threads: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11.5c0 3-1.5 5.5-4 5.5s-4-2.5-4-5.5 1.5-5.5 4-5.5c2.2 0 3.7 1.8 3.9 4.3.2 2.6-1.4 5.2-4.4 5.2-3.6 0-6.5-2.9-6.5-6.5S7.9 2.5 11.5 2.5s6.5 2.9 6.5 6.5c0 4.5-3.5 8-8 8-4.5 0-8-3.5-8-8S5.5 1 10 1"/></svg>`,
+    telegram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`,
+    pinterest: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 21a10 10 0 0 1-2-6c0-3.3 2.7-6 6-6 3 0 5 2 5 4.5 0 3-1.7 5.5-4 5.5-1 0-1.8-.6-2-1.3l-.8 3.3"/></svg>`,
+    kwai: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="4"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>`,
+    google_review: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
     mapa: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
     comida: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>`,
     ifood: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.428 1.67c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006c4.244 0 7.184-3.854 7.184-6.998 0-2.29-2.175-3.293-4.244-3.293zm11.328 0c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006C21.061 11.96 24 8.107 24 4.963c0-2.29-2.18-3.293-4.244-3.293zM14.172 14.52l2.435 1.834c-2.17 2.07-6.124 3.525-9.353 3.17A8.913 8.913 0 01.23 14.541H0a9.598 9.598 0 008.828 7.758c3.814.24 7.323-.905 9.947-3.13l-.004.007 1.08 2.988 1.555-7.623-7.234-.02Z"/></svg>`,
@@ -1151,7 +1774,7 @@
       return LINK_ICONS.fallback;
     }
     if (imageKeyOrUrl.startsWith("http://") || imageKeyOrUrl.startsWith("https://") || imageKeyOrUrl.startsWith("data:")) {
-      return `<img src="${imageKeyOrUrl}" alt="${label}" style="width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 4px;">`;
+      return `<img src="${imageKeyOrUrl}" alt="${escapeHtml(label)}" style="width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 4px;">`;
     }
     if (imageKeyOrUrl.startsWith("<svg")) {
       return imageKeyOrUrl;
@@ -1160,6 +1783,34 @@
       return LINK_ICONS[imageKeyOrUrl];
     }
     return LINK_ICONS.fallback;
+  }
+
+  // Detect traffic source / referrer
+  function getTrafficSource() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const utmSource = params.get('utm_source');
+      if (utmSource) return utmSource.toLowerCase().slice(0, 30);
+
+      const ref = document.referrer ? document.referrer.toLowerCase() : '';
+      if (!ref) return 'direto';
+      if (ref.includes('instagram.com')) return 'instagram';
+      if (ref.includes('tiktok.com')) return 'tiktok';
+      if (ref.includes('whatsapp') || ref.includes('wa.me')) return 'whatsapp';
+      if (ref.includes('facebook.com') || ref.includes('fb.me')) return 'facebook';
+      if (ref.includes('google.')) return 'google';
+      if (ref.includes('t.co') || ref.includes('twitter.com') || ref.includes('x.com')) return 'twitter';
+      if (ref.includes('threads.net')) return 'threads';
+      if (ref.includes('youtube.com') || ref.includes('youtu.be')) return 'youtube';
+      if (ref.includes('linkedin.com')) return 'linkedin';
+      if (ref.includes('pinterest.')) return 'pinterest';
+      if (ref.includes('kwai.')) return 'kwai';
+      
+      const urlObj = new URL(ref);
+      return urlObj.hostname.replace('www.', '').slice(0, 30);
+    } catch(e) {
+      return 'direto';
+    }
   }
 
   // Parse store name from URL query parameter or path
@@ -1185,15 +1836,101 @@
     }, 400);
   }
 
+  let pageEntranceAnimated = false;
+  function animatePageEntrance() {
+    if (typeof gsap === 'undefined') return;
+
+    // Kill any existing page entrance animations to avoid conflicts
+    gsap.killTweensOf(['#store-logo', '#store-pill', '#store-title', '#store-desc', '#store-cta', '#store-sub', '#links-container > *', '#navbar', '#share-btn', '#footer']);
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+    // 1. Logo
+    const logo = document.getElementById('store-logo');
+    if (logo && logo.style.display !== 'none') {
+      tl.fromTo(logo, 
+        { scale: 0.8, opacity: 0, y: -14 }, 
+        { scale: 1, opacity: 1, y: 0, duration: 0.65, ease: 'back.out(1.5)' }
+      );
+    }
+
+    // 2. Pill badge
+    const pill = document.getElementById('store-pill');
+    if (pill && pill.textContent.trim()) {
+      tl.fromTo(pill,
+        { scale: 0.85, opacity: 0, y: 8 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.45, ease: 'back.out(1.4)' },
+        "-=0.45"
+      );
+    }
+
+    // 3. Typography & Bio
+    const textEls = ['#store-title', '#store-desc', '#store-cta', '#store-sub'].filter(sel => {
+      const el = document.querySelector(sel);
+      return el && el.textContent.trim() !== '';
+    });
+    if (textEls.length > 0) {
+      tl.fromTo(textEls,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
+        "-=0.35"
+      );
+    }
+
+    // 4. Link buttons & carousels
+    const linkItems = document.querySelectorAll('#links-container > *');
+    if (linkItems.length > 0) {
+      tl.fromTo(linkItems,
+        { opacity: 0, y: 28, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.055, ease: 'back.out(1.15)' },
+        "-=0.3"
+      );
+    }
+
+    // 5. Surrounding UI
+    tl.fromTo(['#navbar', '#share-btn', '#footer'],
+      { opacity: 0 },
+      { opacity: 1, duration: 0.45, ease: 'power1.out' },
+      "-=0.3"
+    );
+
+    pageEntranceAnimated = true;
+  }
+
   function showApp() {
-    document.getElementById('loader-container').style.opacity = '0';
-    setTimeout(() => {
-      document.getElementById('loader-container').style.display = 'none';
+    const loader = document.getElementById('loader-container');
+    if (loader) {
+      if (typeof gsap !== 'undefined') {
+        gsap.to(loader, {
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.in',
+          onComplete: () => {
+            loader.style.display = 'none';
+            document.getElementById('navbar').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('footer').style.display = 'block';
+            document.getElementById('share-btn').style.display = 'flex';
+            animatePageEntrance();
+          }
+        });
+      } else {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+          document.getElementById('navbar').style.display = 'flex';
+          document.getElementById('main-content').style.display = 'block';
+          document.getElementById('footer').style.display = 'block';
+          document.getElementById('share-btn').style.display = 'flex';
+        }, 350);
+      }
+    } else {
       document.getElementById('navbar').style.display = 'flex';
       document.getElementById('main-content').style.display = 'block';
       document.getElementById('footer').style.display = 'block';
       document.getElementById('share-btn').style.display = 'flex';
-    }, 400);
+      animatePageEntrance();
+    }
   }
 
   function showShareToast(message) {
@@ -1236,8 +1973,6 @@
         return; // Compartilhado com sucesso
       } catch (err) {
         console.warn("navigator.share falhou ou foi bloqueado:", err);
-        // Se foi cancelado pelo usuário (AbortError), não faz nada.
-        // Qualquer outro erro (ex: bloqueado por iframe ou falta de permissão), tenta copiar para o clipboard.
         if (err.name === 'AbortError') {
           return;
         }
@@ -1250,7 +1985,6 @@
         await navigator.clipboard.writeText(window.location.href);
         showShareToast('Link copiado!');
       } else {
-        // Fallback antigo para contextos não seguros (HTTP ou file:///)
         const textArea = document.createElement("textarea");
         textArea.value = window.location.href;
         textArea.style.position = "fixed";
@@ -1281,18 +2015,20 @@
       const offset = now.getTimezoneOffset();
       const localNow = new Date(now.getTime() - (offset * 60 * 1000));
       const todayStr = localNow.toISOString().split('T')[0];
+      const source = getTrafficSource();
 
       await supabaseClient.rpc('track_view_or_click', {
         p_store_id: storeName,
         p_action: 'view',
-        p_today_str: todayStr
+        p_today_str: todayStr,
+        p_referrer: source
       });
     } catch (e) {
       console.error("Erro ao registrar visualização:", e);
     }
   }
 
-  async function trackStoreClick(linkIndex, linkUrl) {
+  async function trackStoreClick(linkIdOrIndex, linkUrl) {
     triggerHaptic();
     const isPreview = window.location.search.includes('preview=true');
     if (isPreview) return;
@@ -1310,7 +2046,7 @@
         p_store_id: storeName,
         p_action: 'click',
         p_today_str: todayStr,
-        p_link_index: String(linkIndex)
+        p_link_index: String(linkIdOrIndex)
       });
     } catch (e) {
       console.error("Erro ao registrar clique:", e);
@@ -1324,8 +2060,24 @@
       return;
     }
 
+    // 1. Instant local render if cached config is present (Stale-While-Revalidate)
+    let hasLoadedFromCache = false;
+    try {
+      const cached = localStorage.getItem('cached_config_' + storeName);
+      if (cached) {
+        const parsedCached = JSON.parse(cached);
+        if (parsedCached) {
+          applyConfig(parsedCached, storeName);
+          showApp();
+          hasLoadedFromCache = true;
+        }
+      }
+    } catch(e) {
+      console.warn("Could not read local config cache:", e);
+    }
+
     if (!supabaseClient) {
-      showNotFound();
+      if (!hasLoadedFromCache) showNotFound();
       return;
     }
 
@@ -1351,21 +2103,28 @@
         }
 
         if (config) {
+          // Update cache for next visit
+          try {
+            localStorage.setItem('cached_config_' + storeName, JSON.stringify(config));
+          } catch(e) {}
+
           const isPreview = window.location.search.includes('preview=true');
           if (!isPreview) {
             trackStoreView(storeName, config);
           }
           applyConfig(config, storeName);
           showApp();
-        } else {
+        } else if (!hasLoadedFromCache) {
           showNotFound();
         }
-      } else {
+      } else if (!hasLoadedFromCache) {
         showNotFound();
       }
     } catch (err) {
       console.error("Erro ao carregar dados do Supabase:", err);
-      showNotFound();
+      if (!hasLoadedFromCache) {
+        showNotFound();
+      }
     }
   }
 
@@ -1374,15 +2133,18 @@
     currentConfigCache = config;
 
     // Apply custom theme color if present
-    if (config.themeColor) {
-      const themeColor = config.themeColor;
-      document.documentElement.style.setProperty('--gold-deep', themeColor);
-      
-      // Generate a very soft alpha/translucent version for the pill background
-      if (themeColor.startsWith("#") && themeColor.length === 7) {
-        const pillBg = themeColor + "12"; // ~7% opacity hex representation
-        document.documentElement.style.setProperty('--pill-bg', pillBg);
-      }
+    const themeColor = config.themeColor || '#e11d48';
+    document.documentElement.style.setProperty('--gold-deep', themeColor);
+    document.documentElement.style.setProperty('--theme-color', themeColor);
+    document.documentElement.style.setProperty('--theme-glow', hexToRgba(themeColor, 0.35));
+    document.documentElement.style.setProperty('--theme-today-bg', hexToRgba(themeColor, 0.18));
+    document.documentElement.style.setProperty('--theme-color-tint', hexToRgba(themeColor, 0.15));
+    document.documentElement.style.setProperty('--theme-border', hexToRgba(themeColor, 0.35));
+    
+    // Generate a very soft alpha/translucent version for the pill background
+    if (themeColor.startsWith("#") && themeColor.length === 7) {
+      const pillBg = themeColor + "12"; // ~7% opacity hex representation
+      document.documentElement.style.setProperty('--pill-bg', pillBg);
     }
 
     if (config.textColor) {
@@ -1559,7 +2321,7 @@
     // 4. Main Title
     const titleH1 = document.getElementById('store-title');
     if (config.title) {
-      titleH1.innerHTML = config.title.replace(/\n/g, '<br>');
+      titleH1.innerHTML = escapeHtml(config.title).replace(/\n/g, '<br>');
       titleH1.style.display = 'block';
     } else {
       titleH1.style.display = 'none';
@@ -1586,21 +2348,22 @@
     // 7. Sub CTA Text
     const subP = document.getElementById('store-sub');
     if (config.subText) {
-      subP.innerHTML = config.subText.replace(/\n/g, '<br>');
+      subP.innerHTML = escapeHtml(config.subText).replace(/\n/g, '<br>');
       subP.style.display = 'block';
     } else {
       subP.style.display = 'none';
     }
 
-    // 8. Render Links
+    // 8. Render Social Bar
+    renderSocialBar(config);
+
+    // 9. Render Links
     if (config.links && Array.isArray(config.links)) {
       renderLinks(config.links);
     }
   }
 
   // Singleton lightbox overlay reused by every carousel card on the page.
-  // Shows the clicked photo enlarged, its optional caption, and — if the
-  // link itself has a URL set — a "Ver mais" link through to it.
   let carouselLightboxEls = null;
   function getCarouselLightbox() {
     if (carouselLightboxEls) return carouselLightboxEls;
@@ -1661,7 +2424,7 @@
     if (link && link.url) {
       lb.link.href = link.url;
       lb.link.style.display = 'block';
-      lb.link.onclick = () => trackStoreClick(index, link.url);
+      lb.link.onclick = () => trackStoreClick(link.id || index, link.url);
     } else {
       lb.link.style.display = 'none';
       lb.link.onclick = null;
@@ -1670,12 +2433,7 @@
     lb.backdrop.classList.add('open');
   }
 
-  // Builds a self-contained animated carousel card: swipeable/clickable
-  // slides, prev/next arrows, dot indicators, and autoplay — all vanilla,
-  // no external library.
   function buildCarouselCard(link, index) {
-    // Backward-compatible: older saved links stored `images` as a plain
-    // string[]; newer ones store `{ url, caption }[]` to support captions.
     const images = link.images.map((img) =>
       typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' }
     );
@@ -1721,12 +2479,6 @@
       return slide;
     }
 
-    // For a seamless infinite loop, pad the real photos with a few cloned
-    // slides on each side (as many as fit in the visible window). Scrolling
-    // past the real edge glides into a clone that looks identical to the
-    // real slide — once that scroll animation finishes we silently jump the
-    // track back into the real range with no transition, so the loop never
-    // visibly "resets".
     const domImages = isInfinite
       ? [...images.slice(-visible), ...images, ...images.slice(0, visible)]
       : images;
@@ -1735,7 +2487,7 @@
     viewport.appendChild(track);
     card.appendChild(viewport);
 
-    let pos = isInfinite ? visible : 0; // index of the leading visible slide within domImages
+    let pos = isInfinite ? visible : 0;
 
     function applyTransform(withTransition) {
       if (!withTransition) {
@@ -1743,7 +2495,7 @@
       }
       track.style.transform = `translateX(-${pos * slideBasisPct}%)`;
       if (!withTransition) {
-        void track.offsetHeight; // force reflow so the jump is instant, not animated
+        void track.offsetHeight;
         track.style.transition = '';
       }
     }
@@ -1760,8 +2512,6 @@
       updateDots();
     }
 
-    // After sliding into a cloned edge, snap back into the real range once
-    // the animation is done — this is what makes the loop feel endless.
     track.addEventListener('transitionend', () => {
       if (!isInfinite) return;
       if (pos >= visible + total) {
@@ -1813,7 +2563,6 @@
       }
       card.appendChild(dots);
 
-      // Touch swipe
       let touchStartX = 0;
       viewport.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
@@ -1829,11 +2578,105 @@
       viewport.addEventListener('mouseenter', stopAutoplay);
       viewport.addEventListener('mouseleave', startAutoplay);
 
-      applyTransform(false); // place the track at the starting real slide with no animation
+      applyTransform(false);
       startAutoplay();
     }
 
     return card;
+  }
+
+  const SOCIAL_ICONS_SVG = {
+    instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>',
+    whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>',
+    tiktok: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.59-1.01V14.5c.01 2.32-.6 4.67-2.06 6.49-1.74 2.21-4.52 3.43-7.3 3.14-2.58-.23-4.99-1.63-6.42-3.8-1.53-2.27-1.74-5.32-.57-7.79 1.13-2.48 3.53-4.23 6.22-4.57.85-.11 1.71-.08 2.56.09v4.14c-.66-.21-1.39-.24-2.07-.1-1.22.24-2.29 1.07-2.81 2.19-.54 1.14-.42 2.54.29 3.57.7 1.04 1.94 1.63 3.2 1.52 1.25-.08 2.38-.85 2.87-2.01.25-.56.36-1.18.35-1.8V0c.01 0 .01.01 0 .02z"/></svg>',
+    youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>',
+    facebook: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>',
+    threads: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221c-.067-.091-1.026-1.393-2.834-1.393-2.186 0-3.87 1.558-3.87 3.999 0 2.502 1.761 4.077 4.053 4.077 1.522 0 2.65-.679 3.013-1.637.283.743.834 1.137 1.634 1.137.95 0 1.748-.567 1.748-1.577 0-3.327-2.613-5.606-6.435-5.606-4.043 0-6.953 2.711-6.953 6.643 0 3.864 2.87 6.536 6.848 6.536 2.057 0 3.738-.667 4.887-1.928l-1.31-1.077c-.896.953-2.146 1.405-3.577 1.405-2.825 0-4.838-1.859-4.838-4.936 0-2.996 1.95-4.943 4.838-4.943 2.658 0 4.398 1.467 4.436 3.655 0 .041-.004.287-.07.502-.132.433-.497.712-.976.712-.42 0-.756-.239-.756-.723V9.757h-1.857v.293c-.426-.354-1.015-.55-1.748-.55-1.503 0-2.457 1.096-2.457 2.579 0 1.488.948 2.57 2.457 2.57.852 0 1.472-.257 1.879-.699.239.537.763.856 1.44.856.88 0 1.564-.467 1.88-1.282.476 1.565 1.745 2.49 3.447 2.49 1.942 0 3.473-1.258 3.473-3.212 0-2.477-1.714-4.884-4.837-4.884zm-3.037 4.92c-.893 0-1.467-.655-1.467-1.558 0-.907.574-1.562 1.467-1.562.895 0 1.468.655 1.468 1.562 0 .903-.573 1.558-1.468 1.558z"/></svg>'
+  };
+
+  function renderSocialBar(config) {
+    const topBar = document.getElementById('social-bar-top');
+    const bottomBar = document.getElementById('social-bar-bottom');
+    if (!topBar || !bottomBar) return;
+
+    topBar.innerHTML = '';
+    bottomBar.innerHTML = '';
+    topBar.style.display = 'none';
+    bottomBar.style.display = 'none';
+
+    const social = config.socialLinks || {};
+    const pos = config.socialPosition || 'top';
+    const targetBar = pos === 'bottom' ? bottomBar : topBar;
+
+    let hasAny = false;
+    Object.keys(social).forEach((key) => {
+      let rawVal = (social[key] || '').trim();
+      if (!rawVal) return;
+
+      let href = rawVal;
+      if (key === 'whatsapp') {
+        const digits = rawVal.replace(/\D/g, '');
+        if (digits) {
+          const fullPhone = (digits.length === 10 || digits.length === 11) ? '55' + digits : digits;
+          href = `https://wa.me/${fullPhone}`;
+        }
+      } else if (key === 'instagram') {
+        if (!rawVal.startsWith('http')) {
+          const cleanUser = rawVal.replace('@', '').trim();
+          href = `https://instagram.com/${cleanUser}`;
+        }
+      } else if (key === 'tiktok') {
+        if (!rawVal.startsWith('http')) {
+          const cleanUser = rawVal.startsWith('@') ? rawVal : '@' + rawVal;
+          href = `https://tiktok.com/${cleanUser}`;
+        }
+      } else if (key === 'threads') {
+        if (!rawVal.startsWith('http')) {
+          const cleanUser = rawVal.replace('@', '').trim();
+          href = `https://threads.net/@${cleanUser}`;
+        }
+      } else if (!/^https?:\/\//i.test(rawVal)) {
+        href = 'https://' + rawVal;
+      }
+
+      const a = document.createElement('a');
+      a.className = 'social-icon-btn';
+      a.href = href;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.setAttribute('aria-label', key);
+      a.innerHTML = SOCIAL_ICONS_SVG[key] || `<span style="font-size:11px; font-weight:800;">${key.slice(0,2).toUpperCase()}</span>`;
+      
+      a.addEventListener('click', () => {
+        trackStoreClick('social_' + key, href);
+      });
+
+      targetBar.appendChild(a);
+      hasAny = true;
+    });
+
+    if (hasAny) {
+      targetBar.style.display = 'flex';
+    }
+  }
+
+  function copyCouponCode(code, btnEl) {
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(() => {
+      showToast(`Cupom ${code} copiado!`);
+      if (navigator.vibrate) navigator.vibrate(50);
+      if (btnEl) {
+        const origHtml = btnEl.innerHTML;
+        btnEl.innerHTML = `<span>✓ Copiado!</span>`;
+        btnEl.style.background = '#10b981';
+        setTimeout(() => {
+          btnEl.innerHTML = origHtml;
+          btnEl.style.background = 'var(--gold-deep, #ef4444)';
+        }, 2200);
+      }
+    }).catch(() => {
+      showToast(`Código: ${code}`);
+    });
   }
 
   function renderLinks(links) {
@@ -1847,26 +2690,58 @@
     let renderedCount = 0;
 
     links.forEach((link, index) => {
-      // Check schedule start and end (unless in preview mode)
       let isScheduledFuture = false;
       let isScheduledExpired = false;
 
       if (link.scheduleStart) {
         const start = new Date(link.scheduleStart);
         if (now < start) {
-          if (!isPreview) return; // Future link — hide on public page
+          if (!isPreview) return;
           isScheduledFuture = true;
         }
       }
       if (link.scheduleEnd) {
         const end = new Date(link.scheduleEnd);
         if (now > end) {
-          if (!isPreview) return; // Expired link — hide on public page
+          if (!isPreview) return;
           isScheduledExpired = true;
         }
       }
 
-      // Check if this is an embedded map iframe
+      // 1. Coupon Card
+      if (link.type === 'cupom' || link.image === 'cupom') {
+        const cdata = link.cupomData || {};
+        const code = cdata.code || 'PROMO10';
+        const title = cdata.title || link.label || 'Cupom de Desconto';
+        const rules = cdata.rules || '';
+
+        const card = document.createElement('div');
+        card.className = 'coupon-card';
+        card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+
+        card.innerHTML = `
+          <div class="coupon-info">
+            <div class="coupon-title">
+              <span style="color: var(--gold-deep, #ef4444); display: inline-flex;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+              </span>
+              <span>${escapeHtml(title)}</span>
+            </div>
+            ${rules ? `<div class="coupon-rules">${escapeHtml(rules)}</div>` : ''}
+          </div>
+          <div class="coupon-action-wrap">
+            <div class="coupon-code-badge">${escapeHtml(code)}</div>
+            <button type="button" class="coupon-copy-btn" onclick="copyCouponCode('${escapeHtml(code)}', this)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copiar</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+        renderedCount++;
+        return;
+      }
+
       const isMap = link.image === 'mapa';
       const isIframe = link.url && (link.url.includes('<iframe') || link.url.includes('google.com/maps/embed'));
       
@@ -1884,7 +2759,7 @@
         card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
         
         card.innerHTML = `
-          <div class="map-card-title">${link.label}</div>
+          <div class="map-card-title">${escapeHtml(link.label)}</div>
           <div class="map-iframe-wrapper">
             <iframe src="${srcUrl}" width="100%" height="220" style="border:0; border-radius: 8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
@@ -1894,7 +2769,6 @@
         return;
       }
 
-      // Animated photo carousel — uploaded/linked photos instead of a single clickable button.
       if (link.type === 'carousel' && Array.isArray(link.images) && link.images.length > 0) {
         const card = buildCarouselCard(link, index);
         card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
@@ -1904,14 +2778,44 @@
       }
 
       const a = document.createElement('a');
-      a.className = 'btn btn-outline';
+      a.className = 'btn btn-outline' + (link.highlight ? ' btn-highlighted' : '');
       a.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
 
-      if (link.image === 'catalago_web') {
+      const linkTrackerId = link.id || index;
+
+      if (link.image === 'pix' || link.type === 'pix') {
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
-          trackStoreClick(index, link.url);
+          trackStoreClick(linkTrackerId, 'pix');
+          openPixModal(link);
+        });
+      } else if (link.image === 'horario' || link.type === 'horario') {
+        a.href = '#';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          trackStoreClick(linkTrackerId, 'horario');
+          openScheduleModal(link.scheduleData, link.label);
+        });
+      } else if (link.image === 'vcard' || link.type === 'vcard') {
+        a.href = '#';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          trackStoreClick(linkTrackerId, 'vcard');
+          downloadVCard(link.vcardData || link);
+        });
+      } else if (link.image === 'mapa' && (link.mapMode === 'modal' || (link.address && !link.url?.includes('iframe')))) {
+        a.href = '#';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          trackStoreClick(linkTrackerId, 'mapa');
+          openRouteModal(link.address || link.url, link.label);
+        });
+      } else if (link.image === 'catalago_web') {
+        a.href = '#';
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          trackStoreClick(linkTrackerId, link.url);
           openPdfModal(link.url, link.label);
         });
       } else if (link.image === 'construcao' && !link.url) {
@@ -1926,7 +2830,7 @@
         a.target = '_blank';
         a.rel = 'noopener';
         a.addEventListener('click', (e) => {
-          trackStoreClick(index, link.url);
+          trackStoreClick(linkTrackerId, link.url);
         });
       }
       
@@ -1941,7 +2845,22 @@
       labelText.textContent = link.label;
       labelSpan.appendChild(labelText);
       
-      if (link.badge) {
+      // Dynamic live badge for Business Hours (Horário de Atendimento)
+      if (link.image === 'horario' || link.type === 'horario') {
+        const statusInfo = calculateOpeningStatus(link.scheduleData);
+        const statusBadge = document.createElement('span');
+        statusBadge.className = `status-badge ${statusInfo.isOpen ? 'open' : 'closed'}`;
+        const dot = document.createElement('span');
+        dot.className = 'status-dot';
+        statusBadge.appendChild(dot);
+        const statusText = document.createTextNode(
+          statusInfo.isOpen
+            ? `Aberto Agora • fecha às ${statusInfo.closeTime}`
+            : `Fechado${statusInfo.nextOpen ? ' • abre ' + statusInfo.nextOpen : ''}`
+        );
+        statusBadge.appendChild(statusText);
+        labelSpan.appendChild(statusBadge);
+      } else if (link.badge) {
         const badgeSpan = document.createElement('span');
         badgeSpan.className = 'btn-badge';
         badgeSpan.textContent = link.badge;
@@ -1974,9 +2893,441 @@
       a.appendChild(labelSpan);
       a.appendChild(arrowSpan);
       
+      // GSAP Micro-interactions
+      if (typeof gsap !== 'undefined') {
+        a.addEventListener('mouseenter', () => {
+          gsap.to(a, { y: -3, scale: 1.015, duration: 0.22, ease: 'power2.out' });
+          gsap.to(arrowSpan, { x: 3, duration: 0.2, ease: 'power2.out' });
+          gsap.to(iconSpan, { scale: 1.08, duration: 0.2, ease: 'power2.out' });
+        });
+
+        a.addEventListener('mouseleave', () => {
+          gsap.to(a, { y: 0, scale: 1, duration: 0.28, ease: 'power2.out' });
+          gsap.to(arrowSpan, { x: 0, duration: 0.25, ease: 'power2.out' });
+          gsap.to(iconSpan, { scale: 1, duration: 0.25, ease: 'power2.out' });
+        });
+
+        a.addEventListener('pointerdown', () => {
+          gsap.to(a, { scale: 0.97, duration: 0.1, ease: 'power1.inOut' });
+          triggerHaptic();
+        });
+
+        a.addEventListener('pointerup', () => {
+          gsap.to(a, { scale: 1.015, duration: 0.2, ease: 'back.out(2)' });
+        });
+      }
+
       container.appendChild(a);
       renderedCount++;
     });
+
+    if (pageEntranceAnimated && typeof gsap !== 'undefined') {
+      gsap.fromTo('#links-container > *', 
+        { opacity: 0, y: 15, scale: 0.98 }, 
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out' }
+      );
+    }
+  }
+
+  // PIX Modal Controller
+  let currentPixKeyToCopy = '';
+  function openPixModal(link) {
+    const backdrop = document.getElementById('pix-modal-backdrop');
+    if (!backdrop) return;
+
+    const titleEl = document.getElementById('pix-modal-title');
+    const beneficiaryEl = document.getElementById('pix-modal-beneficiary');
+    const keyTypeEl = document.getElementById('pix-modal-key-type');
+    const keyValueEl = document.getElementById('pix-modal-key-value');
+    const qrImg = document.getElementById('pix-modal-qr');
+
+    const key = link.pixKey || link.url || '';
+    const keyType = link.pixKeyType || 'Chave PIX';
+    const beneficiary = link.pixBeneficiary || '';
+
+    currentPixKeyToCopy = key;
+
+    titleEl.textContent = link.label || 'Pagamento via PIX';
+    beneficiaryEl.textContent = beneficiary ? `Favorecido: ${beneficiary}` : '';
+    beneficiaryEl.style.display = beneficiary ? 'block' : 'none';
+    keyTypeEl.textContent = keyType;
+    keyValueEl.textContent = key;
+
+    if (key) {
+      qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(key)}&margin=10`;
+    }
+
+    backdrop.style.display = 'flex';
+    backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+      const modalBox = backdrop.querySelector('.pix-modal');
+      if (modalBox) {
+        gsap.fromTo(modalBox, { scale: 0.86, y: 25, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.4)' });
+      }
+    }
+  }
+
+  function closePixModal() {
+    const backdrop = document.getElementById('pix-modal-backdrop');
+    if (!backdrop) return;
+
+    if (typeof gsap !== 'undefined') {
+      const modalBox = backdrop.querySelector('.pix-modal');
+      if (modalBox) {
+        gsap.to(modalBox, { scale: 0.9, y: 15, opacity: 0, duration: 0.2, ease: 'power2.in' });
+      }
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          backdrop.classList.remove('active');
+          backdrop.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      backdrop.classList.remove('active');
+      setTimeout(() => {
+        backdrop.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 250);
+    }
+  }
+
+  async function copyPixKey() {
+    triggerHaptic();
+    if (!currentPixKeyToCopy) return;
+
+    const btn = document.getElementById('pix-copy-action-btn');
+    const originalContent = btn.innerHTML;
+
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(btn, { scale: 0.92 }, { scale: 1, duration: 0.45, ease: 'elastic.out(1.2, 0.4)' });
+    }
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(currentPixKeyToCopy);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = currentPixKeyToCopy;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> <span>Chave Copiada!</span>`;
+      btn.style.backgroundColor = '#059669';
+      showShareToast('Chave PIX copiada com sucesso!');
+
+      setTimeout(() => {
+        btn.innerHTML = originalContent;
+        btn.style.backgroundColor = '#10b981';
+      }, 2200);
+    } catch(err) {
+      console.error('Falha ao copiar PIX:', err);
+      showShareToast('Não foi possível copiar a chave');
+    }
+  }
+
+  const WEEKDAY_NAMES = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  const WEEKDAY_SHORT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+  function normalizeIntervals(dayData) {
+    if (!dayData) return [];
+    if (Array.isArray(dayData.intervals) && dayData.intervals.length > 0) {
+      return dayData.intervals;
+    }
+    if (dayData.open && dayData.close) {
+      return [{ open: dayData.open, close: dayData.close }];
+    }
+    return [{ open: '08:00', close: '18:00' }];
+  }
+
+  function calculateOpeningStatus(schedule) {
+    if (!schedule || typeof schedule !== 'object') {
+      return { isOpen: true, closeTime: '18:00', nextOpen: '', schedule: {} };
+    }
+
+    const now = new Date();
+    const day = now.getDay(); // 0=Dom, 1=Seg...
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    const todaySched = schedule[day] || { enabled: day !== 0, intervals: [{ open: '08:00', close: '18:00' }] };
+    const todayIntervals = normalizeIntervals(todaySched);
+
+    let isOpen = false;
+    let closeTime = '';
+    let nextOpen = '';
+
+    if (todaySched.enabled) {
+      for (let interval of todayIntervals) {
+        const [oH, oM] = (interval.open || '08:00').split(':').map(Number);
+        let [cH, cM] = (interval.close || '18:00').split(':').map(Number);
+        
+        let openMin = (oH || 0) * 60 + (oM || 0);
+        let closeMin = (cH || 0) * 60 + (cM || 0);
+
+        if (closeMin <= openMin) {
+          closeMin += 24 * 60;
+        }
+
+        if (currentMinutes >= openMin && currentMinutes < closeMin) {
+          isOpen = true;
+          closeTime = interval.close || '18:00';
+          break;
+        }
+      }
+    }
+
+    if (!isOpen) {
+      // 1. Check if there is another shift later TODAY
+      if (todaySched.enabled) {
+        for (let interval of todayIntervals) {
+          const [oH, oM] = (interval.open || '08:00').split(':').map(Number);
+          let openMin = (oH || 0) * 60 + (oM || 0);
+          if (currentMinutes < openMin) {
+            nextOpen = `hoje às ${interval.open}`;
+            break;
+          }
+        }
+      }
+
+      // 2. If no shift later today, check upcoming days
+      if (!nextOpen) {
+        for (let i = 1; i < 7; i++) {
+          const nextDayIdx = (day + i) % 7;
+          const s = schedule[nextDayIdx];
+          if (s && s.enabled) {
+            const intervals = normalizeIntervals(s);
+            if (intervals.length > 0) {
+              const firstOpen = intervals[0].open || '08:00';
+              nextOpen = i === 1 ? `amanhã às ${firstOpen}` : `${WEEKDAY_SHORT[nextDayIdx]} às ${firstOpen}`;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    return { isOpen, closeTime, nextOpen, todaySched };
+  }
+
+  // Schedule Modal Controller
+  function openScheduleModal(schedule, label) {
+    const backdrop = document.getElementById('schedule-modal-backdrop');
+    if (!backdrop) return;
+
+    const titleEl = document.getElementById('schedule-modal-title');
+    const statusEl = document.getElementById('schedule-modal-current-status');
+    const listEl = document.getElementById('schedule-modal-list');
+
+    titleEl.textContent = label || 'Horários de Atendimento';
+
+    const statusInfo = calculateOpeningStatus(schedule);
+    if (statusInfo.isOpen) {
+      statusEl.className = 'schedule-status-banner open';
+      statusEl.innerHTML = `
+        <span class="status-dot" style="background-color: #10b981; box-shadow: 0 0 10px #10b981; animation: statusPulse 2s infinite; flex-shrink: 0;"></span> 
+        <span>Aberto Agora • fecha às ${statusInfo.closeTime}</span>
+      `;
+    } else {
+      statusEl.className = 'schedule-status-banner closed';
+      statusEl.innerHTML = `
+        <span class="status-dot" style="background-color: #ef4444; box-shadow: 0 0 8px #ef4444; flex-shrink: 0;"></span> 
+        <span>Fechado no momento${statusInfo.nextOpen ? ' • abre ' + statusInfo.nextOpen : ''}</span>
+      `;
+    }
+
+    listEl.innerHTML = '';
+    const now = new Date();
+    const todayIdx = now.getDay();
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // Seg a Dom
+
+    dayOrder.forEach((dIdx) => {
+      const s = (schedule && schedule[dIdx]) ? schedule[dIdx] : { enabled: dIdx !== 0, intervals: [{ open: '08:00', close: dIdx === 6 ? '12:00' : '18:00' }] };
+      const isToday = dIdx === todayIdx;
+      const intervals = normalizeIntervals(s);
+
+      const row = document.createElement('div');
+      row.className = `schedule-day-row ${isToday ? 'today' : ''}`;
+
+      let intervalsFormatted = 'Fechado';
+      if (s.enabled && intervals.length > 0) {
+        intervalsFormatted = intervals.map(iv => `${iv.open} às ${iv.close}`).join(' &nbsp;•&nbsp; ');
+      }
+
+      row.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="day-name">${WEEKDAY_NAMES[dIdx]}</span>
+          ${isToday ? '<span class="today-tag">HOJE</span>' : ''}
+        </div>
+        <span style="font-weight: ${isToday ? '800' : '600'}; font-size: ${isToday ? '12.5px' : '12px'}; color: ${s.enabled ? (isToday ? '#ffffff' : '#e2e8f0') : '#f87171'}; ${!s.enabled ? 'background: rgba(239, 68, 68, 0.15); padding: 2px 8px; border-radius: 6px;' : ''}; text-align: right;">
+          ${intervalsFormatted}
+        </span>
+      `;
+      listEl.appendChild(row);
+    });
+
+    backdrop.style.display = 'flex';
+    backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+      const card = backdrop.querySelector('.themed-modal-card') || backdrop.querySelector('.pix-modal-card');
+      if (card) {
+        gsap.fromTo(card, { scale: 0.9, y: 20, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.4)' });
+      }
+    }
+  }
+
+  function closeScheduleModal() {
+    const backdrop = document.getElementById('schedule-modal-backdrop');
+    if (!backdrop) return;
+
+    if (typeof gsap !== 'undefined') {
+      const card = backdrop.querySelector('.themed-modal-card') || backdrop.querySelector('.pix-modal-card');
+      if (card) gsap.to(card, { scale: 0.9, y: 15, opacity: 0, duration: 0.2, ease: 'power2.in' });
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          backdrop.classList.remove('active');
+          backdrop.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      backdrop.classList.remove('active');
+      backdrop.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  // VCard 3.0 Generator & Downloader
+  function downloadVCard(vcardData) {
+    triggerHaptic();
+    const data = vcardData || {};
+    const name = data.name || data.label || 'Contato';
+    const org = data.org || '';
+    const phone = data.phone || '';
+    const email = data.email || '';
+    const address = data.address || '';
+    const url = data.url || window.location.href;
+
+    let vcard = 'BEGIN:VCARD\r\nVERSION:3.0\r\n';
+    vcard += `FN:${name}\r\n`;
+    if (org) vcard += `ORG:${org}\r\n`;
+    if (phone) vcard += `TEL;TYPE=CELL,VOICE:${phone.replace(/[^\d+]/g, '')}\r\n`;
+    if (email) vcard += `EMAIL;TYPE=INTERNET,PREF:${email}\r\n`;
+    if (address) vcard += `ADR;TYPE=WORK:;;${address};;;;\r\n`;
+    if (url) vcard += `URL:${url}\r\n`;
+    vcard += 'END:VCARD\r\n';
+
+    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    const cleanFileName = name.replace(/[^\w\s-]/gi, '').trim() || 'contato';
+    a.download = `${cleanFileName}.vcf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+
+    showShareToast('Cartão de contato baixado!');
+  }
+
+  // Route / Como Chegar Modal Controller
+  let currentRouteAddress = '';
+  function openRouteModal(address, label) {
+    const backdrop = document.getElementById('route-modal-backdrop');
+    if (!backdrop) return;
+
+    currentRouteAddress = address || '';
+
+    const titleEl = document.getElementById('route-modal-title');
+    const addressEl = document.getElementById('route-modal-address');
+    const wazeBtn = document.getElementById('route-btn-waze');
+    const googleBtn = document.getElementById('route-btn-google');
+    const appleBtn = document.getElementById('route-btn-apple');
+
+    titleEl.textContent = label || 'Como Chegar';
+    addressEl.textContent = currentRouteAddress || 'Endereço não especificado';
+
+    const encodedAddr = encodeURIComponent(currentRouteAddress);
+    wazeBtn.href = `https://waze.com/ul?q=${encodedAddr}`;
+    googleBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodedAddr}`;
+    appleBtn.href = `https://maps.apple.com/?q=${encodedAddr}`;
+
+    backdrop.style.display = 'flex';
+    backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+      const card = backdrop.querySelector('.themed-modal-card') || backdrop.querySelector('.pix-modal-card');
+      if (card) {
+        gsap.fromTo(card, { scale: 0.9, y: 20, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.35, ease: 'back.out(1.4)' });
+      }
+    }
+  }
+
+  function closeRouteModal() {
+    const backdrop = document.getElementById('route-modal-backdrop');
+    if (!backdrop) return;
+
+    if (typeof gsap !== 'undefined') {
+      const card = backdrop.querySelector('.themed-modal-card') || backdrop.querySelector('.pix-modal-card');
+      if (card) gsap.to(card, { scale: 0.9, y: 15, opacity: 0, duration: 0.2, ease: 'power2.in' });
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          backdrop.classList.remove('active');
+          backdrop.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      backdrop.classList.remove('active');
+      backdrop.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  async function copyRouteAddress() {
+    triggerHaptic();
+    if (!currentRouteAddress) return;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(currentRouteAddress);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = currentRouteAddress;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      showShareToast('Endereço copiado!');
+    } catch(err) {
+      console.error('Falha ao copiar endereço:', err);
+      showShareToast('Não foi possível copiar o endereço');
+    }
   }
 
   // Live Preview listener
@@ -1986,12 +3337,36 @@
     }
   });
 
-  // Check preview mode to offset phone camera notch
   if (window.location.search.includes('preview=true')) {
     document.body.classList.add('in-preview');
   }
 
-  // PDF.js controller logic
+  // Dynamic Lazy Loading for PDF.js
+  let pdfjsPromise = null;
+  function ensurePdfJsLoaded() {
+    if (window['pdfjs-dist/build/pdf']) {
+      return Promise.resolve(window['pdfjs-dist/build/pdf']);
+    }
+    if (pdfjsPromise) return pdfjsPromise;
+
+    pdfjsPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
+      script.onload = () => {
+        const pdfjs = window['pdfjs-dist/build/pdf'];
+        if (pdfjs) {
+          pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+          resolve(pdfjs);
+        } else {
+          reject(new Error('PDF.js not available'));
+        }
+      };
+      script.onerror = () => reject(new Error('Falha ao carregar biblioteca PDF.js'));
+      document.head.appendChild(script);
+    });
+    return pdfjsPromise;
+  }
+
   let pdfDoc = null;
   let pageNum = 1;
   let pageRendering = false;
@@ -1999,12 +3374,6 @@
   let scale = 1.25; 
   let pdfCanvas = null;
   let pdfCtx = null;
-
-  // Initialize PDF.js reference
-  const pdfjsLib = window['pdfjs-dist/build/pdf'];
-  if (pdfjsLib) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-  }
 
   function renderPage(num) {
     pageRendering = true;
@@ -2052,18 +3421,14 @@
   }
 
   function onPrevPage() {
-    if (pageNum <= 1) {
-      return;
-    }
+    if (pageNum <= 1) return;
     pageNum--;
     queueRenderPage(pageNum);
     updateToolbarButtons();
   }
 
   function onNextPage() {
-    if (pageNum >= pdfDoc.numPages) {
-      return;
-    }
+    if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
     pageNum++;
     queueRenderPage(pageNum);
     updateToolbarButtons();
@@ -2082,16 +3447,24 @@
   }
 
   function updateToolbarButtons() {
+    if (!pdfDoc) return;
     document.getElementById('pdf-prev-btn').disabled = pageNum <= 1;
     document.getElementById('pdf-next-btn').disabled = pageNum >= pdfDoc.numPages;
   }
 
-  function openPdfModal(pdfUrl, title) {
+  async function openPdfModal(pdfUrl, title) {
     const backdrop = document.getElementById('pdf-modal-backdrop');
     backdrop.style.display = 'flex';
-    backdrop.offsetHeight; // force reflow
     backdrop.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
+      const modalBox = backdrop.querySelector('.pdf-modal-container');
+      if (modalBox) {
+        gsap.fromTo(modalBox, { scale: 0.9, y: 25, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' });
+      }
+    }
 
     document.getElementById('pdf-modal-title').textContent = title || 'Visualizar Catálogo';
     document.getElementById('pdf-download-btn').href = pdfUrl;
@@ -2110,22 +3483,18 @@
     
     pdfCtx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
     
-    if (!pdfjsLib) {
-      console.error('PDF.js library not loaded');
-      showPdfError();
-      return;
-    }
-    
-    const loadingTask = pdfjsLib.getDocument(pdfUrl);
-    loadingTask.promise.then((pdfDoc_) => {
-      pdfDoc = pdfDoc_;
+    try {
+      const pdfjsLib = await ensurePdfJsLoaded();
+      const loadingTask = pdfjsLib.getDocument(pdfUrl);
+      const doc = await loadingTask.promise;
+      pdfDoc = doc;
       document.getElementById('pdf-total-pages').textContent = pdfDoc.numPages;
       renderPage(pageNum);
       updateToolbarButtons();
-    }).catch((error) => {
+    } catch (error) {
       console.error('Error loading PDF with PDF.js:', error);
       showPdfError();
-    });
+    }
   }
 
   function showPdfError() {
@@ -2136,11 +3505,30 @@
 
   function closePdfModal() {
     const backdrop = document.getElementById('pdf-modal-backdrop');
-    backdrop.classList.remove('active');
-    setTimeout(() => {
-      backdrop.style.display = 'none';
-      document.body.style.overflow = '';
-    }, 300);
+    if (!backdrop) return;
+
+    if (typeof gsap !== 'undefined') {
+      const modalBox = backdrop.querySelector('.pdf-modal-container');
+      if (modalBox) {
+        gsap.to(modalBox, { scale: 0.94, opacity: 0, y: 15, duration: 0.2, ease: 'power2.in' });
+      }
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+        onComplete: () => {
+          backdrop.classList.remove('active');
+          backdrop.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    } else {
+      backdrop.classList.remove('active');
+      setTimeout(() => {
+        backdrop.style.display = 'none';
+        document.body.style.overflow = '';
+      }, 300);
+    }
   }
 
 

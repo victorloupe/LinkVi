@@ -594,8 +594,9 @@
   .preview-panel {
     flex: 0 0 310px;
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     position: sticky;
     top: 92px;
     height: calc(100vh - 120px);
@@ -1110,7 +1111,9 @@
   .modal-backdrop {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(15, 23, 42, 0.35);
+    background-color: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1128,15 +1131,40 @@
   .modal {
     background-color: var(--panel-white);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 12px;
     width: 100%;
-    max-width: 440px;
+    max-width: 520px;
     padding: 24px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
     transform: scale(0.97);
     transition: transform 0.2s ease;
     max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .builder-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .builder-form-grid .form-group {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .builder-form-grid input,
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .modal-backdrop.open .modal {
@@ -1170,6 +1198,9 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .modal-footer {
@@ -1506,7 +1537,7 @@
       display: flex !important;
     }
     .preview-panel {
-      display: none;
+      display: none !important;
     }
     .dashboard-container {
       flex-direction: column;
@@ -1633,6 +1664,29 @@
     }
   }
 
+  @media (max-width: 540px) {
+    .modal {
+      max-width: calc(100% - 20px) !important;
+      padding: 16px 14px !important;
+      margin: 10px !important;
+    }
+
+    .builder-form-grid {
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+    }
+
+    #vcard-builder-fields,
+    #horario-builder-fields,
+    #mapa-builder-fields,
+    #pix-builder-fields,
+    #whatsapp-builder-fields,
+    #email-builder-fields,
+    #telefone-builder-fields {
+      padding: 12px 10px !important;
+    }
+  }
+
   @media (max-width: 480px) {
     .login-card {
       padding: 32px 24px;
@@ -1640,9 +1694,9 @@
     }
 
     .modal {
-      max-width: calc(100% - 32px) !important;
-      padding: 16px;
-      margin: 16px;
+      max-width: calc(100% - 20px) !important;
+      padding: 16px 12px;
+      margin: 10px;
     }
 
     .modal-footer {
@@ -2150,6 +2204,49 @@
         <textarea id="store-sub-text" placeholder="Ex: Selecione uma das opções abaixo para falar conosco" oninput="triggerAutosave()"></textarea>
       </div>
 
+      <!-- Barra de Redes Sociais Compacta (Social Bar) -->
+      <div style="margin-top: 14px; padding: 12px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 14px;">🌐</span>
+            <span style="font-size: 12px; font-weight: 750; color: var(--text-main);">Barra de Redes Sociais (Social Bar)</span>
+          </div>
+          <select id="store-social-position" onchange="triggerAutosave()" style="padding: 3px 8px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; font-weight: 600; color: var(--text-main);">
+            <option value="top">Posição: Topo (abaixo da bio)</option>
+            <option value="bottom">Posição: Rodapé (fim da página)</option>
+          </select>
+        </div>
+        <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4; margin: 0 0 10px;">
+          Adicione links para exibir mini-ícones circulares elegantes na página pública.
+        </p>
+        <div class="builder-form-grid" style="gap: 8px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-instagram" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Instagram:</label>
+            <input type="text" id="social-instagram" placeholder="https://instagram.com/seuperfil ou @seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-whatsapp" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">WhatsApp:</label>
+            <input type="text" id="social-whatsapp" placeholder="Ex: (11) 99999-9999 ou link wa.me" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-tiktok" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">TikTok:</label>
+            <input type="text" id="social-tiktok" placeholder="https://tiktok.com/@seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-youtube" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">YouTube:</label>
+            <input type="text" id="social-youtube" placeholder="https://youtube.com/@seucanal" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-facebook" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Facebook:</label>
+            <input type="text" id="social-facebook" placeholder="https://facebook.com/suapagina" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="social-threads" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Threads / X (Twitter):</label>
+            <input type="text" id="social-threads" placeholder="https://threads.net/@seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+          </div>
+        </div>
+      </div>
+
         </div>
       </div>
     </aside>
@@ -2196,9 +2293,19 @@
       <section class="panel-card" style="margin-bottom: 20px; display: flex; flex-direction: column;">
         <div class="links-header">
           <h3>Links Cadastrados</h3>
-          <button class="btn-add-link" onclick="openLinkModal()">
-            <span>Novo Link +</span>
-          </button>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn-secondary" onclick="exportStoreBackup()" style="padding: 6px 10px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px;" title="Exportar backup completo em formato JSON">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Backup</span>
+            </button>
+            <button type="button" class="btn-secondary" onclick="openImportBackupModal()" style="padding: 6px 10px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px;" title="Restaurar configurações a partir de um backup JSON">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              <span>Restaurar</span>
+            </button>
+            <button class="btn-add-link" onclick="openLinkModal()">
+              <span>Novo Link +</span>
+            </button>
+          </div>
         </div>
 
         <div class="links-list" id="links-container">
@@ -2285,6 +2392,21 @@
       </section>
       </div>
 
+      <!-- Origem do Tráfego (Traffic Sources / Referrers) -->
+      <section class="panel-card" id="traffic-sources-card" style="display: none; margin-top: 16px;">
+        <h3 class="section-title" style="margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+          <span>Origem do Tráfego</span>
+        </h3>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px;">Descubra de quais redes sociais ou canais seus visitantes estão acessando sua página.</p>
+        <div id="traffic-sources-bars" style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Populated dynamically -->
+        </div>
+        <div id="traffic-sources-empty" style="display: none; text-align: center; font-size: 11.5px; color: var(--text-muted); padding: 24px 8px;">
+          Nenhum dado de origem registrado ainda para o período selecionado.
+        </div>
+      </section>
+
       <!-- Monthly per-link click trend -->
       <section class="panel-card" id="monthly-chart-card" style="display: none;">
         <h3 class="section-title" style="margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
@@ -2301,7 +2423,7 @@
     </main>
 
     <!-- Live Preview Panel (Desktop) -->
-    <aside class="preview-panel" style="display: flex; flex-direction: column; align-items: center;">
+    <aside class="preview-panel">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; width: 290px;">
         <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Simulador</span>
         <div class="mockup-toggle-group" style="display: flex; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px;">
@@ -2405,6 +2527,15 @@
           <div class="icon-option" data-icon="tiktok" data-title="TikTok" onclick="selectIcon('tiktok')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>
           </div>
+          <div class="icon-option" data-icon="threads" data-title="Threads" onclick="selectIcon('threads')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11.5c0 3-1.5 5.5-4 5.5s-4-2.5-4-5.5 1.5-5.5 4-5.5c2.2 0 3.7 1.8 3.9 4.3.2 2.6-1.4 5.2-4.4 5.2-3.6 0-6.5-2.9-6.5-6.5S7.9 2.5 11.5 2.5s6.5 2.9 6.5 6.5c0 4.5-3.5 8-8 8-4.5 0-8-3.5-8-8S5.5 1 10 1"/></svg>
+          </div>
+          <div class="icon-option" data-icon="whatsapp" data-title="WhatsApp" onclick="selectIcon('whatsapp')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <div class="icon-option" data-icon="telegram" data-title="Telegram" onclick="selectIcon('telegram')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </div>
           <div class="icon-option" data-icon="facebook" data-title="Facebook" onclick="selectIcon('facebook')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
           </div>
@@ -2414,16 +2545,31 @@
           <div class="icon-option" data-icon="linkedin" data-title="LinkedIn" onclick="selectIcon('linkedin')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
           </div>
+          <div class="icon-option" data-icon="pinterest" data-title="Pinterest" onclick="selectIcon('pinterest')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 21a10 10 0 0 1-2-6c0-3.3 2.7-6 6-6 3 0 5 2 5 4.5 0 3-1.7 5.5-4 5.5-1 0-1.8-.6-2-1.3l-.8 3.3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="kwai" data-title="Kwai" onclick="selectIcon('kwai')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="4"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
+          </div>
+          <div class="icon-option" data-icon="google_review" data-title="Google Avaliações" onclick="selectIcon('google_review')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
           <div class="icon-option" data-icon="web" data-title="Website" onclick="selectIcon('web')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
           </div>
 
-          <!-- Fileira 2: Canais de Contato, Localização & Alimentação -->
-          <div class="icon-option" data-icon="whatsapp" data-title="WhatsApp" onclick="selectIcon('whatsapp')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <!-- Fileira 2: Pagamentos, Contato & Localização -->
+          <div class="icon-option" data-icon="pix" data-title="Chave PIX" onclick="selectIcon('pix')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>
           </div>
           <div class="icon-option" data-icon="telefone" data-title="Telefone" onclick="selectIcon('telefone')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          <div class="icon-option" data-icon="horario" data-title="Horários de Atendimento" onclick="selectIcon('horario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="icon-option" data-icon="vcard" data-title="Salvar Contato (Agenda)" onclick="selectIcon('vcard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>
           </div>
           <div class="icon-option" data-icon="email" data-title="E-mail" onclick="selectIcon('email')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -2435,7 +2581,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>
           </div>
           <div class="icon-option" data-icon="ifood" data-title="iFood" onclick="selectIcon('ifood')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="18" r="3"></circle><path d="M18 18h-6v-5h3l2-3V7M6 18h6M12 13V8H8M3 8h5"/></svg>
+            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.428 1.67c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006c4.244 0 7.184-3.854 7.184-6.998 0-2.29-2.175-3.293-4.244-3.293zm11.328 0c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006C21.061 11.96 24 8.107 24 4.963c0-2.29-2.18-3.293-4.244-3.293zM14.172 14.52l2.435 1.834c-2.17 2.07-6.124 3.525-9.353 3.17A8.913 8.913 0 01.23 14.541H0a9.598 9.598 0 008.828 7.758c3.814.24 7.323-.905 9.947-3.13l-.004.007 1.08 2.988 1.555-7.623-7.234-.02Z"/></svg>
           </div>
 
           <!-- Fileira 3: Vendas, Logística & Customização -->
@@ -2463,41 +2609,194 @@
           <div class="icon-option" data-icon="carousel" data-title="Carrossel de Fotos" onclick="selectIcon('carousel')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>
           </div>
+          <div class="icon-option" data-icon="cupom" data-title="Cupom de Desconto" onclick="selectIcon('cupom')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2" stroke-dasharray="2 2"></rect><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle><path d="M10 9l4 6M14 9l-4 6"></path></svg>
+          </div>
           <div class="icon-option" data-icon="fallback" data-title="Outro Link" onclick="selectIcon('fallback')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           </div>
         </div>
       </div>
 
-      <!-- WhatsApp builder helper -->
-      <div id="whatsapp-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
+      <!-- Horário de Atendimento builder helper -->
+      <div id="horario-builder-fields" style="display: none; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(16, 185, 129, 0.12); color: #059669; flex-shrink: 0;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <div>
+              <div style="font-size: 12px; font-weight: 700; color: var(--text-main);">Horários de Atendimento & Turnos</div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Suporta múltiplos turnos por dia (Almoço, Jantar, etc.).</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button type="button" class="btn-secondary" onclick="applySchedulePreset('restaurante')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 700; border-radius: 6px; background: rgba(225, 29, 72, 0.08); color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.2);">🍣 Restaurante (Almoço & Jantar)</button>
+            <button type="button" class="btn-secondary" onclick="applySchedulePreset('comercial')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 600; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1;">Comercial (08h-18h)</button>
+            <button type="button" class="btn-secondary" onclick="applySchedulePreset('todos')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 600; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1;">Todos os Dias</button>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;" id="schedule-days-rows-container">
+          <!-- Dynamically populated 7 days with multiple shifts -->
+        </div>
+      </div>
+
+      <!-- VCard / Salvar Contato builder helper -->
+      <div id="vcard-builder-fields" style="display: none; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: rgba(59, 130, 246, 0.12); color: #2563eb; flex-shrink: 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>
+          </span>
+          <div>
+            <div style="font-size: 12.5px; font-weight: 700; color: var(--text-main);">Cartão de Contato (.vcf / vCard 3.0)</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">Ao tocar no link, o cliente salva o seu contato na agenda do celular em 1 clique.</div>
+          </div>
+        </div>
+
+        <div class="builder-form-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="vcard-name-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Nome Completo / Loja <span style="color: #ef4444;">*</span></label>
+            <input type="text" id="vcard-name-input" placeholder="Ex: É Pra Japa Sushi" oninput="syncVcardLabel()" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="vcard-org-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Empresa / Cargo (Opcional)</label>
+            <input type="text" id="vcard-org-input" placeholder="Ex: Restaurante & Delivery" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+        </div>
+
+        <div class="builder-form-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="vcard-phone-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Telefone / WhatsApp <span style="color: #ef4444;">*</span></label>
+            <input type="tel" id="vcard-phone-input" placeholder="(11) 99999-9999" oninput="handlePhoneInput(this)" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="vcard-email-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">E-mail (Opcional)</label>
+            <input type="email" id="vcard-email-input" placeholder="contato@empresa.com" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="vcard-address-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Endereço Completo (Opcional)</label>
+          <input type="text" id="vcard-address-input" placeholder="Ex: Rua das Flores, 123 - Centro, São Paulo - SP" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+        </div>
+      </div>
+
+      <!-- Mapa / Como Chegar builder helper -->
+      <div id="mapa-builder-fields" style="display: none; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: rgba(14, 165, 233, 0.12); color: #0284c7; flex-shrink: 0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <div>
+            <div style="font-size: 12.5px; font-weight: 700; color: var(--text-main);">Localização & Rotas</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">Defina o endereço para abrir rotas no Waze, Google Maps e Apple Maps.</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="mapa-mode-select" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Modo de Exibição do Mapa</label>
+          <select id="mapa-mode-select" style="padding: 7px 10px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; width: 100%;" onchange="toggleMapModeFields()">
+            <option value="modal">📍 Modal "Como Chegar" (Waze, Google Maps e Apple Maps)</option>
+            <option value="iframe">🗺️ Incorporar Mapa Interativo na Página (Iframe)</option>
+          </select>
+        </div>
+        <div id="mapa-address-container" class="form-group" style="margin-bottom: 0;">
+          <label for="mapa-address-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Endereço Completo do Estabelecimento</label>
+          <input type="text" id="mapa-address-input" placeholder="Ex: Av. Paulista, 1000 - Bela Vista, São Paulo - SP" oninput="syncMapAddress()" style="font-size: 12px; padding: 7px 10px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          <span style="font-size: 10px; color: var(--text-muted); display: block; margin-top: 4px;">O visitante poderá escolher abrir as rotas direto no aplicativo favorito.</span>
+        </div>
+      </div>
+
+      <!-- PIX builder helper -->
+      <div id="pix-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
         <div class="form-group">
-          <label for="wa-phone" style="font-size: 11px; font-weight: 700;">Número do WhatsApp (com DDD)</label>
-          <input type="tel" inputmode="tel" id="wa-phone" placeholder="Ex: (11) 99999-9999" oninput="handlePhoneInput(this)">
+          <label for="pix-key-type" style="font-size: 11px; font-weight: 700;">Tipo de Chave PIX</label>
+          <select id="pix-key-type" style="padding: 6px 10px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; width: 100%;" onchange="generatePixUrl()">
+            <option value="CPF/CNPJ">CPF / CNPJ</option>
+            <option value="Celular">Celular</option>
+            <option value="E-mail">E-mail</option>
+            <option value="Chave Aleatória">Chave Aleatória (EVP)</option>
+          </select>
         </div>
         <div class="form-group">
-          <label for="wa-message" style="font-size: 11px; font-weight: 700;">Mensagem Inicial (Opcional)</label>
-          <input type="text" id="wa-message" placeholder="Ex: Olá! Vim pelo LinksVi" oninput="generateWhatsAppUrl()">
+          <label for="pix-key-input" style="font-size: 11px; font-weight: 700;">Chave PIX</label>
+          <input type="text" id="pix-key-input" placeholder="Digite sua chave PIX..." oninput="generatePixUrl()">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="pix-beneficiary-input" style="font-size: 11px; font-weight: 700;">Nome do Beneficiário / Loja (Opcional)</label>
+          <input type="text" id="pix-beneficiary-input" placeholder="Ex: Minha Loja Ltda" oninput="generatePixUrl()">
+        </div>
+      </div>
+
+      <!-- WhatsApp builder helper -->
+      <div id="whatsapp-builder-fields" style="display: none; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(37, 211, 102, 0.12); color: #25d366; flex-shrink: 0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </span>
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-main);">Gerador de WhatsApp com Mensagem</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">O cliente clica e abre a conversa no WhatsApp com a mensagem já digitada.</div>
+          </div>
+        </div>
+        <div class="builder-form-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="wa-phone" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Número do WhatsApp (com DDD) <span style="color: #ef4444;">*</span></label>
+            <input type="tel" inputmode="tel" id="wa-phone" placeholder="Ex: (11) 99999-9999" oninput="handlePhoneInput(this); generateWhatsAppUrl();" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="wa-message" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Mensagem Pré-definida (Opcional)</label>
+            <input type="text" id="wa-message" placeholder="Ex: Olá! Gostaria de fazer um pedido." oninput="generateWhatsAppUrl();" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Cupom de Desconto builder helper -->
+      <div id="cupom-builder-fields" style="display: none; flex-direction: column; gap: 12px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div style="display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #d97706; flex-shrink: 0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          </span>
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--text-main);">Cupom de Desconto Copiável em 1 Toque</div>
+            <div style="font-size: 10.5px; color: var(--text-muted);">Card promocional com botão para copiar o código e aplicar no pedido.</div>
+          </div>
+        </div>
+        <div class="builder-form-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="cupom-code-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Código do Cupom <span style="color: #ef4444;">*</span></label>
+            <input type="text" id="cupom-code-input" placeholder="Ex: JAPA10" oninput="this.value = this.value.toUpperCase(); syncCupomLabel();" style="font-size: 12px; font-weight: 700; letter-spacing: 0.5px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="cupom-title-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Texto de Desconto / Oferta</label>
+            <input type="text" id="cupom-title-input" placeholder="Ex: 10% OFF no primeiro pedido" oninput="syncCupomLabel();" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="cupom-rules-input" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Regras / Validade (Opcional)</label>
+          <input type="text" id="cupom-rules-input" placeholder="Ex: Válido para pedidos acima de R$ 50 no WhatsApp" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
         </div>
       </div>
 
       <!-- Email builder helper -->
-      <div id="email-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
-        <div class="form-group">
-          <label for="email-address" style="font-size: 11px; font-weight: 700;">Endereço de E-mail</label>
-          <input type="email" id="email-address" placeholder="Ex: contato@sualoja.com" oninput="generateEmailUrl()">
-        </div>
-        <div class="form-group">
-          <label for="email-subject" style="font-size: 11px; font-weight: 700;">Assunto da Mensagem (Opcional)</label>
-          <input type="text" id="email-subject" placeholder="Ex: Dúvida sobre pedido" oninput="generateEmailUrl()">
+      <div id="email-builder-fields" style="display: none; flex-direction: column; gap: 10px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div class="builder-form-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="email-address" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Endereço de E-mail</label>
+            <input type="email" id="email-address" placeholder="Ex: contato@sualoja.com" oninput="generateEmailUrl()" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="email-subject" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Assunto da Mensagem (Opcional)</label>
+            <input type="text" id="email-subject" placeholder="Ex: Dúvida sobre pedido" oninput="generateEmailUrl()" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
+          </div>
         </div>
       </div>
 
       <!-- Telefone builder helper -->
-      <div id="telefone-builder-fields" style="display: none; flex-direction: column; gap: 8px; border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; background-color: var(--bg-light); margin-top: 4px;">
-        <div class="form-group">
-          <label for="tel-number" style="font-size: 11px; font-weight: 700;">Número do Telefone (com DDD)</label>
-          <input type="tel" inputmode="tel" id="tel-number" placeholder="Ex: (11) 99999-9999" oninput="handleTelInput(this)">
+      <div id="telefone-builder-fields" style="display: none; flex-direction: column; gap: 10px; border: 1px solid #e2e8f0; padding: 14px 16px; border-radius: 10px; background-color: #f8fafc; margin-top: 6px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label for="tel-number" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Número do Telefone (com DDD)</label>
+          <input type="tel" inputmode="tel" id="tel-number" placeholder="Ex: (11) 99999-9999" oninput="handleTelInput(this)" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
         </div>
       </div>
 
@@ -2604,6 +2903,18 @@
         </div>
       </div>
 
+      <!-- Efeito Link em Destaque (Glow / Pulse) -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px; margin-top: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 18px; line-height: 1;">⭐</span>
+          <div>
+            <label for="modal-link-highlight" style="font-size: 11.5px; font-weight: 700; color: var(--text-main); margin: 0; cursor: pointer;">Destacar este Link (Brilho Pulsante)</label>
+            <div style="font-size: 10px; color: var(--text-muted);">Aplica um efeito luminoso pulsante contínuo na cor da loja para atrair mais cliques.</div>
+          </div>
+        </div>
+        <input type="checkbox" id="modal-link-highlight" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--brand-purple);">
+      </div>
+
       <!-- Agendamento & Validade do Link (Opcional) -->
       <details id="link-schedule-details" style="margin-top: 10px; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; background: var(--bg-light);">
         <summary style="font-size: 11.5px; font-weight: 700; color: var(--brand-purple); cursor: pointer; outline: none; user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
@@ -2655,6 +2966,29 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeNewStoreModal()">Cancelar</button>
       <button class="btn-primary-modal" onclick="submitNewStore()">Cadastrar Loja</button>
+    </div>
+</div>
+
+<!-- MODAL: Import Store Backup -->
+<div class="modal-backdrop" id="import-backup-backdrop">
+  <div class="modal" style="max-width: 440px;">
+    <div class="modal-header">
+      <h3>Restaurar Backup da Loja</h3>
+      <button class="modal-close" onclick="closeImportBackupModal()">&times;</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px;">
+      <p style="font-size: 11.5px; color: var(--text-muted); line-height: 1.45;">
+        Selecione um arquivo de backup <code>.json</code> exportado anteriormente. Isso restaurará as cores, imagens, textos e links para a loja atual.
+      </p>
+      <div id="backup-dropzone" style="border: 1.5px dashed var(--border-color); border-radius: 8px; padding: 20px; text-align: center; background: var(--bg-light); cursor: pointer;" onclick="document.getElementById('backup-file-input').click()">
+        <span style="font-size: 12px; font-weight: 600; color: var(--brand-purple);">📂 Clique para escolher o arquivo .json</span>
+        <input type="file" id="backup-file-input" accept=".json" style="display: none;" onchange="handleBackupFileSelect(event)">
+      </div>
+      <div id="backup-preview-info" style="display: none; font-size: 11px; padding: 10px; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 6px; color: #0369a1; line-height: 1.4;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeImportBackupModal()">Cancelar</button>
+      <button class="btn-primary-modal" id="confirm-import-backup-btn" disabled onclick="confirmImportBackup()">Restaurar Dados</button>
     </div>
   </div>
 </div>
@@ -2718,11 +3052,23 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
 <!-- Supabase Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- GSAP 3 Animation Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
   // SUPABASE CONFIG
   const supabaseUrl = "https://lujsstahllhcrkfgjmcw.supabase.co";
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
   const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+
+  function escapeHtml(value) {
+    if (!value) return '';
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
   // ICONS
   const LINK_ICONS = {
@@ -2730,6 +3076,14 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     tiktok: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>`,
     shopee: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>`,
     whatsapp: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>`,
+    pix: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>`,
+    horario: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    vcard: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>`,
+    threads: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11.5c0 3-1.5 5.5-4 5.5s-4-2.5-4-5.5 1.5-5.5 4-5.5c2.2 0 3.7 1.8 3.9 4.3.2 2.6-1.4 5.2-4.4 5.2-3.6 0-6.5-2.9-6.5-6.5S7.9 2.5 11.5 2.5s6.5 2.9 6.5 6.5c0 4.5-3.5 8-8 8-4.5 0-8-3.5-8-8S5.5 1 10 1"/></svg>`,
+    telegram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`,
+    pinterest: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 21a10 10 0 0 1-2-6c0-3.3 2.7-6 6-6 3 0 5 2 5 4.5 0 3-1.7 5.5-4 5.5-1 0-1.8-.6-2-1.3l-.8 3.3"/></svg>`,
+    kwai: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="4"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>`,
+    google_review: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
     mapa: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
     comida: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>`,
     ifood: `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.428 1.67c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006c4.244 0 7.184-3.854 7.184-6.998 0-2.29-2.175-3.293-4.244-3.293zm11.328 0c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006C21.061 11.96 24 8.107 24 4.963c0-2.29-2.18-3.293-4.244-3.293zM14.172 14.52l2.435 1.834c-2.17 2.07-6.124 3.525-9.353 3.17A8.913 8.913 0 01.23 14.541H0a9.598 9.598 0 008.828 7.758c3.814.24 7.323-.905 9.947-3.13l-.004.007 1.08 2.988 1.555-7.623-7.234-.02Z"/></svg>`,
@@ -3096,18 +3450,31 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   // (link list) and "Estatísticas" — only one is shown at a time so each
   // screen stays focused; the live phone preview stays visible either way.
   function switchMainTab(tab) {
-    ['appearance', 'links', 'stats'].forEach((t) => {
-      document.getElementById(`tab-panel-${t}`).classList.toggle('tab-panel-hidden', t !== tab);
-      document.getElementById(`main-tab-btn-${t}`).classList.toggle('active', t === tab);
+    const panels = ['appearance', 'links', 'stats'];
+    panels.forEach((t) => {
+      const panel = document.getElementById(`tab-panel-${t}`);
+      const btn = document.getElementById(`main-tab-btn-${t}`);
+      const isTarget = t === tab;
+
+      if (isTarget) {
+        panel.classList.remove('tab-panel-hidden');
+        if (typeof gsap !== 'undefined') {
+          gsap.fromTo(panel, 
+            { opacity: 0, y: 12 }, 
+            { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out', clearProps: 'transform' }
+          );
+        }
+      } else {
+        panel.classList.add('tab-panel-hidden');
+      }
+      btn.classList.toggle('active', isTarget);
     });
     localStorage.setItem('linksvi_admin_tab', tab);
     updateTabsClipPosition(document.getElementById(`main-tab-btn-${tab}`));
   }
 
   // Moves the filled "pill" highlight layer to sit exactly behind the given
-  // real tab button, via an animated CSS clip-path inset — the same visual
-  // technique used by pill-style animated tab components, reimplemented
-  // here in plain JS since this project has no React/build step.
+  // real tab button, via an animated CSS clip-path inset
   function updateTabsClipPosition(activeBtn) {
     const clip = document.getElementById('main-tabs-clip');
     if (!clip || !activeBtn) return;
@@ -3121,15 +3488,83 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     clip.style.clipPath = `inset(0 ${insetRight.toFixed(2)}% 0 ${insetLeft.toFixed(2)}% round 999px)`;
   }
 
-  // TOAST
+  // TOAST with GSAP
   function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
+    if (!toast) return;
     toast.textContent = message;
-    toast.className = `toast show ${type}`;
-    setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    toast.className = `toast ${type}`;
+
+    if (typeof gsap !== 'undefined') {
+      gsap.killTweensOf(toast);
+      toast.style.display = 'block';
+      toast.classList.add('show');
+      gsap.fromTo(toast, 
+        { y: 20, opacity: 0, scale: 0.92 }, 
+        { y: 0, opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.6)' }
+      );
+      
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => {
+        gsap.to(toast, {
+          y: 12,
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.25,
+          ease: 'power2.in',
+          onComplete: () => {
+            toast.classList.remove('show');
+            toast.style.display = 'none';
+          }
+        });
+      }, 3000);
+    } else {
+      toast.classList.add('show');
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
   }
 
-  // CUSTOM DIALOGS (Alert, Confirm, Prompt)
+  // MODAL GSAP HELPERS
+  function openModalWithGsap(backdropId) {
+    const backdrop = document.getElementById(backdropId);
+    if (!backdrop) return;
+    backdrop.classList.add('open');
+    if (typeof gsap !== 'undefined') {
+      gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: 'power2.out' });
+      const modal = backdrop.querySelector('.modal');
+      if (modal) {
+        gsap.fromTo(modal, { scale: 0.92, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.32, ease: 'back.out(1.4)' });
+      }
+    }
+  }
+
+  function closeModalWithGsap(backdropId, onDone) {
+    const backdrop = document.getElementById(backdropId);
+    if (!backdrop) return;
+    if (typeof gsap !== 'undefined') {
+      const modal = backdrop.querySelector('.modal');
+      if (modal) {
+        gsap.to(modal, { scale: 0.94, y: 10, opacity: 0, duration: 0.18, ease: 'power2.in' });
+      }
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.18,
+        ease: 'power2.in',
+        onComplete: () => {
+          backdrop.classList.remove('open');
+          backdrop.style.opacity = '';
+          if (modal) modal.style.opacity = '';
+          if (onDone) onDone();
+        }
+      });
+    } else {
+      backdrop.classList.remove('open');
+      if (onDone) onDone();
+    }
+  }
+
+  // CUSTOM DIALOGS (Alert, Confirm, Prompt) with GSAP
   function showAlert(title, message, buttonText = "Entendido") {
     return new Promise((resolve) => {
       const backdrop = document.createElement('div');
@@ -3160,11 +3595,23 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
+
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' });
+        gsap.fromTo(modal, { scale: 0.9, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.28, ease: 'back.out(1.5)' });
+      }
+
+      const dismiss = () => {
+        if (typeof gsap !== 'undefined') {
+          gsap.to(modal, { scale: 0.94, opacity: 0, y: 8, duration: 0.16, ease: 'power2.in' });
+          gsap.to(backdrop, { opacity: 0, duration: 0.16, ease: 'power2.in', onComplete: () => { backdrop.remove(); resolve(); } });
+        } else {
+          backdrop.remove();
+          resolve();
+        }
+      };
       
-      modal.querySelector('#alert-btn-close').addEventListener('click', () => {
-        backdrop.remove();
-        resolve();
-      });
+      modal.querySelector('#alert-btn-close').addEventListener('click', dismiss);
     });
   }
 
@@ -3201,19 +3648,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
+
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' });
+        gsap.fromTo(modal, { scale: 0.9, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.28, ease: 'back.out(1.5)' });
+      }
+
+      const dismiss = (result) => {
+        if (typeof gsap !== 'undefined') {
+          gsap.to(modal, { scale: 0.94, opacity: 0, y: 8, duration: 0.16, ease: 'power2.in' });
+          gsap.to(backdrop, { opacity: 0, duration: 0.16, ease: 'power2.in', onComplete: () => { backdrop.remove(); resolve(result); } });
+        } else {
+          backdrop.remove();
+          resolve(result);
+        }
+      };
       
-      const btnCancel = modal.querySelector('#confirm-btn-cancel');
-      const btnOk = modal.querySelector('#confirm-btn-ok');
-      
-      btnCancel.addEventListener('click', () => {
-        backdrop.remove();
-        resolve(false);
-      });
-      
-      btnOk.addEventListener('click', () => {
-        backdrop.remove();
-        resolve(true);
-      });
+      modal.querySelector('#confirm-btn-cancel').addEventListener('click', () => dismiss(false));
+      modal.querySelector('#confirm-btn-ok').addEventListener('click', () => dismiss(true));
     });
   }
 
@@ -3247,26 +3699,33 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
       backdrop.appendChild(modal);
       document.body.appendChild(backdrop);
+
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out' });
+        gsap.fromTo(modal, { scale: 0.9, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.28, ease: 'back.out(1.5)' });
+      }
       
       const input = modal.querySelector('#prompt-input-field');
       input.focus();
+
+      const dismiss = (result) => {
+        if (typeof gsap !== 'undefined') {
+          gsap.to(modal, { scale: 0.94, opacity: 0, y: 8, duration: 0.16, ease: 'power2.in' });
+          gsap.to(backdrop, { opacity: 0, duration: 0.16, ease: 'power2.in', onComplete: () => { backdrop.remove(); resolve(result); } });
+        } else {
+          backdrop.remove();
+          resolve(result);
+        }
+      };
       
       input.addEventListener('keyup', (e) => {
         if (e.key === 'Enter') {
-          backdrop.remove();
-          resolve(input.value);
+          dismiss(input.value);
         }
       });
       
-      modal.querySelector('#prompt-btn-cancel').addEventListener('click', () => {
-        backdrop.remove();
-        resolve(null);
-      });
-      
-      modal.querySelector('#prompt-btn-ok').addEventListener('click', () => {
-        backdrop.remove();
-        resolve(input.value);
-      });
+      modal.querySelector('#prompt-btn-cancel').addEventListener('click', () => dismiss(null));
+      modal.querySelector('#prompt-btn-ok').addEventListener('click', () => dismiss(input.value));
     });
   }
 
@@ -3429,6 +3888,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('store-desc-text').value = "";
     document.getElementById('store-cta-text').value = "";
     document.getElementById('store-sub-text').value = "";
+    document.getElementById('social-instagram').value = "";
+    document.getElementById('social-whatsapp').value = "";
+    document.getElementById('social-tiktok').value = "";
+    document.getElementById('social-youtube').value = "";
+    document.getElementById('social-facebook').value = "";
+    document.getElementById('social-threads').value = "";
+    document.getElementById('store-social-position').value = "top";
     document.getElementById('links-container').innerHTML = "";
     document.getElementById('links-empty-state').style.display = 'block';
     updatePublicLinkDisplay();
@@ -3467,6 +3933,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           }
         }
 
+        let linksList = parsed.links || [];
+        if (Array.isArray(linksList)) {
+          linksList.forEach((l, idx) => {
+            if (!l.id) {
+              l.id = 'lnk_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4) + '_' + idx;
+            }
+          });
+        }
+
         storeConfig = {
           logoUrl: parsed.logoUrl || "",
           logoSize: parsed.logoSize || "medium",
@@ -3475,12 +3950,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           bgColor: parsed.bgColor || "#ffffff",
           btnColor: parsed.btnColor || "#ffffff",
           btnTextColor: parsed.btnTextColor || "#0f172a",
+          btnBorderRadius: parsed.btnBorderRadius || "30px",
           pillText: parsed.pillText || "",
           title: parsed.title || "",
           description: parsed.description || "",
           ctaTitle: parsed.ctaTitle || "",
           subText: parsed.subText || "",
-          links: parsed.links || [],
+          links: linksList,
           bgType: parsed.bgType || "solid",
           bgGradient: parsed.bgGradient || "",
           bgImageUrl: parsed.bgImageUrl || "",
@@ -3496,105 +3972,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           stats: parsed.stats || { views: 0, clicks: {} }
         };
 
-        // Populate fields
-        document.getElementById('store-id-display').value = storeKey;
-        document.getElementById('store-logo-url').value = storeConfig.logoUrl;
-        document.getElementById('store-logo-size').value = storeConfig.logoSize;
-        document.getElementById('store-theme-color').value = storeConfig.themeColor;
-        document.getElementById('store-theme-color-hex').value = (storeConfig.themeColor || "#7c3aed").toUpperCase();
-        document.getElementById('store-text-color').value = storeConfig.textColor;
-        document.getElementById('store-text-color-hex').value = (storeConfig.textColor || "#0f172a").toUpperCase();
-        const bgColor = storeConfig.bgColor || "#ffffff";
-        document.getElementById('store-bg-color').value = bgColor;
-        document.getElementById('store-bg-color-hex').value = bgColor.toUpperCase();
-        
-        // Gradient loading
-        const bgGradient = storeConfig.bgGradient || "";
-        document.getElementById('store-bg-gradient').value = bgGradient;
-        
-        // Preset borders reset
-        document.querySelectorAll('.gradient-preset-option').forEach(preset => {
-          if (bgGradient && preset.getAttribute('onclick').includes(bgGradient)) {
-            preset.style.borderColor = 'var(--border-focus)';
-          } else {
-            preset.style.borderColor = 'transparent';
-          }
-        });
-
-        // Image URL loading
-        const bgImageUrl = storeConfig.bgImageUrl || "";
-        document.getElementById('store-bg-image-url').value = bgImageUrl;
-        const bgPreviewImg = document.getElementById('bg-image-preview-img');
-        const bgPreviewPlaceholder = document.getElementById('bg-image-preview-placeholder');
-        if (bgImageUrl) {
-          bgPreviewImg.src = bgImageUrl;
-          bgPreviewImg.style.display = 'block';
-          bgPreviewPlaceholder.style.display = 'none';
-        } else {
-          bgPreviewImg.style.display = 'none';
-          bgPreviewPlaceholder.style.display = 'block';
-        }
-        
-        // Blur range loading
-        const bgBlur = storeConfig.bgBlur || 0;
-        document.getElementById('store-bg-blur').value = bgBlur;
-        document.getElementById('store-bg-blur-val').textContent = bgBlur + 'px';
-        
-        // Overlay range loading
-        const bgOverlay = storeConfig.bgOverlay || 0;
-        document.getElementById('store-bg-overlay').value = bgOverlay;
-        document.getElementById('store-bg-overlay-val').textContent = Math.round(bgOverlay * 100) + '%';
-
-        // Size loading
-        const bgSize = storeConfig.bgSize || "cover";
-        document.getElementById('store-bg-size').value = bgSize;
-        const zoomContainer = document.getElementById('bg-zoom-container');
-        if (zoomContainer) {
-          zoomContainer.style.display = bgSize === 'custom' ? 'block' : 'none';
-        }
-
-        // Zoom/Scale loading
-        const bgZoom = storeConfig.bgZoom !== undefined ? storeConfig.bgZoom : 100;
-        document.getElementById('store-bg-zoom').value = bgZoom;
-        document.getElementById('store-bg-zoom-val').textContent = bgZoom + '%';
-
-        // Position loading
-        const bgPositionX = storeConfig.bgPositionX !== undefined ? storeConfig.bgPositionX : 50;
-        document.getElementById('store-bg-position-x').value = bgPositionX;
-        document.getElementById('store-bg-position-x-val').textContent = bgPositionX + '%';
-
-        const bgPositionY = storeConfig.bgPositionY !== undefined ? storeConfig.bgPositionY : 50;
-        document.getElementById('store-bg-position-y').value = bgPositionY;
-        document.getElementById('store-bg-position-y-val').textContent = bgPositionY + '%';
-
-        // Repeat and Parallax loading
-        const bgRepeat = storeConfig.bgRepeat || false;
-        document.getElementById('store-bg-repeat').checked = bgRepeat;
-
-        const bgParallax = storeConfig.bgParallax || false;
-        document.getElementById('store-bg-parallax').checked = bgParallax;
-
-        // Button opacity loading
-        const btnOpacity = storeConfig.btnOpacity !== undefined ? storeConfig.btnOpacity : 100;
-        document.getElementById('store-btn-opacity').value = btnOpacity;
-        document.getElementById('store-btn-opacity-val').textContent = btnOpacity + '%';
-
-        // Button radius loading
-        document.getElementById('store-btn-radius').value = storeConfig.btnBorderRadius || "30px";
-
-        // Switch to the correct tab silently (so it doesn't trigger autosave during load)
-        const bgType = storeConfig.bgType || 'solid';
-        switchBgTab(bgType, true);
-        document.getElementById('store-btn-color').value = storeConfig.btnColor || "#ffffff";
-        document.getElementById('store-btn-color-hex').value = (storeConfig.btnColor || "#ffffff").toUpperCase();
-        document.getElementById('store-btn-text-color').value = storeConfig.btnTextColor || "#0f172a";
-        document.getElementById('store-btn-text-color-hex').value = (storeConfig.btnTextColor || "#0f172a").toUpperCase();
-        document.getElementById('store-pill-text').value = storeConfig.pillText;
-        document.getElementById('store-title-text').value = storeConfig.title;
-        document.getElementById('store-desc-text').value = storeConfig.description;
-        document.getElementById('store-cta-text').value = storeConfig.ctaTitle;
-        document.getElementById('store-sub-text').value = storeConfig.subText;
-
+        populateFormFromConfig();
         previewLogo();
         checkThemeContrast();
         updatePublicLinkDisplay();
@@ -3608,6 +3986,118 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     } finally {
       toggleLoader(false);
     }
+  }
+
+  function populateFormFromConfig() {
+    if (!storeConfig) return;
+
+    // Populate fields
+    document.getElementById('store-id-display').value = activeStore;
+    document.getElementById('store-logo-url').value = storeConfig.logoUrl || "";
+    document.getElementById('store-logo-size').value = storeConfig.logoSize || "medium";
+    document.getElementById('store-theme-color').value = storeConfig.themeColor || "#7c3aed";
+    document.getElementById('store-theme-color-hex').value = (storeConfig.themeColor || "#7c3aed").toUpperCase();
+    document.getElementById('store-text-color').value = storeConfig.textColor || "#0f172a";
+    document.getElementById('store-text-color-hex').value = (storeConfig.textColor || "#0f172a").toUpperCase();
+    const bgColor = storeConfig.bgColor || "#ffffff";
+    document.getElementById('store-bg-color').value = bgColor;
+    document.getElementById('store-bg-color-hex').value = bgColor.toUpperCase();
+    
+    // Gradient loading
+    const bgGradient = storeConfig.bgGradient || "";
+    document.getElementById('store-bg-gradient').value = bgGradient;
+    
+    // Preset borders reset
+    document.querySelectorAll('.gradient-preset-option').forEach(preset => {
+      if (bgGradient && preset.getAttribute('onclick').includes(bgGradient)) {
+        preset.style.borderColor = 'var(--border-focus)';
+      } else {
+        preset.style.borderColor = 'transparent';
+      }
+    });
+
+    // Image URL loading
+    const bgImageUrl = storeConfig.bgImageUrl || "";
+    document.getElementById('store-bg-image-url').value = bgImageUrl;
+    const bgPreviewImg = document.getElementById('bg-image-preview-img');
+    const bgPreviewPlaceholder = document.getElementById('bg-image-preview-placeholder');
+    if (bgImageUrl) {
+      bgPreviewImg.src = bgImageUrl;
+      bgPreviewImg.style.display = 'block';
+      bgPreviewPlaceholder.style.display = 'none';
+    } else {
+      bgPreviewImg.style.display = 'none';
+      bgPreviewPlaceholder.style.display = 'block';
+    }
+    
+    // Blur range loading
+    const bgBlur = storeConfig.bgBlur || 0;
+    document.getElementById('store-bg-blur').value = bgBlur;
+    document.getElementById('store-bg-blur-val').textContent = bgBlur + 'px';
+    
+    // Overlay range loading
+    const bgOverlay = storeConfig.bgOverlay || 0;
+    document.getElementById('store-bg-overlay').value = bgOverlay;
+    document.getElementById('store-bg-overlay-val').textContent = Math.round(bgOverlay * 100) + '%';
+
+    // Size loading
+    const bgSize = storeConfig.bgSize || "cover";
+    document.getElementById('store-bg-size').value = bgSize;
+    const zoomContainer = document.getElementById('bg-zoom-container');
+    if (zoomContainer) {
+      zoomContainer.style.display = bgSize === 'custom' ? 'block' : 'none';
+    }
+
+    // Zoom/Scale loading
+    const bgZoom = storeConfig.bgZoom !== undefined ? storeConfig.bgZoom : 100;
+    document.getElementById('store-bg-zoom').value = bgZoom;
+    document.getElementById('store-bg-zoom-val').textContent = bgZoom + '%';
+
+    // Position loading
+    const bgPositionX = storeConfig.bgPositionX !== undefined ? storeConfig.bgPositionX : 50;
+    document.getElementById('store-bg-position-x').value = bgPositionX;
+    document.getElementById('store-bg-position-x-val').textContent = bgPositionX + '%';
+
+    const bgPositionY = storeConfig.bgPositionY !== undefined ? storeConfig.bgPositionY : 50;
+    document.getElementById('store-bg-position-y').value = bgPositionY;
+    document.getElementById('store-bg-position-y-val').textContent = bgPositionY + '%';
+
+    // Repeat and Parallax loading
+    const bgRepeat = storeConfig.bgRepeat || false;
+    document.getElementById('store-bg-repeat').checked = bgRepeat;
+
+    const bgParallax = storeConfig.bgParallax || false;
+    document.getElementById('store-bg-parallax').checked = bgParallax;
+
+    // Button opacity loading
+    const btnOpacity = storeConfig.btnOpacity !== undefined ? storeConfig.btnOpacity : 100;
+    document.getElementById('store-btn-opacity').value = btnOpacity;
+    document.getElementById('store-btn-opacity-val').textContent = btnOpacity + '%';
+
+    // Button radius loading
+    document.getElementById('store-btn-radius').value = storeConfig.btnBorderRadius || "30px";
+
+    // Switch to the correct tab silently
+    const bgType = storeConfig.bgType || 'solid';
+    switchBgTab(bgType, true);
+    document.getElementById('store-btn-color').value = storeConfig.btnColor || "#ffffff";
+    document.getElementById('store-btn-color-hex').value = (storeConfig.btnColor || "#ffffff").toUpperCase();
+    document.getElementById('store-btn-text-color').value = storeConfig.btnTextColor || "#0f172a";
+    document.getElementById('store-btn-text-color-hex').value = (storeConfig.btnTextColor || "#0f172a").toUpperCase();
+    document.getElementById('store-pill-text').value = storeConfig.pillText || "";
+    document.getElementById('store-title-text').value = storeConfig.title || "";
+    document.getElementById('store-desc-text').value = storeConfig.description || "";
+    document.getElementById('store-cta-text').value = storeConfig.ctaTitle || "";
+    document.getElementById('store-sub-text').value = storeConfig.subText || "";
+
+    const social = storeConfig.socialLinks || {};
+    document.getElementById('social-instagram').value = social.instagram || "";
+    document.getElementById('social-whatsapp').value = social.whatsapp || "";
+    document.getElementById('social-tiktok').value = social.tiktok || "";
+    document.getElementById('social-youtube').value = social.youtube || "";
+    document.getElementById('social-facebook').value = social.facebook || "";
+    document.getElementById('social-threads').value = social.threads || "";
+    document.getElementById('store-social-position').value = storeConfig.socialPosition || "top";
   }
 
   // CONFIG PUBLIC LINK DISPLAY
@@ -4243,18 +4733,38 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         }
       }
 
+      let extraInfoBadge = '';
+      let highlightBadge = link.highlight ? `<span class="link-item-badge" style="background-color: #fef3c7; color: #b45309; font-weight: 700;">⭐ Destaque</span>` : '';
+      let urlSubtitle = link.url ? escapeHtml(link.url) : (link.type === 'carousel' ? '' : 'Sem link (Em Construção)');
+
+      if (link.image === 'horario' || link.type === 'horario') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(16, 185, 129, 0.1); color: #059669;">🕒 Horários Semanais</span>`;
+        urlSubtitle = 'Grade semanal com status aberto/fechado em tempo real';
+      } else if (link.image === 'cupom' || link.type === 'cupom') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(245, 158, 11, 0.15); color: #d97706;">🏷️ Cupom: ${escapeHtml(link.cupomData?.code || 'CUPOM')}</span>`;
+        urlSubtitle = link.cupomData ? `Código ${escapeHtml(link.cupomData.code || '')} • ${escapeHtml(link.cupomData.title || '')}` : 'Cupom de Desconto';
+      } else if (link.image === 'vcard' || link.type === 'vcard') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(59, 130, 246, 0.1); color: #2563eb;">📇 Salvar na Agenda</span>`;
+        urlSubtitle = link.vcardData ? `Cartão vCard: ${escapeHtml(link.vcardData.name || link.label)} (${escapeHtml(link.vcardData.phone || 'Sem fone')})` : 'Cartão de contato (.vcf)';
+      } else if (link.image === 'mapa' && link.mapMode === 'modal') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(145, 165, 233, 0.1); color: #0284c7;">📍 Waze / Google Maps</span>`;
+        urlSubtitle = link.address ? `Endereço: ${escapeHtml(link.address)}` : 'Rotas para Waze, Google e Apple Maps';
+      }
+
       item.innerHTML = `
         <div class="link-item-icon" data-platform="${isCustomUrl ? 'fallback' : (link.image || 'fallback')}">
           ${iconHTML}
         </div>
         <div class="link-item-details">
           <div class="link-item-title">
-            ${link.label}
-            ${link.badge ? `<span class="link-item-badge">${link.badge}</span>` : ''}
+            ${escapeHtml(link.label)}
+            ${highlightBadge}
+            ${link.badge ? `<span class="link-item-badge">${escapeHtml(link.badge)}</span>` : ''}
             ${scheduleBadgeHTML}
+            ${extraInfoBadge}
             ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''} • ${link.displayCount == 3 ? 'Pequeno' : link.displayCount == 2 ? 'Médio' : 'Grande'}</span>` : ''}
           </div>
-          <div class="link-item-url">${link.url || (link.type === 'carousel' ? '' : 'Sem link (Em Construção)')}</div>
+          <div class="link-item-url">${urlSubtitle}</div>
         </div>
         <div class="link-item-controls">
           <button class="btn-control" onclick="moveLink(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
@@ -4282,6 +4792,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (!storeConfig.links || !storeConfig.links[index]) return;
     const original = storeConfig.links[index];
     const cloned = JSON.parse(JSON.stringify(original));
+    cloned.id = 'lnk_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
     cloned.label = cloned.label + " (Cópia)";
     storeConfig.links.splice(index + 1, 0, cloned);
     renderLinksList();
@@ -4355,6 +4866,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       bgParallax: document.getElementById('store-bg-parallax').checked,
       btnOpacity: parseInt(document.getElementById('store-btn-opacity').value) || 100,
       btnBorderRadius: document.getElementById('store-btn-radius').value,
+      socialPosition: document.getElementById('store-social-position') ? document.getElementById('store-social-position').value : 'top',
+      socialLinks: {
+        instagram: document.getElementById('social-instagram') ? document.getElementById('social-instagram').value.trim() : '',
+        whatsapp: document.getElementById('social-whatsapp') ? document.getElementById('social-whatsapp').value.trim() : '',
+        tiktok: document.getElementById('social-tiktok') ? document.getElementById('social-tiktok').value.trim() : '',
+        youtube: document.getElementById('social-youtube') ? document.getElementById('social-youtube').value.trim() : '',
+        facebook: document.getElementById('social-facebook') ? document.getElementById('social-facebook').value.trim() : '',
+        threads: document.getElementById('social-threads') ? document.getElementById('social-threads').value.trim() : ''
+      },
       links: storeConfig.links || []
     };
 
@@ -4373,19 +4893,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   }
 
   function openMobilePreviewModal() {
-    const modal = document.getElementById('mobile-preview-backdrop');
-    if (modal) {
-      modal.classList.add('open');
-      updatePreviewIframe();
-      scaleDevicePreviewIframes();
-    }
+    openModalWithGsap('mobile-preview-backdrop');
+    updatePreviewIframe();
+    scaleDevicePreviewIframes();
   }
 
   function closeMobilePreviewModal() {
-    const modal = document.getElementById('mobile-preview-backdrop');
-    if (modal) {
-      modal.classList.remove('open');
-    }
+    closeModalWithGsap('mobile-preview-backdrop');
   }
 
   // ACCESS METRICS & ANALYTICS
@@ -4483,10 +4997,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     
     let filteredViews = 0;
     let filteredClicks = {};
+    let filteredSources = {};
 
     if (filterSelect === 'all') {
       filteredViews = stats.views || 0;
       filteredClicks = Object.assign({}, stats.clicks || {});
+      filteredSources = Object.assign({}, stats.sources || {});
     } else {
       Object.keys(daily).forEach(dateKey => {
         if ((!startDateStr || dateKey >= startDateStr) && (!endDateStr || dateKey <= endDateStr)) {
@@ -4496,6 +5012,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           const dayClicks = dayData.clicks || {};
           Object.keys(dayClicks).forEach(linkIdx => {
             filteredClicks[linkIdx] = (filteredClicks[linkIdx] || 0) + (parseInt(dayClicks[linkIdx]) || 0);
+          });
+
+          const daySources = dayData.sources || {};
+          Object.keys(daySources).forEach(src => {
+            filteredSources[src] = (filteredSources[src] || 0) + (parseInt(daySources[src]) || 0);
           });
         }
       });
@@ -4522,56 +5043,127 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     animateValue('stats-ctr', prevCtr, parseFloat(ctr), 500, true);
 
     const listContainer = document.getElementById('stats-links-breakdown');
-    if (!listContainer) return;
-    listContainer.innerHTML = "";
+    if (listContainer) {
+      listContainer.innerHTML = "";
 
-    const links = storeConfig.links || [];
-    if (links.length === 0) {
-      listContainer.innerHTML = `<div style="text-align: center; font-size: 11px; color: var(--text-muted); padding: 8px;">Nenhum link configurado para rastrear.</div>`;
+      const links = storeConfig.links || [];
+      if (links.length === 0) {
+        listContainer.innerHTML = `<div style="text-align: center; font-size: 11px; color: var(--text-muted); padding: 8px;">Nenhum link configurado para rastrear.</div>`;
+      } else {
+        // Identificar o Link Campeão do período filtrado
+        let maxClicks = 0;
+        let bestLinkIndex = -1;
+        links.forEach((link, idx) => {
+          const cliq = (link.id && filteredClicks[link.id] !== undefined) ? (parseInt(filteredClicks[link.id]) || 0) : (parseInt(filteredClicks[idx]) || 0);
+          if (cliq > maxClicks) {
+            maxClicks = cliq;
+            bestLinkIndex = idx;
+          }
+        });
+
+        links.forEach((link, index) => {
+          const linkClicks = (link.id && filteredClicks[link.id] !== undefined) ? (parseInt(filteredClicks[link.id]) || 0) : (parseInt(filteredClicks[index]) || 0);
+          const linkCtr = filteredViews > 0 ? ((linkClicks / filteredViews) * 100).toFixed(1) : '0.0';
+          const isBest = index === bestLinkIndex && maxClicks > 0;
+          
+          const item = document.createElement('div');
+          item.className = 'analytics-link-item';
+          if (isBest) {
+            item.style.borderColor = 'var(--gold-deep)';
+            item.style.backgroundColor = 'rgba(217, 119, 6, 0.05)';
+          }
+          
+          item.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+              <span style="flex-shrink: 0; display: inline-flex; color: ${isBest ? 'var(--gold-deep)' : 'inherit'};">
+                ${isBest ? '⭐' : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>'}
+              </span>
+              <span style="font-weight: ${isBest ? '700' : '600'}; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(link.label)}</span>
+              ${isBest ? '<span style="font-size: 8.5px; font-weight: 800; background-color: var(--gold-deep); color: #fff; padding: 2px 5px; border-radius: 20px; text-transform: uppercase; margin-left: 6px; line-height: 1; letter-spacing: 0.3px;">Campeão</span>' : ''}
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center; flex-shrink: 0; font-weight: 700;">
+              <span style="color: var(--text-main);">${linkClicks} <span style="font-size: 9px; font-weight: 500; color: var(--text-muted);">cliq.</span></span>
+              <span style="color: ${isBest ? 'var(--gold-deep)' : 'var(--brand-purple)'}; font-size: 11.5px;">${linkCtr}%</span>
+            </div>
+          `;
+          listContainer.appendChild(item);
+        });
+      }
+    }
+
+    renderTrafficSources(filteredSources);
+  }
+
+  function renderTrafficSources(sources) {
+    const card = document.getElementById('traffic-sources-card');
+    const container = document.getElementById('traffic-sources-bars');
+    const empty = document.getElementById('traffic-sources-empty');
+    if (!card || !container || !empty) return;
+
+    if (!activeStore) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+
+    const entries = Object.entries(sources || {}).filter(([_, count]) => count > 0);
+    entries.sort((a, b) => b[1] - a[1]);
+
+    container.innerHTML = '';
+    if (entries.length === 0) {
+      container.style.display = 'none';
+      empty.style.display = 'block';
       return;
     }
 
-    // Identificar o Link Campeão do período filtrado
-    let maxClicks = 0;
-    let bestLinkIndex = -1;
-    links.forEach((_, idx) => {
-      const cliq = parseInt(filteredClicks[idx]) || 0;
-      if (cliq > maxClicks) {
-        maxClicks = cliq;
-        bestLinkIndex = idx;
-      }
+    container.style.display = 'flex';
+    empty.style.display = 'none';
+
+    const maxVal = entries[0][1];
+    const totalViews = entries.reduce((acc, curr) => acc + curr[1], 0);
+
+    const sourceIcons = {
+      instagram: '📸 Instagram',
+      tiktok: '🎵 TikTok',
+      whatsapp: '💬 WhatsApp',
+      facebook: '📘 Facebook',
+      google: '🔍 Google',
+      twitter: '🐦 Twitter/X',
+      threads: '🧵 Threads',
+      direto: '🔗 Acesso Direto / Bio',
+      youtube: '▶️ YouTube',
+      linkedin: '💼 LinkedIn',
+      pinterest: '📌 Pinterest',
+      kwai: '🎥 Kwai'
+    };
+
+    entries.slice(0, 8).forEach(([src, count]) => {
+      const label = sourceIcons[src.toLowerCase()] || `🌐 ${src}`;
+      const pct = maxVal > 0 ? Math.round((count / maxVal) * 100) : 0;
+      const sharePct = totalViews > 0 ? ((count / totalViews) * 100).toFixed(1) : '0.0';
+
+      const row = document.createElement('div');
+      row.style.cssText = 'display: flex; align-items: center; gap: 10px; font-size: 11px;';
+      row.innerHTML = `
+        <span style="width: 120px; flex-shrink: 0; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${label}</span>
+        <div style="flex: 1; background-color: var(--bg-light); border-radius: 4px; height: 16px; overflow: hidden; border: 1px solid var(--border-color);">
+          <div class="traffic-bar-fill" style="width: ${pct}%; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--brand-indigo), var(--brand-purple)); transform-origin: left;"></div>
+        </div>
+        <span style="width: 65px; flex-shrink: 0; text-align: right; font-weight: 700; color: var(--text-main);">${count} <span style="font-size: 9.5px; font-weight: 500; color: var(--text-muted);">(${sharePct}%)</span></span>
+      `;
+      container.appendChild(row);
     });
 
-    links.forEach((link, index) => {
-      const linkClicks = parseInt(filteredClicks[index]) || 0;
-      const linkCtr = filteredViews > 0 ? ((linkClicks / filteredViews) * 100).toFixed(1) : '0.0';
-      const isBest = index === bestLinkIndex && maxClicks > 0;
-      
-      const item = document.createElement('div');
-      item.className = 'analytics-link-item';
-      if (isBest) {
-        item.style.borderColor = 'var(--gold-deep)';
-        item.style.backgroundColor = 'rgba(217, 119, 6, 0.05)';
-      }
-      
-      item.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
-          <span style="flex-shrink: 0; display: inline-flex; color: ${isBest ? 'var(--gold-deep)' : 'inherit'};">
-            ${isBest ? '⭐' : '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>'}
-          </span>
-          <span style="font-weight: ${isBest ? '700' : '600'}; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${link.label}</span>
-          ${isBest ? '<span style="font-size: 8.5px; font-weight: 800; background-color: var(--gold-deep); color: #fff; padding: 2px 5px; border-radius: 20px; text-transform: uppercase; margin-left: 6px; line-height: 1; letter-spacing: 0.3px;">Campeão</span>' : ''}
-        </div>
-        <div style="display: flex; gap: 12px; align-items: center; flex-shrink: 0; font-weight: 700;">
-          <span style="color: var(--text-main);">${linkClicks} <span style="font-size: 9px; font-weight: 500; color: var(--text-muted);">cliq.</span></span>
-          <span style="color: ${isBest ? 'var(--gold-deep)' : 'var(--brand-purple)'}; font-size: 11.5px;">${linkCtr}%</span>
-        </div>
-      `;
-      listContainer.appendChild(item);
-    });
+    if (typeof gsap !== 'undefined') {
+      const bars = container.querySelectorAll('.traffic-bar-fill');
+      gsap.fromTo(bars,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.6, stagger: 0.05, ease: 'power3.out', transformOrigin: 'left' }
+      );
+    }
   }
 
-  function animateValue(id, start, end, duration, isCtr = false) {
+  function animateValue(id, start, end, duration = 600, isCtr = false) {
     const obj = document.getElementById(id);
     if (!obj) return;
     
@@ -4583,25 +5175,26 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    let startTimestamp = null;
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const current = progress * (endNum - startNum) + startNum;
-      
-      if (isCtr) {
-        obj.textContent = `${current.toFixed(1)}%`;
-      } else {
-        obj.textContent = Math.floor(current).toLocaleString();
-      }
-      
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      } else {
-        obj.textContent = isCtr ? `${endNum.toFixed(1)}%` : endNum.toLocaleString();
-      }
-    };
-    window.requestAnimationFrame(step);
+    if (typeof gsap !== 'undefined') {
+      const tracker = { val: startNum };
+      gsap.to(tracker, {
+        val: endNum,
+        duration: duration / 1000,
+        ease: 'power2.out',
+        onUpdate: () => {
+          if (isCtr) {
+            obj.textContent = `${tracker.val.toFixed(1)}%`;
+          } else {
+            obj.textContent = Math.floor(tracker.val).toLocaleString();
+          }
+        },
+        onComplete: () => {
+          obj.textContent = isCtr ? `${endNum.toFixed(1)}%` : endNum.toLocaleString();
+        }
+      });
+    } else {
+      obj.textContent = isCtr ? `${endNum.toFixed(1)}%` : endNum.toLocaleString();
+    }
   }
 
   function loadAnalyticsData() {
@@ -4729,12 +5322,20 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       row.innerHTML = `
         <span style="width: 30px; flex-shrink: 0; font-size: 11px; font-weight: ${isBest ? '800' : '600'}; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-muted)'};">${label}</span>
         <div style="flex: 1; background-color: var(--bg-light); border-radius: 4px; height: 16px; overflow: hidden;">
-          <div style="width: 100%; height: 100%; border-radius: 4px; background-color: ${isBest ? 'var(--brand-purple)' : '#cbd5e1'}; transform-origin: left; transform: scaleX(${pct / 100}); transition: transform 0.4s var(--ease-out);"></div>
+          <div class="weekday-bar-fill" data-scale="${pct / 100}" style="width: 100%; height: 100%; border-radius: 4px; background-color: ${isBest ? 'var(--brand-purple)' : '#cbd5e1'}; transform-origin: left; transform: scaleX(0);"></div>
         </div>
         <span style="width: 34px; flex-shrink: 0; text-align: right; font-size: 11px; font-weight: 700; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-main)'};">${value}</span>
       `;
       barsContainer.appendChild(row);
     });
+
+    if (typeof gsap !== 'undefined') {
+      const weekdayBars = barsContainer.querySelectorAll('.weekday-bar-fill');
+      gsap.fromTo(weekdayBars,
+        { scaleX: 0 },
+        { scaleX: (i, el) => parseFloat(el.getAttribute('data-scale')) || 0, duration: 0.55, stagger: 0.04, ease: 'power3.out', transformOrigin: 'left' }
+      );
+    }
   }
 
   function exportStatsToCSV() {
@@ -4961,6 +5562,15 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.bgRepeat = document.getElementById('store-bg-repeat').checked;
     storeConfig.bgParallax = document.getElementById('store-bg-parallax').checked;
     storeConfig.btnOpacity = parseInt(document.getElementById('store-btn-opacity').value) || 100;
+    storeConfig.socialPosition = document.getElementById('store-social-position') ? document.getElementById('store-social-position').value : 'top';
+    storeConfig.socialLinks = {
+      instagram: document.getElementById('social-instagram') ? document.getElementById('social-instagram').value.trim() : '',
+      whatsapp: document.getElementById('social-whatsapp') ? document.getElementById('social-whatsapp').value.trim() : '',
+      tiktok: document.getElementById('social-tiktok') ? document.getElementById('social-tiktok').value.trim() : '',
+      youtube: document.getElementById('social-youtube') ? document.getElementById('social-youtube').value.trim() : '',
+      facebook: document.getElementById('social-facebook') ? document.getElementById('social-facebook').value.trim() : '',
+      threads: document.getElementById('social-threads') ? document.getElementById('social-threads').value.trim() : ''
+    };
 
     const pwd = await ensureCurrentPassword("Confirmar Identidade", "Sua sessão foi restaurada. Digite sua senha para continuar salvando:");
     if (!pwd) {
@@ -5000,7 +5610,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       if (error) throw error;
       allStoresList = data || [];
       renderAdminStoresTable();
-      document.getElementById('admin-manage-backdrop').classList.add('open');
+      openModalWithGsap('admin-manage-backdrop');
     } catch(e) {
       console.error(e);
       showToast("Erro ao listar usuários.", "error");
@@ -5010,7 +5620,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   }
 
   function closeAdminManageModal() {
-    document.getElementById('admin-manage-backdrop').classList.remove('open');
+    closeModalWithGsap('admin-manage-backdrop');
   }
 
   // Built with DOM APIs (not innerHTML string interpolation) on purpose: a store id
@@ -5275,6 +5885,223 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
   }
 
+  const WEEKDAY_NAMES_PT = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  let currentBuilderSchedule = {};
+
+  function initScheduleDaysContainer(existingSchedule = null) {
+    const container = document.getElementById('schedule-days-rows-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    currentBuilderSchedule = {};
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // Seg a Dom
+
+    dayOrder.forEach((dayIdx) => {
+      let dayData = existingSchedule && existingSchedule[dayIdx] ? existingSchedule[dayIdx] : null;
+      if (!dayData) {
+        dayData = {
+          enabled: dayIdx !== 0,
+          intervals: dayIdx === 6 ? [{ open: '08:00', close: '12:00' }] : [{ open: '08:00', close: '18:00' }]
+        };
+      } else if (!dayData.intervals || !Array.isArray(dayData.intervals) || dayData.intervals.length === 0) {
+        dayData.intervals = [{ open: dayData.open || '08:00', close: dayData.close || '18:00' }];
+      }
+
+      currentBuilderSchedule[dayIdx] = {
+        enabled: Boolean(dayData.enabled),
+        intervals: JSON.parse(JSON.stringify(dayData.intervals))
+      };
+
+      renderScheduleDayCard(dayIdx, container);
+    });
+  }
+
+  function renderScheduleDayCard(dayIdx, parentContainer = null) {
+    const container = parentContainer || document.getElementById('schedule-days-rows-container');
+    if (!container) return;
+
+    let row = document.getElementById(`sched-day-card-${dayIdx}`);
+    if (!row) {
+      row = document.createElement('div');
+      row.id = `sched-day-card-${dayIdx}`;
+      row.className = 'sched-day-card';
+      row.style.cssText = 'display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; padding: 8px 10px; border-radius: 8px; background: var(--panel-white); border: 1px solid var(--border-color); box-sizing: border-box; width: 100%; min-width: 0;';
+      container.appendChild(row);
+    }
+
+    const dayState = currentBuilderSchedule[dayIdx] || { enabled: true, intervals: [{ open: '08:00', close: '18:00' }] };
+
+    row.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; min-width: 0; flex-wrap: wrap; gap: 6px;">
+        <label style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text-main); margin: 0; cursor: pointer;">
+          <input type="checkbox" id="sched-day-enabled-${dayIdx}" ${dayState.enabled ? 'checked' : ''} onchange="toggleScheduleDayEnabled(${dayIdx})">
+          <span>${WEEKDAY_NAMES_PT[dayIdx]}</span>
+        </label>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          ${dayState.enabled ? `
+            <button type="button" onclick="addScheduleInterval(${dayIdx})" style="font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: rgba(59, 130, 246, 0.08); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); cursor: pointer; display: flex; align-items: center; gap: 4px;">
+              <span>+ Adicionar Turno</span>
+            </button>
+          ` : '<span style="font-size: 10px; font-weight: 700; color: #ef4444; background: rgba(239, 68, 68, 0.08); padding: 2px 6px; border-radius: 4px;">Fechado</span>'}
+        </div>
+      </div>
+      <div id="sched-day-intervals-list-${dayIdx}" style="display: ${dayState.enabled ? 'flex' : 'none'}; flex-direction: column; gap: 6px; margin-top: 2px; padding-left: 20px;">
+        ${dayState.intervals.map((interval, iIdx) => `
+          <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+            <span style="font-size: 10px; color: var(--text-muted); font-weight: 600; min-width: 52px;">${dayState.intervals.length > 1 ? (iIdx === 0 ? 'Almoço:' : iIdx === 1 ? 'Jantar:' : `Turno ${iIdx+1}:`) : 'Horário:'}</span>
+            <input type="time" id="sched-day-open-${dayIdx}-${iIdx}" value="${interval.open || '08:00'}" onchange="updateScheduleIntervalValue(${dayIdx}, ${iIdx}, 'open', this.value)" style="padding: 3px 6px; font-size: 11.5px; border: 1px solid #cbd5e1; border-radius: 5px; background: #fff;">
+            <span style="color: var(--text-muted); font-size: 10.5px;">às</span>
+            <input type="time" id="sched-day-close-${dayIdx}-${iIdx}" value="${interval.close || '18:00'}" onchange="updateScheduleIntervalValue(${dayIdx}, ${iIdx}, 'close', this.value)" style="padding: 3px 6px; font-size: 11.5px; border: 1px solid #cbd5e1; border-radius: 5px; background: #fff;">
+            ${dayState.intervals.length > 1 ? `
+              <button type="button" onclick="removeScheduleInterval(${dayIdx}, ${iIdx})" title="Remover turno" style="border: none; background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; line-height: 1; font-weight: 700;">&times;</button>
+            ` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function toggleScheduleDayEnabled(dayIdx) {
+    const chk = document.getElementById(`sched-day-enabled-${dayIdx}`);
+    if (!chk) return;
+    if (!currentBuilderSchedule[dayIdx]) {
+      currentBuilderSchedule[dayIdx] = { enabled: true, intervals: [{ open: '08:00', close: '18:00' }] };
+    }
+    currentBuilderSchedule[dayIdx].enabled = chk.checked;
+    renderScheduleDayCard(dayIdx);
+  }
+
+  function addScheduleInterval(dayIdx) {
+    if (!currentBuilderSchedule[dayIdx]) {
+      currentBuilderSchedule[dayIdx] = { enabled: true, intervals: [] };
+    }
+    const intervals = currentBuilderSchedule[dayIdx].intervals;
+    if (intervals.length === 0) {
+      intervals.push({ open: '11:00', close: '15:00' });
+    } else if (intervals.length === 1) {
+      intervals.push({ open: '18:00', close: '23:30' });
+    } else {
+      intervals.push({ open: '19:00', close: '23:00' });
+    }
+    renderScheduleDayCard(dayIdx);
+  }
+
+  function removeScheduleInterval(dayIdx, iIdx) {
+    if (!currentBuilderSchedule[dayIdx] || !currentBuilderSchedule[dayIdx].intervals) return;
+    currentBuilderSchedule[dayIdx].intervals.splice(iIdx, 1);
+    if (currentBuilderSchedule[dayIdx].intervals.length === 0) {
+      currentBuilderSchedule[dayIdx].intervals.push({ open: '08:00', close: '18:00' });
+    }
+    renderScheduleDayCard(dayIdx);
+  }
+
+  function updateScheduleIntervalValue(dayIdx, iIdx, field, val) {
+    if (currentBuilderSchedule[dayIdx] && currentBuilderSchedule[dayIdx].intervals[iIdx]) {
+      currentBuilderSchedule[dayIdx].intervals[iIdx][field] = val;
+    }
+  }
+
+  function applySchedulePreset(preset) {
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0];
+    dayOrder.forEach((dayIdx) => {
+      if (preset === 'restaurante') {
+        if (dayIdx >= 1 && dayIdx <= 5) {
+          currentBuilderSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '11:00', close: '15:00' },
+              { open: '18:00', close: '23:30' }
+            ]
+          };
+        } else if (dayIdx === 6) { // Sab
+          currentBuilderSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '11:30', close: '16:00' },
+              { open: '18:00', close: '00:00' }
+            ]
+          };
+        } else { // Dom
+          currentBuilderSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '18:00', close: '23:00' }
+            ]
+          };
+        }
+      } else if (preset === 'comercial') {
+        if (dayIdx >= 1 && dayIdx <= 5) {
+          currentBuilderSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [{ open: '08:00', close: '18:00' }]
+          };
+        } else if (dayIdx === 6) {
+          currentBuilderSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [{ open: '08:00', close: '12:00' }]
+          };
+        } else {
+          currentBuilderSchedule[dayIdx] = {
+            enabled: false,
+            intervals: [{ open: '08:00', close: '18:00' }]
+          };
+        }
+      } else if (preset === 'todos') {
+        currentBuilderSchedule[dayIdx] = {
+          enabled: true,
+          intervals: [{ open: '10:00', close: '23:00' }]
+        };
+      }
+      renderScheduleDayCard(dayIdx);
+    });
+  }
+
+  function getScheduleFromBuilder() {
+    const schedule = {};
+    for (let dayIdx = 0; dayIdx <= 6; dayIdx++) {
+      const dayData = currentBuilderSchedule[dayIdx] || { enabled: false, intervals: [{ open: '08:00', close: '18:00' }] };
+      schedule[dayIdx] = {
+        enabled: Boolean(dayData.enabled),
+        open: dayData.intervals[0] ? dayData.intervals[0].open : '08:00',
+        close: dayData.intervals[0] ? dayData.intervals[0].close : '18:00',
+        intervals: dayData.intervals && dayData.intervals.length > 0 ? dayData.intervals : [{ open: '08:00', close: '18:00' }]
+      };
+    }
+    return schedule;
+  }
+
+  function syncVcardLabel() {
+    const name = document.getElementById('vcard-name-input').value.trim();
+    const labelInp = document.getElementById('modal-link-label');
+    if (labelInp && (!labelInp.value || labelInp.value === 'Salvar Contato na Agenda' || labelInp.value === 'Salvar Contato' || labelInp.value.startsWith('Salvar Contato ('))) {
+      labelInp.value = name ? `Salvar Contato (${name})` : 'Salvar Contato na Agenda';
+    }
+  }
+
+  function toggleMapModeFields() {
+    const mode = document.getElementById('mapa-mode-select').value;
+    const addressContainer = document.getElementById('mapa-address-container');
+    const urlGroup = document.getElementById('url-field-group');
+    const mapHelper = document.getElementById('map-helper-text');
+    if (mode === 'modal') {
+      if (addressContainer) addressContainer.style.display = 'block';
+      if (urlGroup) urlGroup.style.display = 'none';
+      if (mapHelper) mapHelper.style.display = 'none';
+    } else {
+      if (addressContainer) addressContainer.style.display = 'none';
+      if (urlGroup) urlGroup.style.display = 'block';
+      if (mapHelper) mapHelper.style.display = 'block';
+    }
+  }
+
+  function syncMapAddress() {
+    const address = document.getElementById('mapa-address-input').value.trim();
+    const urlInp = document.getElementById('modal-link-url');
+    if (urlInp && document.getElementById('mapa-mode-select').value === 'modal') {
+      urlInp.value = address;
+    }
+  }
+
   // LINK MODAL
   function openLinkModal(index = -1) {
     const title = document.getElementById('modal-link-title');
@@ -5285,6 +6112,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     indexInput.value = index;
 
     // Reset helper fields
+    document.getElementById('pix-key-type').value = "CPF/CNPJ";
+    document.getElementById('pix-key-input').value = "";
+    document.getElementById('pix-beneficiary-input').value = "";
     document.getElementById('wa-phone').value = "";
     document.getElementById('wa-message').value = "";
     document.getElementById('email-address').value = "";
@@ -5297,6 +6127,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('modal-link-badge').value = "";
     document.getElementById('carousel-image-url-input').value = "";
     document.getElementById('carousel-upload-status').textContent = "";
+    document.getElementById('vcard-name-input').value = "";
+    document.getElementById('vcard-org-input').value = "";
+    document.getElementById('vcard-phone-input').value = "";
+    document.getElementById('vcard-email-input').value = "";
+    document.getElementById('vcard-address-input').value = "";
+    document.getElementById('mapa-mode-select').value = "modal";
+    document.getElementById('mapa-address-input').value = "";
+    document.getElementById('modal-link-highlight').checked = false;
+    document.getElementById('cupom-code-input').value = "";
+    document.getElementById('cupom-title-input').value = "";
+    document.getElementById('cupom-rules-input').value = "";
 
     if (index === -1) {
       title.textContent = "Adicionar Link";
@@ -5311,6 +6152,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       const radio1 = document.querySelector('input[name="carousel-display-count"][value="1"]');
       if (radio1) radio1.checked = true;
       updateCarouselDisplayPills();
+      initScheduleDaysContainer(null);
       selectIcon("fallback");
     } else {
       title.textContent = "Editar Link";
@@ -5318,6 +6160,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       labelInput.value = link.label;
       urlInput.value = link.url;
       document.getElementById('modal-link-badge').value = link.badge || "";
+      document.getElementById('modal-link-highlight').checked = Boolean(link.highlight);
       document.getElementById('modal-link-schedule-start').value = link.scheduleStart || "";
       document.getElementById('modal-link-schedule-end').value = link.scheduleEnd || "";
       const schedDetails = document.getElementById('link-schedule-details');
@@ -5334,8 +6177,31 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         document.getElementById('carousel-upload-status').textContent = `${currentCarouselImages.length} foto(s) no carrossel`;
       }
 
+      initScheduleDaysContainer(link.scheduleData || null);
+
       // Populate helper fields based on icon type
-      if (link.image === 'whatsapp') {
+      if (link.image === 'pix' || link.type === 'pix') {
+        document.getElementById('pix-key-type').value = link.pixKeyType || 'CPF/CNPJ';
+        document.getElementById('pix-key-input').value = link.pixKey || link.url || '';
+        document.getElementById('pix-beneficiary-input').value = link.pixBeneficiary || '';
+      } else if (link.image === 'cupom' || link.type === 'cupom') {
+        const cdata = link.cupomData || {};
+        document.getElementById('cupom-code-input').value = cdata.code || '';
+        document.getElementById('cupom-title-input').value = cdata.title || '';
+        document.getElementById('cupom-rules-input').value = cdata.rules || '';
+      } else if (link.image === 'vcard' || link.type === 'vcard') {
+        const vdata = link.vcardData || {};
+        document.getElementById('vcard-name-input').value = vdata.name || link.label || '';
+        document.getElementById('vcard-org-input').value = vdata.org || '';
+        document.getElementById('vcard-phone-input').value = maskPhone(vdata.phone || '');
+        document.getElementById('vcard-email-input').value = vdata.email || '';
+        document.getElementById('vcard-address-input').value = vdata.address || '';
+      } else if (link.image === 'mapa') {
+        const mode = link.mapMode || (link.url && link.url.includes('<iframe') ? 'iframe' : 'modal');
+        document.getElementById('mapa-mode-select').value = mode;
+        document.getElementById('mapa-address-input').value = link.address || (mode === 'modal' ? link.url : '');
+        toggleMapModeFields();
+      } else if (link.image === 'whatsapp') {
         const parsed = parseWhatsAppUrl(link.url);
         document.getElementById('wa-phone').value = maskPhone(parsed.phone);
         document.getElementById('wa-message').value = parsed.message;
@@ -5357,11 +6223,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       selectIcon(link.image || "fallback");
     }
 
-    document.getElementById('link-modal-backdrop').classList.add('open');
+    openModalWithGsap('link-modal-backdrop');
   }
 
   function closeLinkModal() {
-    document.getElementById('link-modal-backdrop').classList.remove('open');
+    closeModalWithGsap('link-modal-backdrop');
   }
 
   function selectIcon(iconName) {
@@ -5381,14 +6247,20 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     // Auto-populate link text based on icon clicked
     const labelInput = document.getElementById('modal-link-label');
     const currentVal = labelInput.value.trim().toLowerCase();
-    const isDefault = currentVal === "" || ["instagram", "tiktok", "shopee", "whatsapp", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "catálogo web", "catálogo online", "catalago web", "catalago_web", "catalago online", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "personalizado", "ícone personalizado", "construcao", "em construção", "em breve"].includes(currentVal);
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "threads", "shopee", "whatsapp", "telegram", "pix", "chave pix", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "catálogo web", "catálogo online", "catalago web", "catalago_web", "catalago online", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "pinterest", "kwai", "google", "avalie no google", "avaliações", "personalizado", "ícone personalizado", "construcao", "em construção", "em breve", "horários de atendimento", "horários", "horario", "salvar contato", "salvar contato na agenda", "cupom de desconto", "cupom"].includes(currentVal);
 
     if (isDefault) {
       if (iconName === 'instagram') labelInput.value = "Instagram";
       else if (iconName === 'tiktok') labelInput.value = "TikTok";
-      else if (iconName === 'shopee') labelInput.value = "Shopee";
+      else if (iconName === 'threads') labelInput.value = "Threads";
       else if (iconName === 'whatsapp') labelInput.value = "WhatsApp";
-      else if (iconName === 'mapa') labelInput.value = "Nossa Localização";
+      else if (iconName === 'telegram') labelInput.value = "Telegram";
+      else if (iconName === 'pix') labelInput.value = "Chave PIX";
+      else if (iconName === 'cupom') labelInput.value = "Cupom de Desconto";
+      else if (iconName === 'horario') labelInput.value = "Horários de Atendimento";
+      else if (iconName === 'vcard') labelInput.value = "Salvar Contato na Agenda";
+      else if (iconName === 'shopee') labelInput.value = "Shopee";
+      else if (iconName === 'mapa') labelInput.value = "Como Chegar";
       else if (iconName === 'comida') labelInput.value = "Cardápio";
       else if (iconName === 'ifood') labelInput.value = "iFood";
       else if (iconName === 'coleta') labelInput.value = "Coleta";
@@ -5402,19 +6274,29 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'facebook') labelInput.value = "Facebook";
       else if (iconName === 'youtube') labelInput.value = "YouTube";
       else if (iconName === 'linkedin') labelInput.value = "LinkedIn";
+      else if (iconName === 'pinterest') labelInput.value = "Pinterest";
+      else if (iconName === 'kwai') labelInput.value = "Kwai";
+      else if (iconName === 'google_review') labelInput.value = "Avalie no Google";
       else if (iconName === 'construcao') labelInput.value = "Em Construção";
       else if (iconName === 'custom') labelInput.value = "Link";
       else if (iconName === 'carousel') labelInput.value = "Fotos";
       else if (iconName === 'fallback') labelInput.value = "Link";
     }
 
-    // Auto-populate badge text if iconName is 'construcao'
+    // Auto-populate badge text if iconName is 'construcao' or 'cupom'
     const badgeInput = document.getElementById('modal-link-badge');
     if (iconName === 'construcao' && badgeInput.value.trim() === "") {
       badgeInput.value = "Em Breve";
+    } else if (iconName === 'cupom' && badgeInput.value.trim() === "") {
+      badgeInput.value = "PROMO";
     }
 
     // Show/Hide fields
+    const pixFields = document.getElementById('pix-builder-fields');
+    const cupomFields = document.getElementById('cupom-builder-fields');
+    const horarioFields = document.getElementById('horario-builder-fields');
+    const vcardFields = document.getElementById('vcard-builder-fields');
+    const mapaFields = document.getElementById('mapa-builder-fields');
     const waFields = document.getElementById('whatsapp-builder-fields');
     const emailFields = document.getElementById('email-builder-fields');
     const telFields = document.getElementById('telefone-builder-fields');
@@ -5423,7 +6305,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const mapHelper = document.getElementById('map-helper-text');
 
     // Handle builders and URL readonly status
-    if (iconName === 'whatsapp' || iconName === 'email' || iconName === 'telefone') {
+    if (iconName === 'whatsapp' || iconName === 'email' || iconName === 'telefone' || iconName === 'pix' || iconName === 'horario' || iconName === 'vcard' || iconName === 'cupom') {
       urlInput.setAttribute('readonly', 'true');
       urlInput.style.backgroundColor = 'var(--bg-light)';
       urlInput.style.cursor = 'not-allowed';
@@ -5431,6 +6313,27 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       urlInput.removeAttribute('readonly');
       urlInput.style.backgroundColor = 'var(--panel-white)';
       urlInput.style.cursor = 'text';
+    }
+
+    if (horarioFields) horarioFields.style.display = (iconName === 'horario') ? 'flex' : 'none';
+    if (cupomFields) {
+      cupomFields.style.display = (iconName === 'cupom') ? 'flex' : 'none';
+      if (iconName === 'cupom') syncCupomLabel();
+    }
+    if (vcardFields) vcardFields.style.display = (iconName === 'vcard') ? 'flex' : 'none';
+    if (mapaFields) {
+      mapaFields.style.display = (iconName === 'mapa') ? 'flex' : 'none';
+      if (iconName === 'mapa') toggleMapModeFields();
+    }
+
+    // Show/Hide PIX fields
+    if (pixFields) {
+      if (iconName === 'pix') {
+        pixFields.style.display = 'flex';
+        generatePixUrl();
+      } else {
+        pixFields.style.display = 'none';
+      }
     }
 
     // Show/Hide WhatsApp fields
@@ -5475,7 +6378,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
 
     if (iconName === 'mapa') {
-      mapHelper.style.display = 'block';
+      mapHelper.style.display = (document.getElementById('mapa-mode-select').value === 'iframe') ? 'block' : 'none';
     } else {
       mapHelper.style.display = 'none';
     }
@@ -5498,15 +6401,39 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       carouselFields.style.display = (iconName === 'carousel') ? 'flex' : 'none';
     }
 
-    // Carousel links are just photos — no destination link, custom label,
-    // or badge to fill in, so hide those fields entirely for this type.
     const isCarousel = iconName === 'carousel';
+    const isSpecialLink = iconName === 'horario' || iconName === 'vcard' || iconName === 'cupom' || (iconName === 'mapa' && document.getElementById('mapa-mode-select').value === 'modal');
     const labelGroup = document.getElementById('label-field-group');
     const urlGroup = document.getElementById('url-field-group');
     const badgeGroup = document.getElementById('badge-field-group');
     if (labelGroup) labelGroup.style.display = isCarousel ? 'none' : 'flex';
-    if (urlGroup) urlGroup.style.display = isCarousel ? 'none' : 'flex';
+    if (urlGroup) urlGroup.style.display = (isCarousel || isSpecialLink) ? 'none' : 'flex';
     if (badgeGroup) badgeGroup.style.display = isCarousel ? 'none' : 'flex';
+  }
+
+  function syncCupomLabel() {
+    const code = document.getElementById('cupom-code-input').value.trim();
+    const title = document.getElementById('cupom-title-input').value.trim();
+    const labelInp = document.getElementById('modal-link-label');
+    const badgeInp = document.getElementById('modal-link-badge');
+    const urlInp = document.getElementById('modal-link-url');
+    if (labelInp && (!labelInp.value || labelInp.value === 'Cupom de Desconto' || labelInp.value.startsWith('Cupom '))) {
+      labelInp.value = code ? `Cupom ${code}` : 'Cupom de Desconto';
+    }
+    if (title && badgeInp && (!badgeInp.value || badgeInp.value === 'PROMO' || badgeInp.value.includes('%'))) {
+      badgeInp.value = (title.includes('OFF') || title.includes('%')) ? title.split(' ')[0] : 'PROMO';
+    }
+    if (urlInp) {
+      urlInp.value = code ? `#cupom-${code}` : '#';
+    }
+  }
+
+  function generatePixUrl() {
+    const key = document.getElementById('pix-key-input').value.trim();
+    const urlInput = document.getElementById('modal-link-url');
+    if (urlInput) {
+      urlInput.value = key;
+    }
   }
 
   function maskPhone(value) {
@@ -6025,7 +6952,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    if (!label || (selectedIconType !== 'construcao' && selectedIconType !== 'carousel' && !url)) {
+    if (!label || (selectedIconType !== 'construcao' && selectedIconType !== 'carousel' && selectedIconType !== 'pix' && selectedIconType !== 'horario' && selectedIconType !== 'vcard' && selectedIconType !== 'cupom' && !url)) {
       showAlert("Campos Incompletos", "Por favor, preencha o título e a URL do link.");
       return;
     }
@@ -6037,18 +6964,63 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
     const scheduleStart = document.getElementById('modal-link-schedule-start').value.trim();
     const scheduleEnd = document.getElementById('modal-link-schedule-end').value.trim();
+    const highlight = document.getElementById('modal-link-highlight').checked;
+
+    let existingId = null;
+    if (index !== -1 && storeConfig.links && storeConfig.links[index] && storeConfig.links[index].id) {
+      existingId = storeConfig.links[index].id;
+    }
+    const linkId = existingId || ('lnk_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4));
 
     const linkData = {
+      id: linkId,
       label: label,
-      url: url,
+      url: url || '#',
       image: selectedIconType,
-      badge: badge
+      badge: badge,
+      highlight: highlight
     };
 
     if (scheduleStart) linkData.scheduleStart = scheduleStart;
     if (scheduleEnd) linkData.scheduleEnd = scheduleEnd;
 
-    if (selectedIconType === 'carousel') {
+    if (selectedIconType === 'pix') {
+      linkData.type = 'pix';
+      linkData.pixKeyType = document.getElementById('pix-key-type').value;
+      linkData.pixKey = document.getElementById('pix-key-input').value.trim();
+      linkData.pixBeneficiary = document.getElementById('pix-beneficiary-input').value.trim();
+      linkData.url = linkData.pixKey;
+    } else if (selectedIconType === 'cupom') {
+      linkData.type = 'cupom';
+      const code = document.getElementById('cupom-code-input').value.trim() || 'PROMO10';
+      linkData.cupomData = {
+        code: code,
+        title: document.getElementById('cupom-title-input').value.trim() || label,
+        rules: document.getElementById('cupom-rules-input').value.trim()
+      };
+      linkData.url = `#cupom-${code}`;
+    } else if (selectedIconType === 'horario') {
+      linkData.type = 'horario';
+      linkData.scheduleData = getScheduleFromBuilder();
+      linkData.url = '#';
+    } else if (selectedIconType === 'vcard') {
+      linkData.type = 'vcard';
+      linkData.vcardData = {
+        name: document.getElementById('vcard-name-input').value.trim() || label,
+        org: document.getElementById('vcard-org-input').value.trim(),
+        phone: document.getElementById('vcard-phone-input').value.trim(),
+        email: document.getElementById('vcard-email-input').value.trim(),
+        address: document.getElementById('vcard-address-input').value.trim(),
+        url: window.location.origin + '/' + (activeStore || '')
+      };
+      linkData.url = '#';
+    } else if (selectedIconType === 'mapa') {
+      linkData.mapMode = document.getElementById('mapa-mode-select').value;
+      linkData.address = document.getElementById('mapa-address-input').value.trim();
+      if (linkData.mapMode === 'modal') {
+        linkData.url = linkData.address || '#';
+      }
+    } else if (selectedIconType === 'carousel') {
       linkData.type = 'carousel';
       linkData.images = [...currentCarouselImages];
       const selectedRadio = document.querySelector('input[name="carousel-display-count"]:checked');
@@ -6065,6 +7037,130 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     renderLinksList();
     showToast(index === -1 ? "Link adicionado!" : "Link atualizado!");
     triggerAutosave(true); // Instant save on link submit
+  }
+
+  // STORE BACKUP & RESTORE
+  function exportStoreBackup() {
+    if (!activeStore || !storeConfig) {
+      showToast("Nenhuma loja ativa selecionada para exportar.", "error");
+      return;
+    }
+
+    const backupData = {
+      version: "1.0",
+      exportedAt: new Date().toISOString(),
+      storeId: activeStore,
+      config: JSON.parse(JSON.stringify(storeConfig))
+    };
+
+    const jsonStr = JSON.stringify(backupData, null, 2);
+    const blob = new Blob([jsonStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${activeStore}_backup_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast("Backup exportado com sucesso!");
+  }
+
+  let pendingImportConfig = null;
+
+  function openImportBackupModal() {
+    if (!activeStore) {
+      showToast("Selecione ou crie uma loja antes de restaurar um backup.", "error");
+      return;
+    }
+    pendingImportConfig = null;
+    document.getElementById('backup-file-input').value = "";
+    document.getElementById('backup-preview-info').style.display = "none";
+    document.getElementById('backup-preview-info').innerHTML = "";
+    document.getElementById('confirm-import-backup-btn').disabled = true;
+    openModalWithGsap('import-backup-backdrop');
+  }
+
+  function closeImportBackupModal() {
+    closeModalWithGsap('import-backup-backdrop');
+  }
+
+  function handleBackupFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        let configToRestore = null;
+        let originalStore = "";
+
+        if (parsed.config && typeof parsed.config === 'object') {
+          configToRestore = parsed.config;
+          originalStore = parsed.storeId || "";
+        } else if (parsed.links || parsed.title || parsed.bgColor) {
+          configToRestore = parsed;
+        }
+
+        if (!configToRestore) {
+          throw new Error("Formato de arquivo inválido.");
+        }
+
+        pendingImportConfig = configToRestore;
+        const infoEl = document.getElementById('backup-preview-info');
+        const numLinks = (configToRestore.links && configToRestore.links.length) || 0;
+        infoEl.innerHTML = `
+          <strong>✅ Backup Carregado:</strong><br>
+          • Título da Loja: <strong>${escapeHtml(configToRestore.title || activeStore)}</strong><br>
+          • Total de Links: <strong>${numLinks} link(s)</strong><br>
+          ${originalStore ? `• Loja Original: <code>${escapeHtml(originalStore)}</code><br>` : ''}
+          <span style="display: block; margin-top: 4px; color: #0284c7;">Clique em "Restaurar Dados" abaixo para aplicar e salvar na loja atual (<code>${escapeHtml(activeStore)}</code>).</span>
+        `;
+        infoEl.style.display = "block";
+        document.getElementById('confirm-import-backup-btn').disabled = false;
+      } catch (err) {
+        console.error("Erro ao ler JSON de backup:", err);
+        showAlert("Arquivo Inválido", "O arquivo selecionado não contém um formato de backup válido do LinkVi.");
+        document.getElementById('confirm-import-backup-btn').disabled = true;
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  async function confirmImportBackup() {
+    if (!pendingImportConfig || !activeStore) return;
+
+    try {
+      // Preserve existing statistics if already present
+      const currentStats = storeConfig.stats || { views: 0, clicks: {} };
+      if (!pendingImportConfig.stats || Object.keys(pendingImportConfig.stats).length === 0) {
+        pendingImportConfig.stats = currentStats;
+      }
+
+      // Ensure every link has an ID
+      if (pendingImportConfig.links && Array.isArray(pendingImportConfig.links)) {
+        pendingImportConfig.links.forEach((l, idx) => {
+          if (!l.id) {
+            l.id = 'lnk_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4) + '_' + idx;
+          }
+        });
+      }
+
+      storeConfig = pendingImportConfig;
+      populateFormFromConfig();
+      renderLinksList();
+      updatePreviewIframe();
+      loadAnalyticsData();
+      closeImportBackupModal();
+      showToast("Configurações restauradas com sucesso!");
+      triggerAutosave(true);
+    } catch(err) {
+      console.error("Erro ao restaurar backup:", err);
+      showToast("Erro ao restaurar backup.", "error");
+    }
   }
 </script>
 
