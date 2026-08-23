@@ -8,7 +8,7 @@
 <title>LinksVi — Painel Gerenciador</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -25,18 +25,26 @@
     --success: #10b981;
     --danger: #ef4444;
     --danger-light: #fee2e2;
+    --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  *:focus-visible {
+    outline: 2px solid var(--brand-purple);
+    outline-offset: 2px;
+  }
   
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     background-color: var(--bg-light);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* Section: Login (Premium Minimalist) */
@@ -105,11 +113,11 @@
   }
 
   .login-header h2 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-size: 22px;
     font-weight: 750;
     color: #0f172a;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.02em;
     line-height: 1.3;
   }
 
@@ -197,32 +205,34 @@
 
   .login-card input[type="text"]:focus,
   .login-card input[type="password"]:focus {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
+    border-color: var(--brand-purple);
+    box-shadow: 0 0 0 3px rgba(55, 47, 107, 0.1);
   }
 
   .btn-login {
-    background-color: #7C3AED;
+    background-color: var(--brand-purple);
     color: white;
     border: none;
     padding: 13px;
     border-radius: 8px;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 14.5px;
+    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s var(--ease-out);
     margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.15);
+    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
   }
 
   .btn-login:hover {
-    background-color: #6d28d9;
+    background-color: var(--brand-purple-hover);
     transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.25), 0 4px 6px -4px rgba(124, 58, 237, 0.15);
+    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.12), 0 4px 6px -4px rgba(15, 23, 42, 0.06);
   }
 
   .btn-login:active {
@@ -629,6 +639,58 @@
     pointer-events: none;
   }
 
+  .device-smartphone.mode-android {
+    border-radius: 28px;
+  }
+  .device-smartphone.mode-android::before {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    top: 10px;
+    background: #020617;
+    box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.25);
+  }
+  .device-smartphone.mode-android::after {
+    display: none;
+  }
+
+  /* Theme Presets UI */
+  .preset-card {
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: var(--panel-white);
+    cursor: pointer;
+    transition: all 0.2s var(--ease-out);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+  .preset-card:hover {
+    border-color: var(--brand-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  }
+  .preset-card-preview {
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .preset-card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .device-screen {
     width: 100%;
     height: 100%;
@@ -651,9 +713,10 @@
   }
 
   .section-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-size: 15px;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-main);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 8px;
@@ -857,9 +920,10 @@
   }
 
   .links-header h3 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-size: 15px;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-main);
   }
 
@@ -1087,9 +1151,10 @@
   }
 
   .modal-header h3 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-size: 15px;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-main);
   }
 
@@ -1421,7 +1486,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 10px 20px -6px rgba(55, 47, 107, 0.5), 0 4px 8px -2px rgba(15, 23, 42, 0.15);
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25), 0 8px 10px -6px rgba(15, 23, 42, 0.15);
     z-index: 400;
     transition: background-color 0.15s ease, transform 0.15s ease;
   }
@@ -1635,18 +1700,20 @@
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 12px;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s var(--ease-out);
   }
   .analytics-link-item:hover {
     border-color: var(--brand-purple);
-    background-color: rgba(124, 58, 237, 0.03);
+    background-color: rgba(55, 47, 107, 0.03);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px -2px rgba(124, 58, 237, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
   }
   summary::-webkit-details-marker {
     display: none;
   }
-  #bg-advanced-details[open] .details-arrow {
+  #bg-advanced-details[open] .details-arrow,
+  #theme-presets-details[open] .details-arrow,
+  #link-schedule-details[open] .details-arrow {
     transform: rotate(90deg);
   }
 </style>
@@ -1780,6 +1847,52 @@
     <aside class="panel-card profile-panel tab-panel-hidden" id="tab-panel-appearance">
       <h3 class="section-title">Perfil da Página</h3>
 
+      <!-- Galeria de Temas Prontos em 1 Clique (Colapsável) -->
+      <details id="theme-presets-details" style="margin-top: 14px; margin-bottom: 18px; padding: 10px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 10px;">
+        <summary style="font-family: var(--font-display); font-size: 12px; font-weight: 750; color: var(--text-main); cursor: pointer; outline: none; user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+          <span style="display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+            <span>Temas Prontos em 1 Clique</span>
+          </span>
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 10.5px; color: var(--text-muted); font-weight: 500;">Escolher modelo</span>
+            <span class="details-arrow" style="font-size: 9px; transition: transform 0.2s ease; display: inline-block;">▶</span>
+          </span>
+        </summary>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-color);">
+          <div class="preset-card" onclick="applyThemePreset('dark_luxe', 'Dark Luxe')" title="Aplicar tema Dark Luxe">
+            <div class="preset-card-preview" style="background: #0B0F19; border: 1px solid rgba(255,255,255,0.1);">
+              <span style="font-size: 9px; font-weight: 700; color: #F59E0B; background: #1E293B; padding: 2px 6px; border-radius: 4px;">Botão</span>
+            </div>
+            <div class="preset-card-title">Dark Luxe</div>
+          </div>
+          <div class="preset-card" onclick="applyThemePreset('clean_slate', 'Clean Slate')" title="Aplicar tema Clean Slate">
+            <div class="preset-card-preview" style="background: #FFFFFF; border: 1px solid #E2E8F0;">
+              <span style="font-size: 9px; font-weight: 700; color: #372F6B; background: #EEF2FF; padding: 2px 6px; border-radius: 20px;">Botão</span>
+            </div>
+            <div class="preset-card-title">Clean Slate</div>
+          </div>
+          <div class="preset-card" onclick="applyThemePreset('violet_glass', 'Violet Glass')" title="Aplicar tema Violet Glass">
+            <div class="preset-card-preview" style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);">
+              <span style="font-size: 9px; font-weight: 700; color: #FFFFFF; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); padding: 2px 6px; border-radius: 6px;">Botão</span>
+            </div>
+            <div class="preset-card-title">Violet Glass</div>
+          </div>
+          <div class="preset-card" onclick="applyThemePreset('emerald_luxe', 'Emerald Luxe')" title="Aplicar tema Emerald Luxe">
+            <div class="preset-card-preview" style="background: #064E3B;">
+              <span style="font-size: 9px; font-weight: 700; color: #34D399; background: #065F46; padding: 2px 6px; border-radius: 4px;">Botão</span>
+            </div>
+            <div class="preset-card-title">Emerald Luxe</div>
+          </div>
+          <div class="preset-card" onclick="applyThemePreset('sunset_glow', 'Sunset Glow')" title="Aplicar tema Sunset Glow">
+            <div class="preset-card-preview" style="background: linear-gradient(135deg, #f97316 0%, #ec4899 100%);">
+              <span style="font-size: 9px; font-weight: 700; color: #1E293B; background: #FFFFFF; padding: 2px 6px; border-radius: 20px;">Botão</span>
+            </div>
+            <div class="preset-card-title">Sunset Glow</div>
+          </div>
+        </div>
+      </details>
+
       <div class="profile-columns">
         <div class="profile-col">
 
@@ -1875,6 +1988,11 @@
         </div>
       </div>
 
+      <!-- Intelligent Contrast Warning Badge -->
+      <div id="contrast-warning-badge" style="display: none; align-items: center; gap: 6px; margin-top: 8px; margin-bottom: 12px; padding: 6px 10px; background-color: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; font-size: 11px; font-weight: 600; color: #92400e;">
+        ⚠️ Dica: Contraste baixo entre fundo e texto.
+      </div>
+
       <!-- ESTILO DO FUNDO DA PÁGINA -->
       <div class="bg-tabs-container">
         <label style="font-size: 11px; font-weight: 750; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">Estilo do Fundo da Página</label>
@@ -1918,7 +2036,7 @@
               <input type="file" id="bg-image-file-input" accept="image/*" style="display: none;" onchange="handleBgImageUpload(event)">
             </div>
             <div id="bg-image-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
-              <img id="bg-image-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+              <img id="bg-image-preview-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
               <div id="bg-image-preview-placeholder" style="color: var(--text-muted); display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>
             </div>
           </div>
@@ -2053,16 +2171,22 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
-          <div id="store-qr-placeholder" style="width: 84px; height: 84px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <div id="store-qr-placeholder" style="width: 88px; height: 88px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><line x1="14" y1="14" x2="14" y2="21"></line><line x1="21" y1="14" x2="21" y2="21"></line><line x1="14" y1="17.5" x2="21" y2="17.5"></line></svg>
           </div>
-          <img id="store-qr-img" src="" alt="QR Code do link da loja" style="display: none; width: 84px; height: 84px; border-radius: 8px; border: 1px solid var(--border-color); flex-shrink: 0;">
-          <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0;">
-            <span style="font-size: 11.5px; font-weight: 700; color: var(--text-main);">QR Code da Loja</span>
-            <span style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4;">Use em cardápios, embalagens ou material impresso para levar direto à sua página de links.</span>
-            <button type="button" id="store-qr-download-btn" onclick="downloadStoreQrCode()" class="btn-secondary" style="display: none; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; width: fit-content; margin-top: 4px; cursor: pointer;">
+          <img id="store-qr-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR Code do link da loja" style="display: none; width: 88px; height: 88px; border-radius: 8px; border: 1px solid var(--border-color); flex-shrink: 0; background: #ffffff;">
+          <div style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: var(--text-main);">QR Code da Loja</span>
+              <div style="display: flex; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 14px; padding: 2px;">
+                <button type="button" id="qr-color-btn-brand" onclick="setQrColorMode('brand')" style="padding: 2px 8px; font-size: 10px; font-weight: 700; border: none; border-radius: 12px; background: var(--panel-white); color: var(--brand-purple); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">🎨 Cor da Loja</button>
+                <button type="button" id="qr-color-btn-black" onclick="setQrColorMode('black')" style="padding: 2px 8px; font-size: 10px; font-weight: 600; border: none; border-radius: 12px; background: transparent; color: var(--text-muted); cursor: pointer;">⚫ Preto</button>
+              </div>
+            </div>
+            <span style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4;">Use em cardápios, embalagens ou balcão para levar direto aos seus links.</span>
+            <button type="button" id="store-qr-download-btn" onclick="downloadStoreQrCode()" class="btn-secondary" style="display: none; align-items: center; gap: 6px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; width: fit-content; margin-top: 2px; cursor: pointer;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>Baixar QR Code</span>
+              <span>Baixar QR Code HD (1000px)</span>
             </button>
           </div>
         </div>
@@ -2177,7 +2301,18 @@
     </main>
 
     <!-- Live Preview Panel (Desktop) -->
-    <aside class="preview-panel">
+    <aside class="preview-panel" style="display: flex; flex-direction: column; align-items: center;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; width: 290px;">
+        <span style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Simulador</span>
+        <div class="mockup-toggle-group" style="display: flex; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; padding: 2px;">
+          <button type="button" id="mockup-btn-iphone" class="mockup-mode-btn active" onclick="setMockupDevice('iphone')" style="display: flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 10.5px; font-weight: 700; border: none; border-radius: 14px; background: var(--panel-white); color: var(--brand-purple); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+            iPhone
+          </button>
+          <button type="button" id="mockup-btn-android" class="mockup-mode-btn" onclick="setMockupDevice('android')" style="display: flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 10.5px; font-weight: 600; border: none; border-radius: 14px; background: transparent; color: var(--text-muted); cursor: pointer;">
+            Android
+          </button>
+        </div>
+      </div>
       <div class="device-smartphone">
         <div class="device-screen">
           <iframe id="live-preview-iframe" src="" frameborder="0" allow="web-share"></iframe>
@@ -2195,7 +2330,11 @@
   <!-- MODAL: Mobile Preview -->
   <div class="modal-backdrop" id="mobile-preview-backdrop">
     <div class="modal" style="max-width: 360px; padding: 12px; background: transparent; border: none; box-shadow: none;">
-      <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div class="mockup-toggle-group" style="display: flex; background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 2px;">
+          <button type="button" class="mockup-mode-btn" onclick="setMockupDevice('iphone')" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border: none; border-radius: 14px; background: white; color: var(--brand-purple); cursor: pointer;">iPhone</button>
+          <button type="button" class="mockup-mode-btn" onclick="setMockupDevice('android')" style="padding: 4px 10px; font-size: 11px; font-weight: 600; border: none; border-radius: 14px; background: transparent; color: white; cursor: pointer;">Android</button>
+        </div>
         <button onclick="closeMobilePreviewModal()" style="background: rgba(15, 23, 42, 0.6); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; font-weight: bold;">&times;</button>
       </div>
       <div class="device-smartphone" style="margin: 0 auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
@@ -2374,7 +2513,7 @@
               <input type="file" id="custom-icon-file-input" accept="image/*" style="display: none;" onchange="handleCustomIconUpload(event)">
             </div>
             <div id="custom-icon-preview-box" style="width: 50px; height: 50px; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: var(--panel-white); overflow: hidden; flex-shrink: 0; position: relative;">
-              <img id="custom-icon-preview-img" src="" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: contain;">
+              <img id="custom-icon-preview-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: contain;">
               <div id="custom-icon-preview-placeholder" style="color: var(--text-muted); display: flex; align-items: center; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>
             </div>
           </div>
@@ -2464,6 +2603,30 @@
           </div>
         </div>
       </div>
+
+      <!-- Agendamento & Validade do Link (Opcional) -->
+      <details id="link-schedule-details" style="margin-top: 10px; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 12px; background: var(--bg-light);">
+        <summary style="font-size: 11.5px; font-weight: 700; color: var(--brand-purple); cursor: pointer; outline: none; user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
+          <span style="display: flex; align-items: center; gap: 6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Agendamento & Validade (Opcional)</span>
+          </span>
+          <span class="details-arrow" style="font-size: 9px; transition: transform 0.2s ease; display: inline-block;">▶</span>
+        </summary>
+        <p style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4; margin: 8px 0 10px;">
+          Programe promoções e eventos. O link só aparecerá na página pública a partir do início e será ocultado automaticamente após expirar.
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="modal-link-schedule-start" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Início da Exibição:</label>
+            <input type="datetime-local" id="modal-link-schedule-start" style="font-size: 11px; padding: 6px 8px; background: var(--panel-white);">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="modal-link-schedule-end" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Expiração (Término):</label>
+            <input type="datetime-local" id="modal-link-schedule-end" style="font-size: 11px; padding: 6px 8px; background: var(--panel-white);">
+          </div>
+        </div>
+      </details>
     </div>
     <div class="modal-footer">
       <button class="btn-secondary" onclick="closeLinkModal()">Cancelar</button>
@@ -2740,6 +2903,167 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     });
   });
 
+  const THEME_PRESETS = {
+    dark_luxe: {
+      bgType: 'solid',
+      bgColor: '#0B0F19',
+      textColor: '#F8FAFC',
+      themeColor: '#F59E0B',
+      btnColor: '#1E293B',
+      btnTextColor: '#F8FAFC',
+      btnBorderRadius: '12px',
+      btnOpacity: 100
+    },
+    clean_slate: {
+      bgType: 'solid',
+      bgColor: '#FFFFFF',
+      textColor: '#0F172A',
+      themeColor: '#372F6B',
+      btnColor: '#EEF2FF',
+      btnTextColor: '#0F172A',
+      btnBorderRadius: '30px',
+      btnOpacity: 100
+    },
+    violet_glass: {
+      bgType: 'gradient',
+      bgGradient: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+      textColor: '#FFFFFF',
+      themeColor: '#FDE047',
+      btnColor: '#FFFFFF',
+      btnTextColor: '#FFFFFF',
+      btnBorderRadius: '16px',
+      btnOpacity: 15
+    },
+    emerald_luxe: {
+      bgType: 'solid',
+      bgColor: '#064E3B',
+      textColor: '#ECFDF5',
+      themeColor: '#34D399',
+      btnColor: '#065F46',
+      btnTextColor: '#ECFDF5',
+      btnBorderRadius: '10px',
+      btnOpacity: 90
+    },
+    sunset_glow: {
+      bgType: 'gradient',
+      bgGradient: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)',
+      textColor: '#FFFFFF',
+      themeColor: '#FEF08A',
+      btnColor: '#FFFFFF',
+      btnTextColor: '#1E293B',
+      btnBorderRadius: '30px',
+      btnOpacity: 95
+    }
+  };
+
+  async function applyThemePreset(presetId, presetName) {
+    const preset = THEME_PRESETS[presetId];
+    if (!preset || !storeConfig) return;
+
+    const displayName = presetName || presetId;
+    const confirmed = await showConfirm(
+      `Aplicar Tema "${displayName}"?`,
+      "As cores atuais, estilo de fundo e formato dos botões da sua página serão substituídos por este tema pronto. Deseja continuar?",
+      "Aplicar Tema",
+      "Cancelar"
+    );
+
+    if (!confirmed) return;
+
+    if (preset.bgType === 'solid') {
+      document.getElementById('store-bg-color').value = preset.bgColor;
+      document.getElementById('store-bg-color-hex').value = preset.bgColor.toUpperCase();
+      storeConfig.bgColor = preset.bgColor;
+      switchBgTab('solid');
+    } else if (preset.bgType === 'gradient') {
+      document.getElementById('store-bg-gradient').value = preset.bgGradient;
+      storeConfig.bgGradient = preset.bgGradient;
+      switchBgTab('gradient');
+    }
+
+    document.getElementById('store-theme-color').value = preset.themeColor;
+    document.getElementById('store-theme-color-hex').value = preset.themeColor.toUpperCase();
+    storeConfig.themeColor = preset.themeColor;
+
+    document.getElementById('store-text-color').value = preset.textColor;
+    document.getElementById('store-text-color-hex').value = preset.textColor.toUpperCase();
+    storeConfig.textColor = preset.textColor;
+
+    document.getElementById('store-btn-color').value = preset.btnColor;
+    document.getElementById('store-btn-color-hex').value = preset.btnColor.toUpperCase();
+    storeConfig.btnColor = preset.btnColor;
+
+    document.getElementById('store-btn-text-color').value = preset.btnTextColor;
+    document.getElementById('store-btn-text-color-hex').value = preset.btnTextColor.toUpperCase();
+    storeConfig.btnTextColor = preset.btnTextColor;
+
+    document.getElementById('store-btn-radius').value = preset.btnBorderRadius;
+    storeConfig.btnBorderRadius = preset.btnBorderRadius;
+
+    document.getElementById('store-btn-opacity').value = preset.btnOpacity;
+    document.getElementById('store-btn-opacity-val').textContent = preset.btnOpacity + '%';
+    storeConfig.btnOpacity = preset.btnOpacity;
+
+    checkThemeContrast();
+    triggerAutosave();
+    showToast(`Tema "${displayName}" aplicado com sucesso!`);
+  }
+
+  function checkThemeContrast() {
+    const textColor = document.getElementById('store-text-color')?.value || '#0f172a';
+    const bgColor = document.getElementById('store-bg-color')?.value || '#ffffff';
+    const isSolid = (activeBgTab === 'solid');
+    const warningEl = document.getElementById('contrast-warning-badge');
+    if (!warningEl) return;
+    
+    if (!isSolid) {
+      warningEl.style.display = 'none';
+      return;
+    }
+    
+    function getLuminance(hex) {
+      if (!hex || !hex.startsWith('#')) return 0.5;
+      const cleanHex = hex.replace('#', '');
+      if (cleanHex.length !== 6) return 0.5;
+      const rgb = parseInt(cleanHex, 16);
+      const r = ((rgb >> 16) & 0xff) / 255;
+      const g = ((rgb >> 8) & 0xff) / 255;
+      const b = (rgb & 0xff) / 255;
+      const [lr, lg, lb] = [r, g, b].map(c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+      return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
+    }
+    
+    try {
+      const lumText = getLuminance(textColor);
+      const lumBg = getLuminance(bgColor);
+      const ratio = (Math.max(lumText, lumBg) + 0.05) / (Math.min(lumText, lumBg) + 0.05);
+      if (ratio < 2.5) {
+        warningEl.style.display = 'flex';
+      } else {
+        warningEl.style.display = 'none';
+      }
+    } catch(e) {
+      warningEl.style.display = 'none';
+    }
+  }
+
+  function setMockupDevice(device) {
+    const isAndroid = device === 'android';
+    document.querySelectorAll('.device-smartphone').forEach(el => {
+      el.classList.toggle('mode-android', isAndroid);
+    });
+    const btnIphone = document.getElementById('mockup-btn-iphone');
+    const btnAndroid = document.getElementById('mockup-btn-android');
+    if (btnIphone && btnAndroid) {
+      btnIphone.classList.toggle('active', !isAndroid);
+      btnIphone.style.background = !isAndroid ? 'var(--panel-white)' : 'transparent';
+      btnIphone.style.color = !isAndroid ? 'var(--brand-purple)' : 'var(--text-muted)';
+      btnAndroid.classList.toggle('active', isAndroid);
+      btnAndroid.style.background = isAndroid ? 'var(--panel-white)' : 'transparent';
+      btnAndroid.style.color = isAndroid ? 'var(--brand-purple)' : 'var(--text-muted)';
+    }
+  }
+
   // Scales each phone-mockup iframe to exactly fill its frame, based on the
   // frame's real measured size rather than a hardcoded constant. The
   // iframes always render their document at a fixed 375x781 "design"
@@ -2827,7 +3151,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
             </svg>
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px;">
-            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-main); margin: 0;">${title}</h3>
             <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0;">${message}</p>
           </div>
           <button class="btn-primary-modal" style="width: 100%; padding: 11px; font-size: 13.5px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; margin-top: 8px;" id="alert-btn-close">${buttonText}</button>
@@ -2858,14 +3182,14 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       modal.innerHTML = `
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
           <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(55, 47, 107, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : 'var(--brand-purple)'};">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
               <line x1="12" y1="9" x2="12" y2="13"></line>
               <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px;">
-            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-main); margin: 0;">${title}</h3>
             <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0;">${message}</p>
           </div>
           <div style="display: flex; gap: 10px; width: 100%; margin-top: 8px;">
@@ -2908,7 +3232,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         <div style="display: flex; flex-direction: column; gap: 14px;">
           ${previewImageUrl ? `<img src="${previewImageUrl}" alt="" style="width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);">` : ''}
           <div style="display: flex; flex-direction: column; gap: 4px;">
-            <h3 style="font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0;">${title}</h3>
+            <h3 style="font-family: var(--font-display); font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-main); margin: 0;">${title}</h3>
             <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4; margin: 0;">${message}</p>
           </div>
           <div class="form-group">
@@ -3272,6 +3596,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         document.getElementById('store-sub-text').value = storeConfig.subText;
 
         previewLogo();
+        checkThemeContrast();
         updatePublicLinkDisplay();
         renderLinksList();
         updatePreviewIframe();
@@ -3310,9 +3635,42 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     updateStoreQrCode(urlInput.value);
   }
 
-  // QR CODE — generated on the fly via a free public API (goqr.me), no
-  // extra dependency needed. Kept in sync with the public link automatically
-  // since it's driven from updatePublicLinkDisplay().
+  let activeQrColorMode = 'brand'; // 'brand' | 'black'
+
+  function hexToRgbDash(hex) {
+    if (!hex || typeof hex !== 'string') return '0-0-0';
+    let clean = hex.replace('#', '').trim();
+    if (clean.length === 3) {
+      clean = clean.split('').map(c => c + c).join('');
+    }
+    if (clean.length !== 6) return '0-0-0';
+    const r = parseInt(clean.substring(0, 2), 16) || 0;
+    const g = parseInt(clean.substring(2, 4), 16) || 0;
+    const b = parseInt(clean.substring(4, 6), 16) || 0;
+    return `${r}-${g}-${b}`;
+  }
+
+  function setQrColorMode(mode) {
+    activeQrColorMode = mode;
+    const btnBrand = document.getElementById('qr-color-btn-brand');
+    const btnBlack = document.getElementById('qr-color-btn-black');
+    if (btnBrand && btnBlack) {
+      const isBrand = mode === 'brand';
+      btnBrand.style.background = isBrand ? 'var(--panel-white)' : 'transparent';
+      btnBrand.style.color = isBrand ? 'var(--brand-purple)' : 'var(--text-muted)';
+      btnBrand.style.fontWeight = isBrand ? '700' : '600';
+      btnBrand.style.boxShadow = isBrand ? '0 1px 2px rgba(0,0,0,0.05)' : 'none';
+
+      btnBlack.style.background = !isBrand ? 'var(--panel-white)' : 'transparent';
+      btnBlack.style.color = !isBrand ? 'var(--text-main)' : 'var(--text-muted)';
+      btnBlack.style.fontWeight = !isBrand ? '700' : '600';
+      btnBlack.style.boxShadow = !isBrand ? '0 1px 2px rgba(0,0,0,0.05)' : 'none';
+    }
+    const url = document.getElementById('public-link-url')?.value;
+    if (url) updateStoreQrCode(url);
+  }
+
+  // QR CODE — generated on the fly via free public API (goqr.me) with brand color support
   function updateStoreQrCode(url) {
     const placeholder = document.getElementById('store-qr-placeholder');
     const img = document.getElementById('store-qr-img');
@@ -3327,30 +3685,38 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&data=${encodeURIComponent(url)}`;
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#372f6b';
+    const colorParam = (activeQrColorMode === 'brand') ? hexToRgbDash(themeColor) : '0-0-0';
+
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&color=${colorParam}&data=${encodeURIComponent(url)}`;
     img.style.display = 'block';
     placeholder.style.display = 'none';
     downloadBtn.style.display = 'flex';
   }
 
-  // Downloads the QR code image via fetch+blob rather than a plain <a
-  // download> link — the image comes from a different origin, and browsers
-  // don't reliably honor the download attribute for cross-origin resources.
+  // Downloads high-definition 1000x1000px QR Code
   async function downloadStoreQrCode() {
-    const img = document.getElementById('store-qr-img');
-    if (!img || !img.src) return;
+    const urlInput = document.getElementById('public-link-url');
+    if (!urlInput || !urlInput.value) return;
+
+    const url = urlInput.value;
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#372f6b';
+    const colorParam = (activeQrColorMode === 'brand') ? hexToRgbDash(themeColor) : '0-0-0';
+    const hdQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&margin=16&color=${colorParam}&data=${encodeURIComponent(url)}`;
 
     try {
-      const response = await fetch(img.src);
+      showToast("Gerando QR Code em alta definição (1000px)...");
+      const response = await fetch(hdQrUrl);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = blobUrl;
-      a.download = `qrcode-${activeStore || 'linksvi'}.png`;
+      a.download = `qrcode_${activeStore || 'linksvi'}_${activeQrColorMode}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(blobUrl);
+      showToast("QR Code baixado com sucesso!");
     } catch (e) {
       console.error("Erro ao baixar QR Code:", e);
       showToast("Não foi possível baixar o QR Code.", "error");
@@ -3385,7 +3751,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (success) {
       showToast("Link copiado para a área de transferência!");
 
-      // Visual feedback on the button
+      // Visual feedback on the button in the links panel
       const btn = document.querySelector('.btn-copy');
       if (btn) {
         const originalText = btn.innerHTML;
@@ -3400,6 +3766,21 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           btn.innerHTML = originalText;
           btn.style.borderColor = '';
           btn.style.color = '';
+        }, 2000);
+      }
+
+      // Visual feedback on the header quick-copy button
+      const headerBtn = document.getElementById('header-copy-link-btn');
+      if (headerBtn) {
+        const origHeaderHtml = headerBtn.innerHTML;
+        headerBtn.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span style="color: #22c55e;">Copiado!</span>
+        `;
+        headerBtn.style.borderColor = '#22c55e';
+        setTimeout(() => {
+          headerBtn.innerHTML = origHeaderHtml;
+          headerBtn.style.borderColor = '';
         }, 2000);
       }
     } else {
@@ -3841,6 +4222,27 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       const iconHTML = getLinkIconHTML(link.image, link.label);
       const isCustomUrl = link.image && (link.image.startsWith("http://") || link.image.startsWith("https://") || link.image.startsWith("data:"));
 
+      let scheduleBadgeHTML = '';
+      if (link.scheduleStart || link.scheduleEnd) {
+        const now = new Date();
+        const start = link.scheduleStart ? new Date(link.scheduleStart) : null;
+        const end = link.scheduleEnd ? new Date(link.scheduleEnd) : null;
+
+        if (start && now < start) {
+          const dateStr = start.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          const timeStr = start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fef3c7; color: #92400e;">⏳ Inicia ${dateStr} ${timeStr}</span>`;
+        } else if (end && now > end) {
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fee2e2; color: #b91c1c;">⛔ Expirado</span>`;
+        } else if (end) {
+          const endDateStr = end.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+          const endTimeStr = end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d;">🟢 Ativo (até ${endDateStr} ${endTimeStr})</span>`;
+        } else {
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d;">🟢 Ativo</span>`;
+        }
+      }
+
       item.innerHTML = `
         <div class="link-item-icon" data-platform="${isCustomUrl ? 'fallback' : (link.image || 'fallback')}">
           ${iconHTML}
@@ -3849,6 +4251,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           <div class="link-item-title">
             ${link.label}
             ${link.badge ? `<span class="link-item-badge">${link.badge}</span>` : ''}
+            ${scheduleBadgeHTML}
             ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''} • ${link.displayCount == 3 ? 'Pequeno' : link.displayCount == 2 ? 'Médio' : 'Grande'}</span>` : ''}
           </div>
           <div class="link-item-url">${link.url || (link.type === 'carousel' ? '' : 'Sem link (Em Construção)')}</div>
@@ -3860,6 +4263,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           <button class="btn-control" onclick="moveLink(${index}, 1)" title="Mover para baixo" ${index === storeConfig.links.length - 1 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
           </button>
+          <button class="btn-control" onclick="duplicateLink(${index})" title="Duplicar Link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          </button>
           <button class="btn-control" onclick="openLinkModal(${index})" title="Editar">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           </button>
@@ -3870,6 +4276,17 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       `;
       container.appendChild(item);
     });
+  }
+
+  function duplicateLink(index) {
+    if (!storeConfig.links || !storeConfig.links[index]) return;
+    const original = storeConfig.links[index];
+    const cloned = JSON.parse(JSON.stringify(original));
+    cloned.label = cloned.label + " (Cópia)";
+    storeConfig.links.splice(index + 1, 0, cloned);
+    renderLinksList();
+    triggerAutosave(true); // Instant save on duplication
+    showToast("Link duplicado com sucesso!");
   }
 
   function moveLink(index, direction) {
@@ -4312,7 +4729,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       row.innerHTML = `
         <span style="width: 30px; flex-shrink: 0; font-size: 11px; font-weight: ${isBest ? '800' : '600'}; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-muted)'};">${label}</span>
         <div style="flex: 1; background-color: var(--bg-light); border-radius: 4px; height: 16px; overflow: hidden;">
-          <div style="width: ${pct}%; height: 100%; border-radius: 4px; background-color: ${isBest ? 'var(--brand-purple)' : '#cbd5e1'}; transition: width 0.4s ease;"></div>
+          <div style="width: 100%; height: 100%; border-radius: 4px; background-color: ${isBest ? 'var(--brand-purple)' : '#cbd5e1'}; transform-origin: left; transform: scaleX(${pct / 100}); transition: transform 0.4s var(--ease-out);"></div>
         </div>
         <span style="width: 34px; flex-shrink: 0; text-align: right; font-size: 11px; font-weight: 700; color: ${isBest ? 'var(--brand-purple)' : 'var(--text-main)'};">${value}</span>
       `;
@@ -4500,6 +4917,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function triggerAutosave(instant = false) {
     if (!activeStore) return;
     updateSaveStatus('saving');
+    checkThemeContrast();
     sendConfigToPreview(); // Live update preview iframe
     
     if (autosaveTimeout) {
@@ -4884,6 +5302,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       title.textContent = "Adicionar Link";
       labelInput.value = "";
       urlInput.value = "";
+      document.getElementById('modal-link-schedule-start').value = "";
+      document.getElementById('modal-link-schedule-end').value = "";
+      const schedDetails = document.getElementById('link-schedule-details');
+      if (schedDetails) schedDetails.open = false;
       currentCarouselImages = [];
       renderCarouselThumbnails();
       const radio1 = document.querySelector('input[name="carousel-display-count"][value="1"]');
@@ -4896,6 +5318,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       labelInput.value = link.label;
       urlInput.value = link.url;
       document.getElementById('modal-link-badge').value = link.badge || "";
+      document.getElementById('modal-link-schedule-start').value = link.scheduleStart || "";
+      document.getElementById('modal-link-schedule-end').value = link.scheduleEnd || "";
+      const schedDetails = document.getElementById('link-schedule-details');
+      if (schedDetails) schedDetails.open = Boolean(link.scheduleStart || link.scheduleEnd);
       currentCarouselImages = (link.type === 'carousel' && Array.isArray(link.images))
         ? link.images.map((img) => typeof img === 'string' ? { url: img, caption: '' } : { url: img.url, caption: img.caption || '' })
         : [];
@@ -5609,12 +6035,18 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       url = 'https://' + url;
     }
 
+    const scheduleStart = document.getElementById('modal-link-schedule-start').value.trim();
+    const scheduleEnd = document.getElementById('modal-link-schedule-end').value.trim();
+
     const linkData = {
       label: label,
       url: url,
       image: selectedIconType,
       badge: badge
     };
+
+    if (scheduleStart) linkData.scheduleStart = scheduleStart;
+    if (scheduleEnd) linkData.scheduleEnd = scheduleEnd;
 
     if (selectedIconType === 'carousel') {
       linkData.type = 'carousel';

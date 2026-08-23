@@ -3,84 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Mobile Integration -->
+<!-- Mobile Integration & PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LinksVi">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff">
+<link rel="dns-prefetch" href="https://lujsstahllhcrkfgjmcw.supabase.co">
+<link rel="preconnect" href="https://lujsstahllhcrkfgjmcw.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <link rel="shortcut icon" type="image/x-icon" href="https://lujsstahllhcrkfgjmcw.supabase.co/storage/v1/object/public/logos/favicon.ico">
 <title>LinksVi — Carregando...</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0F172A;
     --navy-soft: #475569;
     --gold: #6366F1;
-    --gold-deep: #7C3AED; /* This becomes the custom highlight color */
+    --gold-deep: #7C3AED; /* Custom highlight color */
     --bg: #FFFFFF;
     --btn-bg: #FFFFFF; /* Custom button background */
     --btn-text: #0F172A; /* Custom button text color */
     --pill-bg: #EEF2FF; /* Light version of custom highlight color */
     --line: #E2E8F0;
+    --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   }
   * { box-sizing: border-box; }
+  *:focus-visible {
+    outline: 2px solid var(--gold-deep);
+    outline-offset: 2px;
+  }
   body {
     margin: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
     color: var(--navy);
     background: var(--bg);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
   }
   body.has-bg-image, body.has-bg-image footer, body.has-bg-image nav {
     background: transparent !important;
   }
 
-  /* Nav styling */
+  /* Nav styling - sticky top without layout jump or flicker */
   nav {
     display: none; /* Shown after load */
     align-items: center;
     justify-content: center;
     padding: 24px 20px 8px;
-    background: var(--bg);
-    position: relative;
+    background: transparent;
+    position: sticky;
+    top: 0;
     z-index: 100;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: padding 0.25s var(--ease-out), background-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
     width: 100%;
     box-sizing: border-box;
   }
 
   /* Notch spacer inside virtual phone iframe */
-  body.in-preview nav, body.in-preview nav.scrolled {
-    padding-top: 40px !important;
+  body.in-preview nav {
+    padding-top: 36px !important;
   }
 
   /* Notch spacer on real mobile/tablet devices in production */
   @media (max-width: 768px) {
-    nav, nav.scrolled {
-      padding-top: 40px !important;
+    nav {
+      padding-top: max(24px, env(safe-area-inset-top)) !important;
     }
   }
   
   nav.scrolled {
-    position: fixed;
-    top: 0;
-    padding: 10px 20px;
-    justify-content: center;
-    background: var(--nav-bg, rgba(255, 255, 255, 0.85)) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-    border-bottom: 1.4px solid rgba(226, 232, 240, 0.8);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  }
+
+  body.in-preview nav.scrolled {
+    padding-top: 24px !important;
+    padding-bottom: 8px !important;
+  }
+
+  @media (max-width: 768px) {
+    nav.scrolled {
+      padding-top: max(10px, env(safe-area-inset-top)) !important;
+      padding-bottom: 8px !important;
+    }
   }
   
   body.has-bg-image nav.scrolled {
-    background: var(--nav-bg, rgba(255, 255, 255, 0.85)) !important;
+    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
   }
 
   .logo-wrap {
@@ -88,39 +113,41 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: gap 0.25s var(--ease-out);
     width: 100%;
   }
 
   .logo-wrap img {
-    height: 100px; /* Enlarged logo */
+    height: var(--logo-height, 100px);
     width: auto;
     display: block;
     object-fit: contain;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: height 0.25s var(--ease-out), transform 0.25s var(--ease-out);
   }
 
   nav.scrolled .logo-wrap img {
-    height: 40px !important; /* Shrink logo */
+    height: 38px !important; /* Shrink logo smoothly */
   }
 
   #navbar-store-name {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: 16px;
+    font-size: 15.5px;
+    letter-spacing: -0.015em;
     color: var(--navy);
     opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out), max-width 0.25s var(--ease-out);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: none;
+    display: block;
   }
 
   nav.scrolled #navbar-store-name {
-    display: block !important;
     opacity: 1;
+    max-width: 260px;
     transform: translateX(0);
   }
 
@@ -137,70 +164,76 @@
 
   .pill {
     display: inline-block;
-    padding: 8px 20px;
-    border-radius: 30px;
+    padding: 6px 18px;
+    border-radius: 999px;
     background: var(--pill-bg);
     color: var(--gold-deep);
+    font-family: var(--font-body);
     font-weight: 700;
     font-size: 11px;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeUp .5s ease forwards .05s;
+    animation: fadeUp .5s var(--ease-out) forwards .05s;
+    border: 1px solid rgba(99, 102, 241, 0.12);
   }
 
   .brand-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-weight: 800;
-    font-size: 24px;
-    line-height: 1.25;
-    margin: 8px 0 8px;
+    font-size: clamp(22px, 5vw, 28px);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    margin: 10px 0 8px;
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeUp .5s ease forwards .1s;
+    animation: fadeUp .5s var(--ease-out) forwards .1s;
   }
 
   .brand-desc {
-    font-size: 13.5px;
-    line-height: 1.5;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
     color: var(--navy-soft);
     margin: 0 0 24px;
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeUp .5s ease forwards .18s;
+    animation: fadeUp .5s var(--ease-out) forwards .18s;
   }
 
   .cta-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
-    font-size: 16px;
-    line-height: 1.2;
+    font-size: 16.5px;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
     margin: 0 0 6px;
     color: var(--navy);
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeUp .5s ease forwards .24s;
+    animation: fadeUp .5s var(--ease-out) forwards .24s;
   }
 
   p.sub {
+    font-family: var(--font-body);
     font-size: 13px;
     line-height: 1.5;
     color: var(--navy-soft);
     margin: 0 0 28px;
     opacity: 0;
     transform: translateY(8px);
-    animation: fadeUp .5s ease forwards .3s;
+    animation: fadeUp .5s var(--ease-out) forwards .3s;
   }
 
   @keyframes fadeUp {
     0% {
       opacity: 0;
-      transform: translateY(20px) scale(0.98);
+      transform: translateY(16px);
     }
     100% {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   }
 
@@ -217,13 +250,14 @@
     width: 100%;
     padding: 16px 20px;
     border-radius: var(--btn-radius, 12px);
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-display);
     font-weight: 600;
     font-size: 15.5px;
+    letter-spacing: -0.01em;
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), border-color 0.2s ease, background 0.2s ease;
     opacity: 0;
-    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeUp 0.6s var(--ease-out) forwards;
   }
 
   .btn-icon {
@@ -233,7 +267,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s var(--ease-out);
   }
   .btn-icon svg { width: 100%; height: 100%; }
 
@@ -247,6 +281,7 @@
     border-radius: 20px;
     background: var(--gold-deep);
     color: #ffffff;
+    font-family: var(--font-body);
     font-size: 9.5px;
     font-weight: 700;
     text-transform: uppercase;
@@ -254,9 +289,26 @@
     flex-shrink: 0;
     line-height: 1;
     flex-wrap: nowrap;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-arrow { flex: none; transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1); }
+  .btn-badge::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: skewX(-20deg);
+    animation: badgeSheen 3.5s infinite;
+  }
+
+  @keyframes badgeSheen {
+    0%, 65% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  .btn-arrow { flex: none; transition: transform .2s var(--ease-out); }
 
   .btn-outline {
     background: var(--btn-bg);
@@ -265,26 +317,26 @@
     -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
     color: var(--btn-text);
     border: 1.4px solid var(--line);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
   }
   .btn-outline .btn-icon { color: var(--gold-deep); }
 
   /* Hover optimizations for desktop mouse pointers */
   @media (hover: hover) {
-    .btn:hover .btn-icon { transform: scale(1.15); }
-    .btn:hover .btn-arrow { transform: translateX(5px); }
+    .btn:hover .btn-icon { transform: scale(1.12); }
+    .btn:hover .btn-arrow { transform: translateX(4px); }
     .btn-outline:hover {
       border-color: var(--gold-deep);
       background: var(--btn-bg);
       background: color-mix(in srgb, var(--btn-bg) var(--btn-opacity, 100%), transparent);
-      transform: translateY(-3px) scale(1.015);
-      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
     }
   }
 
   /* Tap feedback for touch screens and click feedback */
   .btn:active {
-    transform: scale(0.97) !important;
+    transform: scale(0.985) !important;
     background-color: var(--pill-bg);
     transition: transform 0.08s ease;
   }
@@ -327,18 +379,19 @@
     border-radius: var(--btn-radius, 12px);
     padding: 16px;
     text-align: left;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     display: flex;
     flex-direction: column;
     gap: 12px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform: translateY(16px);
+    animation: fadeUp 0.6s var(--ease-out) forwards;
   }
   .map-card-title {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
     font-size: 14.5px;
+    letter-spacing: -0.01em;
     color: var(--btn-text);
   }
   .map-iframe-wrapper {
@@ -588,7 +641,7 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* Loading Spinner */
+  /* Skeleton Shimmer Loading State */
   #loader-container {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -596,11 +649,76 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: max(32px, env(safe-area-inset-top));
     z-index: 1000;
-    transition: opacity 0.4s ease;
+    transition: opacity 0.35s var(--ease-out);
+    overflow: hidden;
   }
   
+  .skeleton-wrapper {
+    width: 100%;
+    max-width: 480px;
+    padding: 24px 24px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 14px;
+  }
+  
+  .skeleton-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+    margin-bottom: 4px;
+  }
+  
+  .skeleton-pill {
+    width: 100px;
+    height: 22px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+  }
+  
+  .skeleton-title {
+    width: 190px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+  }
+  
+  .skeleton-desc {
+    width: 260px;
+    height: 16px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.04) 25%, rgba(15, 23, 42, 0.09) 50%, rgba(15, 23, 42, 0.04) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+    margin-bottom: 12px;
+  }
+  
+  .skeleton-btn {
+    width: 100%;
+    height: 52px;
+    border-radius: var(--btn-radius, 12px);
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.1) 50%, rgba(15, 23, 42, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+  }
+  
+  @keyframes skeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
   /* Custom scrollbar for premium look */
   ::-webkit-scrollbar {
     width: 8px;
@@ -616,26 +734,6 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--navy);
   }
-  .spinner {
-    width: 44px;
-    height: 44px;
-    border: 3px solid var(--line);
-    border-top-color: var(--gold-deep);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 16px;
-  }
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  #loader-container p {
-    font-family: 'Inter', sans-serif;
-    color: var(--navy-soft);
-    font-size: 13.5px;
-    font-weight: 500;
-    margin: 0;
-  }
 
   /* Error State Screen */
   #error-screen {
@@ -644,11 +742,13 @@
     margin: auto;
     padding: 32px 24px;
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-body);
   }
   #error-screen h1 {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
     font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
     color: var(--navy);
     margin-bottom: 12px;
   }
@@ -702,7 +802,7 @@
     flex-direction: column;
     overflow: hidden;
     transform: translateY(20px);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.3s var(--ease-out);
     border: 1px solid rgba(226, 232, 240, 0.8);
   }
   .pdf-modal-backdrop.active .pdf-modal-container {
@@ -726,7 +826,8 @@
   }
   .pdf-modal-title {
     font-weight: 700;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
     font-size: 16px;
     color: var(--navy);
   }
@@ -875,10 +976,18 @@
 </button>
 <div class="share-toast" id="share-toast">Link copiado!</div>
 
-<!-- Loader Screen -->
+<!-- Skeleton Shimmer Loader Screen -->
 <div id="loader-container">
-  <div class="spinner"></div>
-  <p>Carregando links...</p>
+  <div class="skeleton-wrapper">
+    <div class="skeleton-avatar"></div>
+    <div class="skeleton-pill"></div>
+    <div class="skeleton-title"></div>
+    <div class="skeleton-desc"></div>
+    <div class="skeleton-btn"></div>
+    <div class="skeleton-btn"></div>
+    <div class="skeleton-btn"></div>
+    <div class="skeleton-btn"></div>
+  </div>
 </div>
 
 <!-- Error Screen -->
@@ -891,7 +1000,7 @@
 <!-- Header / Nav -->
 <nav id="navbar">
   <div class="logo-wrap">
-    <img id="store-logo" src="" alt="Logo" style="display: none;">
+    <img id="store-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Logo" style="display: none;">
     <span id="navbar-store-name"></span>
   </div>
 </nav>
@@ -1095,7 +1204,14 @@
     showShareToast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
+  function triggerHaptic() {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate(10); } catch(e) {}
+    }
+  }
+
   async function handleShareClick() {
+    triggerHaptic();
     const isPreview = window.location.search.includes('preview=true') || (window.self !== window.top);
     if (isPreview) {
       const storeName = getStoreName();
@@ -1177,6 +1293,7 @@
   }
 
   async function trackStoreClick(linkIndex, linkUrl) {
+    triggerHaptic();
     const isPreview = window.location.search.includes('preview=true');
     if (isPreview) return;
     
@@ -1390,15 +1507,16 @@
     // 1. Logo
     const logoImg = document.getElementById('store-logo');
     
-    // Set logo height dynamically based on size config
+    // Set logo height dynamically based on size config via CSS variable
     const logoSize = config.logoSize || "medium";
+    let targetLogoHeight = '100px';
     if (logoSize === 'small') {
-      logoImg.style.height = '70px';
+      targetLogoHeight = '70px';
     } else if (logoSize === 'large') {
-      logoImg.style.height = '130px';
-    } else {
-      logoImg.style.height = '100px'; // medium (default)
+      targetLogoHeight = '130px';
     }
+    document.documentElement.style.setProperty('--logo-height', targetLogoHeight);
+    logoImg.style.removeProperty('height');
 
     const displayStoreName = storeName || getStoreName() || "Links";
     if (config.logoUrl) {
@@ -1722,11 +1840,35 @@
     const container = document.getElementById('links-container');
     if (!container || !links || links.length === 0) return;
     
+    const isPreview = window.location.search.includes('preview=true') || (window.self !== window.top);
+    const now = new Date();
+
     container.innerHTML = '';
+    let renderedCount = 0;
+
     links.forEach((link, index) => {
+      // Check schedule start and end (unless in preview mode)
+      let isScheduledFuture = false;
+      let isScheduledExpired = false;
+
+      if (link.scheduleStart) {
+        const start = new Date(link.scheduleStart);
+        if (now < start) {
+          if (!isPreview) return; // Future link — hide on public page
+          isScheduledFuture = true;
+        }
+      }
+      if (link.scheduleEnd) {
+        const end = new Date(link.scheduleEnd);
+        if (now > end) {
+          if (!isPreview) return; // Expired link — hide on public page
+          isScheduledExpired = true;
+        }
+      }
+
       // Check if this is an embedded map iframe
       const isMap = link.image === 'mapa';
-      const isIframe = link.url.includes('<iframe') || link.url.includes('google.com/maps/embed');
+      const isIframe = link.url && (link.url.includes('<iframe') || link.url.includes('google.com/maps/embed'));
       
       if (isMap && isIframe) {
         let srcUrl = link.url;
@@ -1739,7 +1881,7 @@
         
         const card = document.createElement('div');
         card.className = 'map-card';
-        card.style.animationDelay = `${0.38 + index * 0.08}s`;
+        card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
         
         card.innerHTML = `
           <div class="map-card-title">${link.label}</div>
@@ -1748,21 +1890,22 @@
           </div>
         `;
         container.appendChild(card);
+        renderedCount++;
         return;
       }
 
-      // Animated photo carousel — uploaded/linked photos instead of a
-      // single clickable button.
+      // Animated photo carousel — uploaded/linked photos instead of a single clickable button.
       if (link.type === 'carousel' && Array.isArray(link.images) && link.images.length > 0) {
         const card = buildCarouselCard(link, index);
-        card.style.animationDelay = `${0.38 + index * 0.08}s`;
+        card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
         container.appendChild(card);
+        renderedCount++;
         return;
       }
 
       const a = document.createElement('a');
       a.className = 'btn btn-outline';
-      a.style.animationDelay = `${0.38 + index * 0.08}s`;
+      a.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
 
       if (link.image === 'catalago_web') {
         a.href = '#';
@@ -1803,6 +1946,20 @@
         badgeSpan.className = 'btn-badge';
         badgeSpan.textContent = link.badge;
         labelSpan.appendChild(badgeSpan);
+      } else if (isPreview && isScheduledFuture) {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'btn-badge';
+        badgeSpan.textContent = '⏳ Agendado';
+        badgeSpan.style.background = '#fef3c7';
+        badgeSpan.style.color = '#92400e';
+        labelSpan.appendChild(badgeSpan);
+      } else if (isPreview && isScheduledExpired) {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'btn-badge';
+        badgeSpan.textContent = '⛔ Expirado';
+        badgeSpan.style.background = '#fee2e2';
+        badgeSpan.style.color = '#b91c1c';
+        labelSpan.appendChild(badgeSpan);
       }
       
       const arrowSpan = document.createElement('span');
@@ -1818,6 +1975,7 @@
       a.appendChild(arrowSpan);
       
       container.appendChild(a);
+      renderedCount++;
     });
   }
 
@@ -2026,9 +2184,9 @@
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
     if (navbar) {
-      if (window.scrollY > 150) {
+      if (window.scrollY > 35) {
         navbar.classList.add('scrolled');
-      } else if (window.scrollY < 20) {
+      } else if (window.scrollY <= 10) {
         navbar.classList.remove('scrolled');
       }
     }
@@ -2041,7 +2199,7 @@
       });
       ticking = true;
     }
-  });
+  }, { passive: true });
 
   document.addEventListener('DOMContentLoaded', loadStoreData);
 </script>
