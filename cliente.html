@@ -132,6 +132,16 @@
     height: 38px !important; /* Shrink logo smoothly */
   }
 
+  /* Probe de medição: o nav é colapsado e restaurado dentro do mesmo frame
+     para descobrir quanta altura o colapso remove. As transições precisam
+     ficar desligadas para que a medição nunca vire uma animação visível. */
+  nav.nav-measuring,
+  nav.nav-measuring .logo-wrap,
+  nav.nav-measuring .logo-wrap img,
+  nav.nav-measuring #navbar-store-name {
+    transition: none !important;
+  }
+
   #navbar-store-name {
     font-family: var(--font-display);
     font-weight: 700;
@@ -2113,6 +2123,7 @@
     // sure any newly rendered node is in its final visible state.
     if (appRevealed) {
       settleEntranceState();
+      scheduleNavCollapseUpdate();
       return;
     }
     appRevealed = true;
@@ -2121,6 +2132,7 @@
     if (!loader) {
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
+      scheduleNavCollapseUpdate();
       return;
     }
 
@@ -2130,6 +2142,7 @@
       // leaving a blank frame in between.
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
+      scheduleNavCollapseUpdate();
 
       if (typeof gsap !== 'undefined') {
         gsap.to(loader, {
@@ -3831,9 +3844,73 @@
     bgLayer.style.transform = transformStr;
   }
 
+  // Colapsar o nav encurta a pagina: a logo cai de --logo-height para 38px e o
+  // padding diminui, somando de ~46px a ~106px a menos de altura. Numa pagina
+  // que mal passa da altura da tela, essa altura removida acaba com o proprio
+  // scroll que disparou o colapso — o navegador volta pro topo, o nav expande
+  // de novo e o visitante ve a logo encolher e crescer a toa, uma vez so.
+  // Por isso o colapso so fica ativo quando sobra scroll depois dele.
+  let navCollapseEnabled = false;
+  let isMeasuringNav = false;
+  const NAV_COLLAPSE_MARGIN = 60; // folga acima do gatilho de 35px
+
+  // Mede a diferenca de altura entre nav expandido e colapsado. Tudo acontece
+  // de forma sincrona dentro de um unico frame e com as transicoes desligadas,
+  // entao nao ha repintura intermediaria: a medicao e invisivel.
+  function measureNavCollapseSaving(navbar) {
+    isMeasuringNav = true;
+    const wasCollapsed = navbar.classList.contains('scrolled');
+
+    navbar.classList.add('nav-measuring');
+    navbar.classList.remove('scrolled');
+    const expandedHeight = navbar.offsetHeight;
+    navbar.classList.add('scrolled');
+    const collapsedHeight = navbar.offsetHeight;
+
+    if (!wasCollapsed) navbar.classList.remove('scrolled');
+    void navbar.offsetHeight; // aplica o estado final antes das transicoes voltarem
+    navbar.classList.remove('nav-measuring');
+
+    isMeasuringNav = false;
+    return Math.max(0, expandedHeight - collapsedHeight);
+  }
+
+  function updateNavCollapseMode() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar || navbar.style.display === 'none') return;
+
+    const saving = measureNavCollapseSaving(navbar);
+    const overflow = document.documentElement.scrollHeight - window.innerHeight;
+    navCollapseEnabled = overflow > saving + NAV_COLLAPSE_MARGIN;
+
+    if (!navCollapseEnabled && navbar.classList.contains('scrolled')) {
+      navbar.classList.remove('scrolled');
+    }
+  }
+
+  // Recalcula sempre que a altura do conteudo ou da viewport mudar: imagens de
+  // carrossel carregando, config atualizado em segundo plano, rotacao de tela.
+  let navCollapseTimer = null;
+  function scheduleNavCollapseUpdate() {
+    if (isMeasuringNav) return;
+    clearTimeout(navCollapseTimer);
+    navCollapseTimer = setTimeout(updateNavCollapseMode, 120);
+  }
+
+  window.addEventListener('resize', scheduleNavCollapseUpdate, { passive: true });
+  window.addEventListener('orientationchange', scheduleNavCollapseUpdate, { passive: true });
+  window.addEventListener('load', scheduleNavCollapseUpdate);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    // Observa o container de links, e nao o <main>: main tem flex 1 0 auto, entao
+    // a altura dele reage ao proprio colapso do nav e realimentaria a medicao.
+    const linksEl = document.getElementById('links-container');
+    if (linksEl) new ResizeObserver(scheduleNavCollapseUpdate).observe(linksEl);
+  }
+
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
-    if (navbar) {
+    if (navbar && navCollapseEnabled && !isMeasuringNav) {
       if (window.scrollY > 35) {
         navbar.classList.add('scrolled');
       } else if (window.scrollY <= 10) {
