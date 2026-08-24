@@ -24,6 +24,7 @@
     --navy-soft: #475569;
     --gold: #6366F1;
     --gold-deep: #7C3AED; /* Custom highlight color */
+    --theme-color: #7C3AED; /* Brand color (overwritten by the store config) */
     --bg: #FFFFFF;
     --btn-bg: #FFFFFF; /* Custom button background */
     --btn-text: #0F172A; /* Custom button text color */
@@ -32,6 +33,9 @@
     --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    /* Loading skeleton tinted with the brand color */
+    --skeleton-base: color-mix(in srgb, var(--theme-color) 11%, transparent);
+    --skeleton-shine: color-mix(in srgb, var(--theme-color) 26%, transparent);
   }
   * { box-sizing: border-box; }
   *:focus-visible {
@@ -234,6 +238,23 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* When GSAP is available it drives the whole entrance sequence in page
+     order (logo -> pill -> title -> ... -> links). The CSS fadeUp animations
+     above are the no-JS fallback only: leaving both active made every element
+     animate twice (the page appeared to blink). */
+  html.gsap-entrance .pill,
+  html.gsap-entrance .brand-title,
+  html.gsap-entrance .brand-desc,
+  html.gsap-entrance .cta-title,
+  html.gsap-entrance p.sub,
+  html.gsap-entrance .social-bar-container,
+  html.gsap-entrance .btn,
+  html.gsap-entrance .coupon-card,
+  html.gsap-entrance .map-card,
+  html.gsap-entrance .carousel-card {
+    animation: none !important;
   }
 
   .links {
@@ -796,7 +817,7 @@
     transition: opacity 0.35s var(--ease-out);
     overflow: hidden;
   }
-  
+
   .skeleton-wrapper {
     width: 100%;
     max-width: 480px;
@@ -807,54 +828,76 @@
     box-sizing: border-box;
     gap: 14px;
   }
-  
+
+  /* Every skeleton block is tinted with the store brand color, so the
+     loading state already looks like the page it is loading. */
+  .skeleton-avatar,
+  .skeleton-pill,
+  .skeleton-title,
+  .skeleton-desc,
+  .skeleton-btn {
+    background-image: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 50%, var(--skeleton-base) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+  }
+
   .skeleton-avatar {
     width: 88px;
     height: 88px;
     border-radius: 50%;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.4s infinite;
     margin-bottom: 4px;
   }
-  
+
   .skeleton-pill {
     width: 100px;
     height: 22px;
     border-radius: 999px;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.4s infinite;
   }
-  
+
   .skeleton-title {
     width: 190px;
     height: 28px;
     border-radius: 6px;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.12) 50%, rgba(15, 23, 42, 0.05) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.4s infinite;
   }
-  
+
   .skeleton-desc {
     width: 260px;
     height: 16px;
     border-radius: 4px;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.04) 25%, rgba(15, 23, 42, 0.09) 50%, rgba(15, 23, 42, 0.04) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.4s infinite;
     margin-bottom: 12px;
   }
-  
+
   .skeleton-btn {
     width: 100%;
     height: 52px;
     border-radius: var(--btn-radius, 12px);
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.05) 25%, rgba(15, 23, 42, 0.1) 50%, rgba(15, 23, 42, 0.05) 75%);
-    background-size: 200% 100%;
-    animation: skeletonShimmer 1.4s infinite;
   }
-  
+
+  /* Brand colored spinner shown under the skeleton */
+  .loader-spinner {
+    width: 24px;
+    height: 24px;
+    margin-top: 24px;
+    border-radius: 50%;
+    border: 2.5px solid color-mix(in srgb, var(--theme-color) 16%, transparent);
+    border-top-color: var(--theme-color);
+    animation: loaderSpin 0.7s linear infinite;
+  }
+
+  .loader-label {
+    margin-top: 12px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--theme-color) 70%, transparent);
+  }
+
+  @keyframes loaderSpin {
+    to { transform: rotate(360deg); }
+  }
+
   @keyframes skeletonShimmer {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
@@ -1494,6 +1537,8 @@
     <div class="skeleton-btn"></div>
     <div class="skeleton-btn"></div>
     <div class="skeleton-btn"></div>
+    <div class="loader-spinner" role="status" aria-label="Carregando"></div>
+    <div class="loader-label">Carregando</div>
   </div>
 </div>
 
@@ -1661,6 +1706,9 @@
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
   const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
   let currentConfigCache = null;
+  let isSilentConfigUpdate = false;
+  // JSON of the config currently rendered, used to skip redundant re-renders.
+  let appliedConfigSignature = null;
 
   function hexToRgba(hex, alpha) {
     if (!hex || typeof hex !== 'string') return `rgba(225, 29, 72, ${alpha})`;
@@ -1837,25 +1885,134 @@
   }
 
   let pageEntranceAnimated = false;
+  let appRevealed = false;
+  let entranceTimeline = null;
+
+  // GSAP owns the entrance sequence when it is available; the flag disables
+  // the duplicated CSS fadeUp animations (see the .gsap-entrance block).
+  if (typeof gsap !== 'undefined') {
+    document.documentElement.classList.add('gsap-entrance');
+  }
+
+  // Elements revealed by the entrance timeline, in page order.
+  // The shell only ever fades (the navbar is sticky, so it must not get a
+  // transform written onto it); the content also slides/scales into place.
+  const ENTRANCE_SHELL = ['#navbar', '#share-btn', '#footer'];
+  const ENTRANCE_CONTENT = [
+    '#store-logo', '#store-pill', '#store-title', '#store-desc',
+    '#social-bar-top', '#store-cta', '#store-sub',
+    '#links-container > *', '#social-bar-bottom'
+  ];
+  const ENTRANCE_TARGETS = ENTRANCE_SHELL.concat(ENTRANCE_CONTENT);
+
+  // Resolves when the image is ready (or on error / after the timeout, so a
+  // slow asset can never hold the page hostage).
+  function preloadImage(url, timeout = 1600) {
+    return new Promise((resolve) => {
+      if (!url || url.startsWith('data:')) return resolve();
+      let settled = false;
+      const finish = () => { if (!settled) { settled = true; resolve(); } };
+      const img = new Image();
+      img.onload = finish;
+      img.onerror = finish;
+      img.src = url;
+      if (img.complete) finish();
+      setTimeout(finish, timeout);
+    });
+  }
+
+  // The logo and the background image are above the fold, so the page waits
+  // for them before revealing. Without this the links rendered first and the
+  // logo only popped in later, out of order.
+  function waitForCriticalAssets() {
+    const jobs = [];
+
+    const logoImg = document.getElementById('store-logo');
+    if (logoImg && logoImg.style.display !== 'none' && logoImg.src) {
+      jobs.push(preloadImage(logoImg.src));
+    }
+
+    const bgLayer = document.getElementById('custom-bg-layer');
+    if (bgLayer) {
+      const match = (bgLayer.style.backgroundImage || '').match(/url\(["']?([^"')]+)["']?\)/);
+      if (match && match[1]) jobs.push(preloadImage(match[1]));
+    }
+
+    return jobs.length ? Promise.all(jobs) : Promise.resolve();
+  }
+
+  // Resolves entrance selectors to the elements currently in the DOM, so GSAP
+  // never warns about a selector that matches nothing.
+  function resolveEntranceTargets(selectors) {
+    const els = [];
+    (selectors || ENTRANCE_TARGETS).forEach((sel) => {
+      document.querySelectorAll(sel).forEach((el) => els.push(el));
+    });
+    return els;
+  }
+
+  function revealAppShell() {
+    document.getElementById('navbar').style.display = 'flex';
+    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('footer').style.display = 'block';
+    document.getElementById('share-btn').style.display = 'flex';
+  }
+
+  // Brings every entrance target to its final state without replaying the
+  // sequence. Used when the page is already on screen and only the content
+  // changed (cache revalidation / live preview), so nothing blinks twice.
+  // Killing the timeline matters: a still running entrance would otherwise
+  // keep pulling elements back to opacity 0 seconds later.
+  function settleEntranceState() {
+    if (typeof gsap === 'undefined') return;
+    if (entranceTimeline) {
+      entranceTimeline.kill();
+      entranceTimeline = null;
+    }
+    const shell = resolveEntranceTargets(ENTRANCE_SHELL);
+    const content = resolveEntranceTargets(ENTRANCE_CONTENT);
+    gsap.killTweensOf(shell.concat(content));
+    // Short catch-up fade rather than a hard snap: what is already visible
+    // does not move, freshly rendered nodes just fade in.
+    const tween = { duration: 0.25, ease: 'power2.out', overwrite: 'auto' };
+    if (shell.length) gsap.to(shell, Object.assign({ opacity: 1 }, tween));
+    if (content.length) gsap.to(content, Object.assign({ opacity: 1, y: 0, scale: 1 }, tween));
+    pageEntranceAnimated = true;
+  }
+
   function animatePageEntrance() {
     if (typeof gsap === 'undefined') return;
 
     // Kill any existing page entrance animations to avoid conflicts
-    gsap.killTweensOf(['#store-logo', '#store-pill', '#store-title', '#store-desc', '#store-cta', '#store-sub', '#links-container > *', '#navbar', '#share-btn', '#footer']);
+    if (entranceTimeline) {
+      entranceTimeline.kill();
+      entranceTimeline = null;
+    }
+    gsap.killTweensOf(resolveEntranceTargets());
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    entranceTimeline = tl;
+    const visible = (sel) => {
+      const el = document.querySelector(sel);
+      return el && el.style.display !== 'none' ? el : null;
+    };
 
-    // 1. Logo
-    const logo = document.getElementById('store-logo');
-    if (logo && logo.style.display !== 'none') {
-      tl.fromTo(logo, 
-        { scale: 0.8, opacity: 0, y: -14 }, 
-        { scale: 1, opacity: 1, y: 0, duration: 0.65, ease: 'back.out(1.5)' }
+    // 1. Navbar + logo. The logo lives inside the navbar, so the navbar has to
+    // come in with it — fading the nav at the end of the timeline kept the
+    // logo hidden until after every link had already appeared.
+    tl.fromTo('#navbar', { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0);
+
+    const logo = visible('#store-logo');
+    if (logo) {
+      tl.fromTo(logo,
+        { scale: 0.8, opacity: 0, y: -14 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.65, ease: 'back.out(1.5)' },
+        0
       );
     }
 
     // 2. Pill badge
-    const pill = document.getElementById('store-pill');
+    const pill = visible('#store-pill');
     if (pill && pill.textContent.trim()) {
       tl.fromTo(pill,
         { scale: 0.85, opacity: 0, y: 8 },
@@ -1864,31 +2021,62 @@
       );
     }
 
-    // 3. Typography & Bio
-    const textEls = ['#store-title', '#store-desc', '#store-cta', '#store-sub'].filter(sel => {
-      const el = document.querySelector(sel);
+    // 3. Title & description
+    const headEls = ['#store-title', '#store-desc'].filter(sel => {
+      const el = visible(sel);
       return el && el.textContent.trim() !== '';
     });
-    if (textEls.length > 0) {
-      tl.fromTo(textEls,
+    if (headEls.length > 0) {
+      tl.fromTo(headEls,
         { opacity: 0, y: 15 },
         { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' },
         "-=0.35"
       );
     }
 
-    // 4. Link buttons & carousels
+    // 4. Social bar rendered above the links
+    if (visible('#social-bar-top')) {
+      tl.fromTo('#social-bar-top',
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+        "-=0.25"
+      );
+    }
+
+    // 5. CTA texts
+    const ctaEls = ['#store-cta', '#store-sub'].filter(sel => {
+      const el = visible(sel);
+      return el && el.textContent.trim() !== '';
+    });
+    if (ctaEls.length > 0) {
+      tl.fromTo(ctaEls,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.45, stagger: 0.07, ease: 'power2.out' },
+        "-=0.2"
+      );
+    }
+
+    // 6. Link buttons & carousels
     const linkItems = document.querySelectorAll('#links-container > *');
     if (linkItems.length > 0) {
       tl.fromTo(linkItems,
         { opacity: 0, y: 28, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.055, ease: 'back.out(1.15)' },
-        "-=0.3"
+        "-=0.2"
       );
     }
 
-    // 5. Surrounding UI
-    tl.fromTo(['#navbar', '#share-btn', '#footer'],
+    // 7. Social bar rendered below the links
+    if (visible('#social-bar-bottom')) {
+      tl.fromTo('#social-bar-bottom',
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' },
+        "-=0.25"
+      );
+    }
+
+    // 8. Surrounding UI
+    tl.fromTo(['#share-btn', '#footer'],
       { opacity: 0 },
       { opacity: 1, duration: 0.45, ease: 'power1.out' },
       "-=0.3"
@@ -1897,40 +2085,44 @@
     pageEntranceAnimated = true;
   }
 
-  function showApp() {
+  function showApp(options) {
+    const animate = !options || options.animate !== false;
+
+    // Already on screen (rendered from cache): never replay the loader or the
+    // entrance — that second pass is what made the page blink twice. Just make
+    // sure any newly rendered node is in its final visible state.
+    if (appRevealed) {
+      settleEntranceState();
+      return;
+    }
+    appRevealed = true;
+
     const loader = document.getElementById('loader-container');
-    if (loader) {
+    if (!loader) {
+      revealAppShell();
+      if (animate) animatePageEntrance(); else settleEntranceState();
+      return;
+    }
+
+    waitForCriticalAssets().then(() => {
+      // Reveal the content underneath first (it starts at opacity 0) and start
+      // the entrance while the loader fades, so the two cross-fade instead of
+      // leaving a blank frame in between.
+      revealAppShell();
+      if (animate) animatePageEntrance(); else settleEntranceState();
+
       if (typeof gsap !== 'undefined') {
         gsap.to(loader, {
           opacity: 0,
-          duration: 0.35,
+          duration: 0.3,
           ease: 'power2.in',
-          onComplete: () => {
-            loader.style.display = 'none';
-            document.getElementById('navbar').style.display = 'flex';
-            document.getElementById('main-content').style.display = 'block';
-            document.getElementById('footer').style.display = 'block';
-            document.getElementById('share-btn').style.display = 'flex';
-            animatePageEntrance();
-          }
+          onComplete: () => { loader.style.display = 'none'; }
         });
       } else {
         loader.style.opacity = '0';
-        setTimeout(() => {
-          loader.style.display = 'none';
-          document.getElementById('navbar').style.display = 'flex';
-          document.getElementById('main-content').style.display = 'block';
-          document.getElementById('footer').style.display = 'block';
-          document.getElementById('share-btn').style.display = 'flex';
-        }, 350);
+        setTimeout(() => { loader.style.display = 'none'; }, 350);
       }
-    } else {
-      document.getElementById('navbar').style.display = 'flex';
-      document.getElementById('main-content').style.display = 'block';
-      document.getElementById('footer').style.display = 'block';
-      document.getElementById('share-btn').style.display = 'flex';
-      animatePageEntrance();
-    }
+    });
   }
 
   function showShareToast(message) {
@@ -2067,6 +2259,7 @@
       if (cached) {
         const parsedCached = JSON.parse(cached);
         if (parsedCached) {
+          appliedConfigSignature = JSON.stringify(parsedCached);
           applyConfig(parsedCached, storeName);
           showApp();
           hasLoadedFromCache = true;
@@ -2103,17 +2296,29 @@
         }
 
         if (config) {
+          const freshSignature = JSON.stringify(config);
+
           // Update cache for next visit
           try {
-            localStorage.setItem('cached_config_' + storeName, JSON.stringify(config));
+            localStorage.setItem('cached_config_' + storeName, freshSignature);
           } catch(e) {}
 
           const isPreview = window.location.search.includes('preview=true');
           if (!isPreview) {
             trackStoreView(storeName, config);
           }
-          applyConfig(config, storeName);
-          showApp();
+
+          // The page is already rendered from an identical cached config —
+          // re-applying it would replay every animation for nothing.
+          if (hasLoadedFromCache && freshSignature === appliedConfigSignature) {
+            return;
+          }
+
+          appliedConfigSignature = freshSignature;
+          // A silent update repaints the content in place, without a second
+          // entrance animation, when the page is already visible.
+          applyConfig(config, storeName, { silent: hasLoadedFromCache });
+          showApp({ animate: !hasLoadedFromCache });
         } else if (!hasLoadedFromCache) {
           showNotFound();
         }
@@ -2128,8 +2333,11 @@
     }
   }
 
-  function applyConfig(config, storeName = '') {
+  function applyConfig(config, storeName = '', options = {}) {
     if (!config) return;
+    // Silent = the page is already visible, so freshly rendered nodes are put
+    // straight into their final state instead of animating in again.
+    isSilentConfigUpdate = options.silent === true;
     currentConfigCache = config;
 
     // Apply custom theme color if present
@@ -2361,6 +2569,8 @@
     if (config.links && Array.isArray(config.links)) {
       renderLinks(config.links);
     }
+
+    isSilentConfigUpdate = false;
   }
 
   // Singleton lightbox overlay reused by every carousel card on the page.
@@ -2921,7 +3131,16 @@
       renderedCount++;
     });
 
-    if (pageEntranceAnimated && typeof gsap !== 'undefined') {
+    if (typeof gsap === 'undefined') return;
+
+    if (isSilentConfigUpdate) {
+      // Content refreshed under an already visible page: fade the new nodes
+      // in once. Replaying the full entrance here is what looked like a blink.
+      const items = container.children;
+      if (items.length) {
+        gsap.to(items, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+      }
+    } else if (pageEntranceAnimated) {
       gsap.fromTo('#links-container > *', 
         { opacity: 0, y: 15, scale: 0.98 }, 
         { opacity: 1, y: 0, scale: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out' }
@@ -3333,7 +3552,8 @@
   // Live Preview listener
   window.addEventListener('message', (event) => {
     if (event.data && event.data.type === 'updateConfig') {
-      applyConfig(event.data.config);
+      applyConfig(event.data.config, '', { silent: appRevealed });
+      if (appRevealed) settleEntranceState();
     }
   });
 
