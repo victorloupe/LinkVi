@@ -2272,25 +2272,43 @@
       return;
     }
 
-    // 1. Instant local render if cached config is present (Stale-While-Revalidate)
-    let hasLoadedFromCache = false;
-    try {
-      const cached = localStorage.getItem('cached_config_' + storeName);
-      if (cached) {
-        const parsedCached = JSON.parse(cached);
-        if (parsedCached) {
-          appliedConfigSignature = JSON.stringify(parsedCached);
-          applyConfig(parsedCached, storeName);
-          showApp();
-          hasLoadedFromCache = true;
+    let hasRenderedLocally = false;
+
+    // 1. Config inlined in the HTML by api/share.js. The edge function already
+    // paid the Supabase round trip to build the Open Graph tags, so the page can
+    // render straight away instead of querying the same row from the phone.
+    const injectedConfig = window.__STORE_CONFIG__;
+    if (injectedConfig && typeof injectedConfig === 'object') {
+      appliedConfigSignature = JSON.stringify(injectedConfig);
+      try {
+        localStorage.setItem('cached_config_' + storeName, appliedConfigSignature);
+      } catch(e) {}
+      applyConfig(injectedConfig, storeName);
+      showApp();
+      hasRenderedLocally = true;
+    }
+
+    // 2. Otherwise render from the local cache (Stale-While-Revalidate). This is
+    // the path for ?store= / cliente.html accessed without the edge function.
+    if (!hasRenderedLocally) {
+      try {
+        const cached = localStorage.getItem('cached_config_' + storeName);
+        if (cached) {
+          const parsedCached = JSON.parse(cached);
+          if (parsedCached) {
+            appliedConfigSignature = JSON.stringify(parsedCached);
+            applyConfig(parsedCached, storeName);
+            showApp();
+            hasRenderedLocally = true;
+          }
         }
+      } catch(e) {
+        console.warn("Could not read local config cache:", e);
       }
-    } catch(e) {
-      console.warn("Could not read local config cache:", e);
     }
 
     if (!supabaseClient) {
-      if (!hasLoadedFromCache) showNotFound();
+      if (!hasRenderedLocally) showNotFound();
       return;
     }
 
@@ -2330,24 +2348,24 @@
 
           // The page is already rendered from an identical cached config —
           // re-applying it would replay every animation for nothing.
-          if (hasLoadedFromCache && freshSignature === appliedConfigSignature) {
+          if (hasRenderedLocally && freshSignature === appliedConfigSignature) {
             return;
           }
 
           appliedConfigSignature = freshSignature;
           // A silent update repaints the content in place, without a second
           // entrance animation, when the page is already visible.
-          applyConfig(config, storeName, { silent: hasLoadedFromCache });
-          showApp({ animate: !hasLoadedFromCache });
-        } else if (!hasLoadedFromCache) {
+          applyConfig(config, storeName, { silent: hasRenderedLocally });
+          showApp({ animate: !hasRenderedLocally });
+        } else if (!hasRenderedLocally) {
           showNotFound();
         }
-      } else if (!hasLoadedFromCache) {
+      } else if (!hasRenderedLocally) {
         showNotFound();
       }
     } catch (err) {
       console.error("Erro ao carregar dados do Supabase:", err);
-      if (!hasLoadedFromCache) {
+      if (!hasRenderedLocally) {
         showNotFound();
       }
     }
