@@ -111,6 +111,20 @@
     background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
   }
 
+  /* O colapso só entra a partir de 35px de rolagem. Entre 0 e 35 o nav já está
+     grudado no topo, e sem fundo a logo em tamanho cheio aparece por cima do
+     conteúdo passando por baixo. Então o fundo entra assim que a página rola,
+     independente do colapso. */
+  nav.nav-solid {
+    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  body.has-bg-image nav.nav-solid {
+    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
+  }
+
   .logo-wrap {
     display: flex;
     align-items: center;
@@ -130,6 +144,15 @@
 
   nav.scrolled .logo-wrap img {
     height: 38px !important; /* Shrink logo smoothly */
+  }
+
+  /* Página curta: sem cabeçalho fixo. Enquanto .scrolled não entra, o nav não
+     tem fundo — se ele ficasse grudado no topo, a logo em tamanho cheio
+     apareceria por cima do texto que rola por baixo dela. Rolando junto com o
+     conteúdo isso não acontece, e numa página curta o cabeçalho compacto não
+     faz falta: está tudo visível. */
+  nav.nav-static {
+    position: static;
   }
 
   /* Probe de medição: o nav é colapsado e restaurado dentro do mesmo frame
@@ -1560,7 +1583,7 @@
 </div>
 
 <!-- Header / Nav -->
-<nav id="navbar">
+<nav id="navbar" class="nav-static">
   <div class="logo-wrap">
     <img id="store-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Logo" style="display: none;">
     <span id="navbar-store-name"></span>
@@ -2123,7 +2146,7 @@
     // sure any newly rendered node is in its final visible state.
     if (appRevealed) {
       settleEntranceState();
-      scheduleNavCollapseUpdate();
+      updateNavCollapseMode();
       return;
     }
     appRevealed = true;
@@ -2132,7 +2155,7 @@
     if (!loader) {
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
-      scheduleNavCollapseUpdate();
+      updateNavCollapseMode();
       return;
     }
 
@@ -2142,7 +2165,7 @@
       // leaving a blank frame in between.
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
-      scheduleNavCollapseUpdate();
+      updateNavCollapseMode();
 
       if (typeof gsap !== 'undefined') {
         gsap.to(loader, {
@@ -3883,8 +3906,13 @@
     const overflow = document.documentElement.scrollHeight - window.innerHeight;
     navCollapseEnabled = overflow > saving + NAV_COLLAPSE_MARGIN;
 
-    if (!navCollapseEnabled && navbar.classList.contains('scrolled')) {
+    // Sem colapso, o nav tambem deixa de ser sticky: um cabecalho grudado no
+    // topo e sem fundo deixaria a logo por cima do conteudo que rola sob ele.
+    navbar.classList.toggle('nav-static', !navCollapseEnabled);
+
+    if (!navCollapseEnabled) {
       navbar.classList.remove('scrolled');
+      navbar.classList.remove('nav-solid');
     }
   }
 
@@ -3911,6 +3939,8 @@
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
     if (navbar && navCollapseEnabled && !isMeasuringNav) {
+      // fundo ja na primeira rolagem, colapso so a partir de 35px
+      navbar.classList.toggle('nav-solid', window.scrollY > 0);
       if (window.scrollY > 35) {
         navbar.classList.add('scrolled');
       } else if (window.scrollY <= 10) {
