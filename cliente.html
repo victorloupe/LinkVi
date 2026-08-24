@@ -58,17 +58,15 @@
     background: transparent !important;
   }
 
-  /* Nav styling - sticky top without layout jump or flicker */
+  /* Nav: rola junto com o conteúdo. Não existe cabeçalho fixo — a logo sobe
+     com a página como qualquer outro elemento. */
   nav {
     display: none; /* Shown after load */
     align-items: center;
     justify-content: center;
     padding: 24px 20px 8px;
     background: transparent;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    transition: padding 0.25s var(--ease-out), background-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+    position: static;
     width: 100%;
     box-sizing: border-box;
   }
@@ -84,53 +82,11 @@
       padding-top: max(24px, env(safe-area-inset-top)) !important;
     }
   }
-  
-  nav.scrolled {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-  }
-
-  body.in-preview nav.scrolled {
-    padding-top: 24px !important;
-    padding-bottom: 8px !important;
-  }
-
-  @media (max-width: 768px) {
-    nav.scrolled {
-      padding-top: max(10px, env(safe-area-inset-top)) !important;
-      padding-bottom: 8px !important;
-    }
-  }
-  
-  body.has-bg-image nav.scrolled {
-    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
-  }
-
-  /* O colapso só entra a partir de 35px de rolagem. Entre 0 e 35 o nav já está
-     grudado no topo, e sem fundo a logo em tamanho cheio aparece por cima do
-     conteúdo passando por baixo. Então o fundo entra assim que a página rola,
-     independente do colapso. */
-  nav.nav-solid {
-    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-
-  body.has-bg-image nav.nav-solid {
-    background: var(--nav-bg, rgba(255, 255, 255, 0.88)) !important;
-  }
 
   .logo-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    transition: gap 0.25s var(--ease-out);
     width: 100%;
   }
 
@@ -140,51 +96,6 @@
     display: block;
     object-fit: contain;
     transition: height 0.25s var(--ease-out), transform 0.25s var(--ease-out);
-  }
-
-  nav.scrolled .logo-wrap img {
-    height: 38px !important; /* Shrink logo smoothly */
-  }
-
-  /* Página curta: sem cabeçalho fixo. Enquanto .scrolled não entra, o nav não
-     tem fundo — se ele ficasse grudado no topo, a logo em tamanho cheio
-     apareceria por cima do texto que rola por baixo dela. Rolando junto com o
-     conteúdo isso não acontece, e numa página curta o cabeçalho compacto não
-     faz falta: está tudo visível. */
-  nav.nav-static {
-    position: static;
-  }
-
-  /* Probe de medição: o nav é colapsado e restaurado dentro do mesmo frame
-     para descobrir quanta altura o colapso remove. As transições precisam
-     ficar desligadas para que a medição nunca vire uma animação visível. */
-  nav.nav-measuring,
-  nav.nav-measuring .logo-wrap,
-  nav.nav-measuring .logo-wrap img,
-  nav.nav-measuring #navbar-store-name {
-    transition: none !important;
-  }
-
-  #navbar-store-name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 15.5px;
-    letter-spacing: -0.015em;
-    color: var(--navy);
-    opacity: 0;
-    max-width: 0;
-    transform: translateX(-8px);
-    transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out), max-width 0.25s var(--ease-out);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-  }
-
-  nav.scrolled #navbar-store-name {
-    opacity: 1;
-    max-width: 260px;
-    transform: translateX(0);
   }
 
   /* Main Container */
@@ -1583,10 +1494,9 @@
 </div>
 
 <!-- Header / Nav -->
-<nav id="navbar" class="nav-static">
+<nav id="navbar">
   <div class="logo-wrap">
     <img id="store-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Logo" style="display: none;">
-    <span id="navbar-store-name"></span>
   </div>
 </nav>
 
@@ -2146,7 +2056,6 @@
     // sure any newly rendered node is in its final visible state.
     if (appRevealed) {
       settleEntranceState();
-      updateNavCollapseMode();
       return;
     }
     appRevealed = true;
@@ -2155,7 +2064,6 @@
     if (!loader) {
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
-      updateNavCollapseMode();
       return;
     }
 
@@ -2165,7 +2073,6 @@
       // leaving a blank frame in between.
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
-      updateNavCollapseMode();
 
       if (typeof gsap !== 'undefined') {
         gsap.to(loader, {
@@ -2575,21 +2482,6 @@
 
     // 2. Document Title & Navbar Store Title
     document.title = config.title ? `${config.title} — Links` : `${displayStoreName} — Links`;
-    const navStoreName = document.getElementById('navbar-store-name');
-    if (navStoreName) {
-      navStoreName.textContent = config.title || displayStoreName;
-    }
-
-    // Calculate navbar background color (translucent version of base background color)
-    let baseBgColor = '#ffffff';
-    if (config.bgColor) {
-      baseBgColor = config.bgColor;
-    }
-    let navBg = 'rgba(255, 255, 255, 0.85)';
-    if (baseBgColor.startsWith('#')) {
-      navBg = hexToRgba(baseBgColor, 0.85);
-    }
-    document.documentElement.style.setProperty('--nav-bg', navBg);
 
     // 3. Pill
     const pillSpan = document.getElementById('store-pill');
@@ -3867,87 +3759,7 @@
     bgLayer.style.transform = transformStr;
   }
 
-  // Colapsar o nav encurta a pagina: a logo cai de --logo-height para 38px e o
-  // padding diminui, somando de ~46px a ~106px a menos de altura. Numa pagina
-  // que mal passa da altura da tela, essa altura removida acaba com o proprio
-  // scroll que disparou o colapso — o navegador volta pro topo, o nav expande
-  // de novo e o visitante ve a logo encolher e crescer a toa, uma vez so.
-  // Por isso o colapso so fica ativo quando sobra scroll depois dele.
-  let navCollapseEnabled = false;
-  let isMeasuringNav = false;
-  const NAV_COLLAPSE_MARGIN = 60; // folga acima do gatilho de 35px
-
-  // Mede a diferenca de altura entre nav expandido e colapsado. Tudo acontece
-  // de forma sincrona dentro de um unico frame e com as transicoes desligadas,
-  // entao nao ha repintura intermediaria: a medicao e invisivel.
-  function measureNavCollapseSaving(navbar) {
-    isMeasuringNav = true;
-    const wasCollapsed = navbar.classList.contains('scrolled');
-
-    navbar.classList.add('nav-measuring');
-    navbar.classList.remove('scrolled');
-    const expandedHeight = navbar.offsetHeight;
-    navbar.classList.add('scrolled');
-    const collapsedHeight = navbar.offsetHeight;
-
-    if (!wasCollapsed) navbar.classList.remove('scrolled');
-    void navbar.offsetHeight; // aplica o estado final antes das transicoes voltarem
-    navbar.classList.remove('nav-measuring');
-
-    isMeasuringNav = false;
-    return Math.max(0, expandedHeight - collapsedHeight);
-  }
-
-  function updateNavCollapseMode() {
-    const navbar = document.getElementById('navbar');
-    if (!navbar || navbar.style.display === 'none') return;
-
-    const saving = measureNavCollapseSaving(navbar);
-    const overflow = document.documentElement.scrollHeight - window.innerHeight;
-    navCollapseEnabled = overflow > saving + NAV_COLLAPSE_MARGIN;
-
-    // Sem colapso, o nav tambem deixa de ser sticky: um cabecalho grudado no
-    // topo e sem fundo deixaria a logo por cima do conteudo que rola sob ele.
-    navbar.classList.toggle('nav-static', !navCollapseEnabled);
-
-    if (!navCollapseEnabled) {
-      navbar.classList.remove('scrolled');
-      navbar.classList.remove('nav-solid');
-    }
-  }
-
-  // Recalcula sempre que a altura do conteudo ou da viewport mudar: imagens de
-  // carrossel carregando, config atualizado em segundo plano, rotacao de tela.
-  let navCollapseTimer = null;
-  function scheduleNavCollapseUpdate() {
-    if (isMeasuringNav) return;
-    clearTimeout(navCollapseTimer);
-    navCollapseTimer = setTimeout(updateNavCollapseMode, 120);
-  }
-
-  window.addEventListener('resize', scheduleNavCollapseUpdate, { passive: true });
-  window.addEventListener('orientationchange', scheduleNavCollapseUpdate, { passive: true });
-  window.addEventListener('load', scheduleNavCollapseUpdate);
-
-  if (typeof ResizeObserver !== 'undefined') {
-    // Observa o container de links, e nao o <main>: main tem flex 1 0 auto, entao
-    // a altura dele reage ao proprio colapso do nav e realimentaria a medicao.
-    const linksEl = document.getElementById('links-container');
-    if (linksEl) new ResizeObserver(scheduleNavCollapseUpdate).observe(linksEl);
-  }
-
   window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
-    if (navbar && navCollapseEnabled && !isMeasuringNav) {
-      // fundo ja na primeira rolagem, colapso so a partir de 35px
-      navbar.classList.toggle('nav-solid', window.scrollY > 0);
-      if (window.scrollY > 35) {
-        navbar.classList.add('scrolled');
-      } else if (window.scrollY <= 10) {
-        navbar.classList.remove('scrolled');
-      }
-    }
-    
     lastScrollY = window.scrollY;
     if (!ticking) {
       window.requestAnimationFrame(() => {
