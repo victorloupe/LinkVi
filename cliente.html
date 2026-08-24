@@ -1905,6 +1905,14 @@
   ];
   const ENTRANCE_TARGETS = ENTRANCE_SHELL.concat(ENTRANCE_CONTENT);
 
+  // Visitors who asked their OS for less motion get the content revealed
+  // instantly instead of the entrance sequence. The CSS media query below
+  // only neutralises CSS animations, so GSAP has to be checked in JS.
+  function prefersReducedMotion() {
+    return typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
   // Resolves when the image is ready (or on error / after the timeout, so a
   // slow asset can never hold the page hostage).
   function preloadImage(url, timeout = 1600) {
@@ -1972,6 +1980,14 @@
     const shell = resolveEntranceTargets(ENTRANCE_SHELL);
     const content = resolveEntranceTargets(ENTRANCE_CONTENT);
     gsap.killTweensOf(shell.concat(content));
+
+    if (prefersReducedMotion()) {
+      if (shell.length) gsap.set(shell, { opacity: 1 });
+      if (content.length) gsap.set(content, { opacity: 1, y: 0, scale: 1 });
+      pageEntranceAnimated = true;
+      return;
+    }
+
     // Short catch-up fade rather than a hard snap: what is already visible
     // does not move, freshly rendered nodes just fade in.
     const tween = { duration: 0.25, ease: 'power2.out', overwrite: 'auto' };
@@ -1982,6 +1998,10 @@
 
   function animatePageEntrance() {
     if (typeof gsap === 'undefined') return;
+    if (prefersReducedMotion()) {
+      settleEntranceState();
+      return;
+    }
 
     // Kill any existing page entrance animations to avoid conflicts
     if (entranceTimeline) {
@@ -3138,7 +3158,11 @@
       // in once. Replaying the full entrance here is what looked like a blink.
       const items = container.children;
       if (items.length) {
-        gsap.to(items, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+        if (prefersReducedMotion()) {
+          gsap.set(items, { opacity: 1, y: 0, scale: 1 });
+        } else {
+          gsap.to(items, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+        }
       }
     } else if (pageEntranceAnimated) {
       gsap.fromTo('#links-container > *', 
