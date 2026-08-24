@@ -132,6 +132,16 @@
     height: 38px !important; /* Shrink logo smoothly */
   }
 
+  /* Probe de medição: o nav é colapsado e restaurado dentro do mesmo frame
+     para descobrir quanta altura o colapso remove. As transições precisam
+     ficar desligadas para que a medição nunca vire uma animação visível. */
+  nav.nav-measuring,
+  nav.nav-measuring .logo-wrap,
+  nav.nav-measuring .logo-wrap img,
+  nav.nav-measuring #navbar-store-name {
+    transition: none !important;
+  }
+
   #navbar-store-name {
     font-family: var(--font-display);
     font-weight: 700;
@@ -1905,6 +1915,14 @@
   ];
   const ENTRANCE_TARGETS = ENTRANCE_SHELL.concat(ENTRANCE_CONTENT);
 
+  // Visitors who asked their OS for less motion get the content revealed
+  // instantly instead of the entrance sequence. The CSS media query below
+  // only neutralises CSS animations, so GSAP has to be checked in JS.
+  function prefersReducedMotion() {
+    return typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
   // Resolves when the image is ready (or on error / after the timeout, so a
   // slow asset can never hold the page hostage).
   function preloadImage(url, timeout = 1600) {
@@ -1972,6 +1990,14 @@
     const shell = resolveEntranceTargets(ENTRANCE_SHELL);
     const content = resolveEntranceTargets(ENTRANCE_CONTENT);
     gsap.killTweensOf(shell.concat(content));
+
+    if (prefersReducedMotion()) {
+      if (shell.length) gsap.set(shell, { opacity: 1 });
+      if (content.length) gsap.set(content, { opacity: 1, y: 0, scale: 1 });
+      pageEntranceAnimated = true;
+      return;
+    }
+
     // Short catch-up fade rather than a hard snap: what is already visible
     // does not move, freshly rendered nodes just fade in.
     const tween = { duration: 0.25, ease: 'power2.out', overwrite: 'auto' };
@@ -1982,6 +2008,10 @@
 
   function animatePageEntrance() {
     if (typeof gsap === 'undefined') return;
+    if (prefersReducedMotion()) {
+      settleEntranceState();
+      return;
+    }
 
     // Kill any existing page entrance animations to avoid conflicts
     if (entranceTimeline) {
@@ -2093,6 +2123,7 @@
     // sure any newly rendered node is in its final visible state.
     if (appRevealed) {
       settleEntranceState();
+      scheduleNavCollapseUpdate();
       return;
     }
     appRevealed = true;
@@ -2101,6 +2132,7 @@
     if (!loader) {
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
+      scheduleNavCollapseUpdate();
       return;
     }
 
@@ -2110,6 +2142,7 @@
       // leaving a blank frame in between.
       revealAppShell();
       if (animate) animatePageEntrance(); else settleEntranceState();
+      scheduleNavCollapseUpdate();
 
       if (typeof gsap !== 'undefined') {
         gsap.to(loader, {
@@ -2252,25 +2285,43 @@
       return;
     }
 
-    // 1. Instant local render if cached config is present (Stale-While-Revalidate)
-    let hasLoadedFromCache = false;
-    try {
-      const cached = localStorage.getItem('cached_config_' + storeName);
-      if (cached) {
-        const parsedCached = JSON.parse(cached);
-        if (parsedCached) {
-          appliedConfigSignature = JSON.stringify(parsedCached);
-          applyConfig(parsedCached, storeName);
-          showApp();
-          hasLoadedFromCache = true;
+    let hasRenderedLocally = false;
+
+    // 1. Config inlined in the HTML by api/share.js. The edge function already
+    // paid the Supabase round trip to build the Open Graph tags, so the page can
+    // render straight away instead of querying the same row from the phone.
+    const injectedConfig = window.__STORE_CONFIG__;
+    if (injectedConfig && typeof injectedConfig === 'object') {
+      appliedConfigSignature = JSON.stringify(injectedConfig);
+      try {
+        localStorage.setItem('cached_config_' + storeName, appliedConfigSignature);
+      } catch(e) {}
+      applyConfig(injectedConfig, storeName);
+      showApp();
+      hasRenderedLocally = true;
+    }
+
+    // 2. Otherwise render from the local cache (Stale-While-Revalidate). This is
+    // the path for ?store= / cliente.html accessed without the edge function.
+    if (!hasRenderedLocally) {
+      try {
+        const cached = localStorage.getItem('cached_config_' + storeName);
+        if (cached) {
+          const parsedCached = JSON.parse(cached);
+          if (parsedCached) {
+            appliedConfigSignature = JSON.stringify(parsedCached);
+            applyConfig(parsedCached, storeName);
+            showApp();
+            hasRenderedLocally = true;
+          }
         }
+      } catch(e) {
+        console.warn("Could not read local config cache:", e);
       }
-    } catch(e) {
-      console.warn("Could not read local config cache:", e);
     }
 
     if (!supabaseClient) {
-      if (!hasLoadedFromCache) showNotFound();
+      if (!hasRenderedLocally) showNotFound();
       return;
     }
 
@@ -2310,24 +2361,24 @@
 
           // The page is already rendered from an identical cached config —
           // re-applying it would replay every animation for nothing.
-          if (hasLoadedFromCache && freshSignature === appliedConfigSignature) {
+          if (hasRenderedLocally && freshSignature === appliedConfigSignature) {
             return;
           }
 
           appliedConfigSignature = freshSignature;
           // A silent update repaints the content in place, without a second
           // entrance animation, when the page is already visible.
-          applyConfig(config, storeName, { silent: hasLoadedFromCache });
-          showApp({ animate: !hasLoadedFromCache });
-        } else if (!hasLoadedFromCache) {
+          applyConfig(config, storeName, { silent: hasRenderedLocally });
+          showApp({ animate: !hasRenderedLocally });
+        } else if (!hasRenderedLocally) {
           showNotFound();
         }
-      } else if (!hasLoadedFromCache) {
+      } else if (!hasRenderedLocally) {
         showNotFound();
       }
     } catch (err) {
       console.error("Erro ao carregar dados do Supabase:", err);
-      if (!hasLoadedFromCache) {
+      if (!hasRenderedLocally) {
         showNotFound();
       }
     }
@@ -3138,7 +3189,11 @@
       // in once. Replaying the full entrance here is what looked like a blink.
       const items = container.children;
       if (items.length) {
-        gsap.to(items, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+        if (prefersReducedMotion()) {
+          gsap.set(items, { opacity: 1, y: 0, scale: 1 });
+        } else {
+          gsap.to(items, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' });
+        }
       }
     } else if (pageEntranceAnimated) {
       gsap.fromTo('#links-container > *', 
@@ -3789,9 +3844,73 @@
     bgLayer.style.transform = transformStr;
   }
 
+  // Colapsar o nav encurta a pagina: a logo cai de --logo-height para 38px e o
+  // padding diminui, somando de ~46px a ~106px a menos de altura. Numa pagina
+  // que mal passa da altura da tela, essa altura removida acaba com o proprio
+  // scroll que disparou o colapso — o navegador volta pro topo, o nav expande
+  // de novo e o visitante ve a logo encolher e crescer a toa, uma vez so.
+  // Por isso o colapso so fica ativo quando sobra scroll depois dele.
+  let navCollapseEnabled = false;
+  let isMeasuringNav = false;
+  const NAV_COLLAPSE_MARGIN = 60; // folga acima do gatilho de 35px
+
+  // Mede a diferenca de altura entre nav expandido e colapsado. Tudo acontece
+  // de forma sincrona dentro de um unico frame e com as transicoes desligadas,
+  // entao nao ha repintura intermediaria: a medicao e invisivel.
+  function measureNavCollapseSaving(navbar) {
+    isMeasuringNav = true;
+    const wasCollapsed = navbar.classList.contains('scrolled');
+
+    navbar.classList.add('nav-measuring');
+    navbar.classList.remove('scrolled');
+    const expandedHeight = navbar.offsetHeight;
+    navbar.classList.add('scrolled');
+    const collapsedHeight = navbar.offsetHeight;
+
+    if (!wasCollapsed) navbar.classList.remove('scrolled');
+    void navbar.offsetHeight; // aplica o estado final antes das transicoes voltarem
+    navbar.classList.remove('nav-measuring');
+
+    isMeasuringNav = false;
+    return Math.max(0, expandedHeight - collapsedHeight);
+  }
+
+  function updateNavCollapseMode() {
+    const navbar = document.getElementById('navbar');
+    if (!navbar || navbar.style.display === 'none') return;
+
+    const saving = measureNavCollapseSaving(navbar);
+    const overflow = document.documentElement.scrollHeight - window.innerHeight;
+    navCollapseEnabled = overflow > saving + NAV_COLLAPSE_MARGIN;
+
+    if (!navCollapseEnabled && navbar.classList.contains('scrolled')) {
+      navbar.classList.remove('scrolled');
+    }
+  }
+
+  // Recalcula sempre que a altura do conteudo ou da viewport mudar: imagens de
+  // carrossel carregando, config atualizado em segundo plano, rotacao de tela.
+  let navCollapseTimer = null;
+  function scheduleNavCollapseUpdate() {
+    if (isMeasuringNav) return;
+    clearTimeout(navCollapseTimer);
+    navCollapseTimer = setTimeout(updateNavCollapseMode, 120);
+  }
+
+  window.addEventListener('resize', scheduleNavCollapseUpdate, { passive: true });
+  window.addEventListener('orientationchange', scheduleNavCollapseUpdate, { passive: true });
+  window.addEventListener('load', scheduleNavCollapseUpdate);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    // Observa o container de links, e nao o <main>: main tem flex 1 0 auto, entao
+    // a altura dele reage ao proprio colapso do nav e realimentaria a medicao.
+    const linksEl = document.getElementById('links-container');
+    if (linksEl) new ResizeObserver(scheduleNavCollapseUpdate).observe(linksEl);
+  }
+
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
-    if (navbar) {
+    if (navbar && navCollapseEnabled && !isMeasuringNav) {
       if (window.scrollY > 35) {
         navbar.classList.add('scrolled');
       } else if (window.scrollY <= 10) {
