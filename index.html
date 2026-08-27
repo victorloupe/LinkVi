@@ -17,11 +17,11 @@
     --border-color: #e2e8f0;
     --text-main: #0f172a;
     --text-muted: #64748b;
-    --brand-indigo: #6366f1;
-    --brand-purple: #372f6b;
-    --brand-purple-hover: #453c85;
+    --brand-indigo: #0066ff;
+    --brand-purple: #5e17eb;
+    --brand-purple-hover: #4e12c7;
     --border-focus: var(--brand-purple);
-    --gradient-brand: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+    --gradient-brand: linear-gradient(135deg, #6a01fc 0%, #0066ff 100%);
     --success: #10b981;
     --danger: #ef4444;
     --danger-light: #fee2e2;
@@ -62,11 +62,11 @@
   #login-container::before {
     content: "";
     position: absolute;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.05) 0%, rgba(124, 58, 237, 0) 70%);
-    top: 10%;
-    left: 10%;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(106, 1, 252, 0.08) 0%, rgba(106, 1, 252, 0) 70%);
+    top: 8%;
+    left: 8%;
     z-index: 1;
     pointer-events: none;
   }
@@ -74,11 +74,11 @@
   #login-container::after {
     content: "";
     position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0) 70%);
-    bottom: 10%;
-    right: 10%;
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.08) 0%, rgba(0, 102, 255, 0) 70%);
+    bottom: 8%;
+    right: 8%;
     z-index: 1;
     pointer-events: none;
   }
@@ -86,14 +86,14 @@
   .login-card {
     background-color: var(--panel-white);
     border: 1px solid rgba(226, 232, 240, 0.8);
-    padding: 48px 40px;
-    border-radius: 16px;
+    padding: 44px 38px;
+    border-radius: 20px;
     width: 100%;
-    max-width: 410px;
-    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    max-width: 430px;
+    box-shadow: 0 20px 35px -5px rgba(15, 23, 42, 0.06), 0 8px 16px -6px rgba(106, 1, 252, 0.04);
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 22px;
     animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     z-index: 10;
   }
@@ -106,10 +106,17 @@
   }
 
   .login-header img {
-    height: 120px;
+    height: 180px;
     width: auto;
+    max-width: 100%;
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
+    filter: drop-shadow(0 4px 16px rgba(106, 1, 252, 0.08));
+    transition: transform 0.3s ease;
+  }
+
+  .login-header img:hover {
+    transform: scale(1.02);
   }
 
   .login-header h2 {
@@ -122,7 +129,10 @@
   }
 
   .purple-vi-login {
-    color: #7C3AED;
+    background: linear-gradient(135deg, #6a01fc 0%, #0066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
   }
 
   /* Custom modern scrollbars */
@@ -206,11 +216,11 @@
   .login-card input[type="text"]:focus,
   .login-card input[type="password"]:focus {
     border-color: var(--brand-purple);
-    box-shadow: 0 0 0 3px rgba(55, 47, 107, 0.1);
+    box-shadow: 0 0 0 3px rgba(94, 23, 235, 0.14);
   }
 
   .btn-login {
-    background-color: var(--brand-purple);
+    background: linear-gradient(135deg, #6a01fc 0%, #0066ff 100%);
     color: white;
     border: none;
     padding: 13px;
@@ -226,13 +236,13 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 4px 14px -2px rgba(106, 1, 252, 0.35), 0 2px 4px -2px rgba(0, 102, 255, 0.2);
   }
 
   .btn-login:hover {
-    background-color: var(--brand-purple-hover);
+    background: linear-gradient(135deg, #5800d4 0%, #0052cc 100%);
     transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.12), 0 4px 6px -4px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 8px 20px -3px rgba(106, 1, 252, 0.45), 0 4px 8px -2px rgba(0, 102, 255, 0.3);
   }
 
   .btn-login:active {
@@ -273,7 +283,7 @@
   }
 
   .logo-area img {
-    height: 60px;
+    height: 56px;
     width: auto;
     display: block;
   }
@@ -752,7 +762,7 @@
 
   .form-group input:focus, .form-group textarea:focus {
     border-color: var(--border-focus);
-    box-shadow: 0 0 0 2px rgba(55, 47, 107, 0.12);
+    box-shadow: 0 0 0 2px rgba(94, 23, 235, 0.14);
   }
 
   .form-group textarea {
@@ -953,20 +963,64 @@
     gap: 8px;
   }
 
-  /* Minimalist Link Card (No boxed borders on controls) */
+  /* Minimalist Link Card with Drag-and-Drop */
   .link-item {
     display: flex;
     align-items: center;
     padding: 12px 16px;
     background-color: var(--panel-white);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    transition: all 0.15s ease;
+    border-radius: 8px;
+    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    user-select: none;
+    position: relative;
   }
 
   .link-item:hover {
     border-color: #cbd5e1;
     background-color: var(--bg-light);
+  }
+
+  .link-item.is-dragging {
+    opacity: 0.45;
+    background-color: rgba(124, 58, 237, 0.04);
+    border: 1.5px dashed var(--brand-purple);
+    transform: scale(0.99);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+  }
+
+  .link-item.drag-over-top {
+    border-top: 3px solid var(--brand-purple) !important;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+  }
+
+  .link-item.drag-over-bottom {
+    border-bottom: 3px solid var(--brand-purple) !important;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+
+  .link-drag-handle {
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    padding: 6px 4px;
+    margin-right: 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .link-drag-handle:hover {
+    color: var(--brand-purple);
+    background: rgba(124, 58, 237, 0.08);
+  }
+
+  .link-drag-handle:active {
+    cursor: grabbing;
   }
 
   .link-item-icon {
@@ -1078,6 +1132,34 @@
     color: var(--danger);
   }
 
+  .btn-control.toggle-active {
+    color: #10b981;
+  }
+
+  .btn-control.toggle-active:hover {
+    background-color: rgba(16, 185, 129, 0.12);
+    color: #059669;
+  }
+
+  .btn-control.toggle-active.inactive {
+    color: #94a3b8;
+  }
+
+  .btn-control.toggle-active.inactive:hover {
+    background-color: #f1f5f9;
+    color: #475569;
+  }
+
+  .link-item.is-inactive {
+    opacity: 0.62;
+    background-color: #f8fafc;
+    border-style: dashed;
+  }
+
+  .link-item.is-inactive .link-item-icon {
+    filter: grayscale(0.85);
+  }
+
   /* Bottom Save Bar (Clean white bar) */
   .save-bar {
     position: sticky;
@@ -1131,17 +1213,169 @@
   .modal {
     background-color: var(--panel-white);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: 16px;
     width: 100%;
-    max-width: 520px;
-    padding: 24px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    max-width: 640px;
+    padding: 24px 28px;
+    box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.14), 0 8px 12px -6px rgba(0, 0, 0, 0.08);
     transform: scale(0.97);
     transition: transform 0.2s ease;
     max-height: 90vh;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
+  }
+
+  /* Schedule Builder Modern UI */
+  .sched-day-row {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  .sched-day-row:hover {
+    border-color: #cbd5e1;
+  }
+  .sched-day-row.is-disabled {
+    background: #f8fafc;
+    border-color: #e2e8f0;
+    opacity: 0.72;
+  }
+  .sched-day-row.is-disabled:hover {
+    opacity: 0.9;
+  }
+  .sched-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .sched-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .sched-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: 0.22s ease;
+    border-radius: 20px;
+  }
+  .sched-slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.22s ease;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .sched-switch input:checked + .sched-slider {
+    background-color: var(--brand-purple, #7c3aed);
+  }
+  .sched-switch input:checked + .sched-slider:before {
+    transform: translateX(16px);
+  }
+  .preset-pill-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+    color: var(--text-main, #0f172a);
+    font-family: inherit;
+  }
+  .preset-pill-btn:hover {
+    border-color: var(--brand-purple, #7c3aed);
+    background: rgba(124, 58, 237, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(124, 58, 237, 0.1);
+  }
+  .sched-time-input {
+    padding: 5px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #ffffff;
+    outline: none;
+    font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .sched-time-input:focus {
+    border-color: var(--brand-purple, #7c3aed);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+  }
+  .btn-add-shift {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    background: rgba(124, 58, 237, 0.08);
+    color: var(--brand-purple, #7c3aed);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-add-shift:hover {
+    background: rgba(124, 58, 237, 0.16);
+    border-color: var(--brand-purple, #7c3aed);
+  }
+  .btn-copy-day {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-copy-day:hover {
+    background: #f8fafc;
+    color: var(--brand-purple, #7c3aed);
+    border-color: #cbd5e1;
+  }
+  .btn-remove-shift {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: none;
+    background: rgba(239, 68, 68, 0.08);
+    color: #ef4444;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+  }
+  .btn-remove-shift:hover {
+    background: rgba(239, 68, 68, 0.18);
+    color: #dc2626;
   }
 
   .builder-form-grid {
@@ -1240,26 +1474,158 @@
     background-color: var(--brand-purple-hover);
   }
 
-  /* Icons selector */
+  /* Icons selector & Categorization */
+  .icon-selector-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+
+  .icon-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .icon-search-box svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    width: 14px;
+    height: 14px;
+    z-index: 2;
+  }
+
+  .icon-search-input,
+  input.icon-search-input,
+  .form-group input.icon-search-input {
+    width: 100% !important;
+    padding: 6px 28px 6px 36px !important;
+    font-family: inherit;
+    font-size: 11.5px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    outline: none;
+    transition: all 0.15s ease;
+    box-sizing: border-box;
+  }
+
+  .icon-search-input:focus,
+  input.icon-search-input:focus {
+    border-color: var(--border-focus);
+    background-color: var(--panel-white);
+    box-shadow: 0 0 0 2px rgba(94, 23, 235, 0.1);
+  }
+
+  .btn-icon-search-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.12s;
+    z-index: 2;
+  }
+
+  .btn-icon-search-clear:hover {
+    color: var(--text-main);
+    background-color: #e2e8f0;
+  }
+
+  .icon-category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-bottom: 2px;
+  }
+
+  .icon-category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-light);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  .icon-category-pill svg {
+    width: 11px;
+    height: 11px;
+    stroke-width: 2.2;
+    flex-shrink: 0;
+  }
+
+  .icon-category-pill:hover:not(.active) {
+    background: #e2e8f0;
+    color: var(--text-main);
+  }
+
+  .icon-category-pill.active {
+    background: var(--brand-purple);
+    color: #ffffff;
+    border-color: var(--brand-purple);
+    box-shadow: 0 1px 4px rgba(94, 23, 235, 0.2);
+  }
+
   .icon-selector-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 4px;
     margin-top: 2px;
+    padding: 5px;
+    max-height: none;
+    overflow: visible;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-sizing: border-box;
   }
 
   .icon-option {
-    border: 1px solid var(--border-color);
+    border: 1px solid #cbd5e1;
     border-radius: 6px;
+    height: 32px;
+    min-width: 0;
     aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.15s ease;
-    color: var(--text-muted);
-    background-color: var(--bg-light);
+    color: #64748b;
+    background-color: #ffffff;
     position: relative;
+    box-sizing: border-box;
   }
 
   /* Tooltip styling */
@@ -1271,9 +1637,9 @@
     transform: translate(-50%, 4px) scale(0.9);
     background-color: #1e293b;
     color: #ffffff;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    padding: 6px 10px;
+    padding: 4px 8px;
     border-radius: 4px;
     white-space: nowrap;
     opacity: 0;
@@ -1289,7 +1655,7 @@
     bottom: 110%;
     left: 50%;
     transform: translate(-50%, 4px) scale(0.9);
-    border-width: 5px;
+    border-width: 4px;
     border-style: solid;
     border-color: #1e293b transparent transparent transparent;
     opacity: 0;
@@ -1306,18 +1672,22 @@
 
   .icon-option:hover {
     border-color: var(--border-focus);
-    color: var(--text-main);
+    color: var(--brand-purple);
+    background-color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
   }
 
   .icon-option.selected {
     border-color: var(--border-focus);
-    background-color: rgba(55, 47, 107, 0.08);
-    color: var(--text-main);
+    background-color: rgba(124, 58, 237, 0.1);
+    color: var(--brand-purple);
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25);
   }
 
   .icon-option svg {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
   }
 
   /* Admin table */
@@ -1330,15 +1700,20 @@
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
-    font-size: 12.5px;
+    font-size: 13px;
   }
 
   .admin-table th {
     font-weight: 700;
     color: var(--text-muted);
+    font-size: 11px;
     text-transform: uppercase;
-    font-size: 10px;
     letter-spacing: 0.5px;
+    background-color: var(--bg-light);
+  }
+
+  .admin-table tr:hover td {
+    background-color: var(--bg-light);
   }
 
   /* Toast */
@@ -1469,7 +1844,7 @@
 
   .bg-tab-btn:hover {
     color: var(--text-main);
-    background-color: rgba(55, 47, 107, 0.06);
+    background-color: rgba(94, 23, 235, 0.06);
   }
 
   .bg-tab-btn.active {
@@ -1575,40 +1950,77 @@
 
     .header-tabs-group {
       grid-area: tabs;
-      flex: none;
       width: 100%;
       padding: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: nowrap;
+      min-width: 0;
     }
 
     .main-tabs-bar {
-      flex-shrink: 1;
+      flex: 1;
       min-width: 0;
-      padding: 4px;
+      padding: 3px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      box-sizing: border-box;
+      position: relative;
     }
 
-    .header-tabs-group .main-tab-btn {
-      padding: 8px 11px;
-      font-size: 11.5px;
+    .main-tabs-clip {
+      inset: 3px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      width: calc(100% - 6px);
+      box-sizing: border-box;
     }
 
-    .header-tabs-group .main-tab-btn svg {
-      width: 12px;
-      height: 12px;
+    .header-tabs-group .main-tab-btn,
+    .main-tabs-clip .main-tab-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 7px 4px !important;
+      font-size: 11.5px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px !important;
+      text-align: center;
+      box-sizing: border-box;
     }
 
-    .btn-copy-quick span {
-      display: none;
+    .header-tabs-group .main-tab-btn svg,
+    .main-tabs-clip .main-tab-btn svg {
+      width: 13px !important;
+      height: 13px !important;
+      flex-shrink: 0;
     }
 
     .btn-copy-quick {
-      padding: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
+      width: 34px !important;
+      height: 34px !important;
+      min-width: 34px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box;
+    }
+
+    .btn-copy-quick span {
+      display: none !important;
+    }
+
+    .btn-copy-quick svg {
+      width: 14px !important;
+      height: 14px !important;
+      margin: 0 !important;
     }
 
     .header-actions {
@@ -1664,11 +2076,36 @@
     }
   }
 
-  @media (max-width: 540px) {
+  @media (max-width: 640px) {
+    .modal-backdrop {
+      align-items: flex-end !important;
+      padding: 0 !important;
+    }
+
     .modal {
-      max-width: calc(100% - 20px) !important;
-      padding: 16px 14px !important;
-      margin: 10px !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      border-top-left-radius: 22px !important;
+      border-top-right-radius: 22px !important;
+      border-left: none !important;
+      border-right: none !important;
+      border-bottom: none !important;
+      padding: 16px 20px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+      max-height: 88vh !important;
+      box-shadow: 0 -10px 35px -5px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .modal::before {
+      content: '';
+      display: block;
+      width: 38px;
+      height: 4.5px;
+      background-color: #cbd5e1;
+      border-radius: 999px;
+      margin: 0 auto 14px auto;
     }
 
     .builder-form-grid {
@@ -1685,6 +2122,34 @@
     #telefone-builder-fields {
       padding: 12px 10px !important;
     }
+
+    .icon-category-pills {
+      flex-wrap: wrap !important;
+      gap: 5px !important;
+    }
+
+    .icon-category-pill {
+      padding: 4px 8px !important;
+      font-size: 10.5px !important;
+    }
+
+    .icon-selector-grid {
+      grid-template-columns: repeat(10, 1fr) !important;
+      gap: 4px !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    .modal-footer {
+      flex-direction: column-reverse;
+      gap: 8px;
+      padding-top: 14px;
+    }
+
+    .modal-footer button {
+      width: 100%;
+      margin: 0;
+    }
   }
 
   @media (max-width: 480px) {
@@ -1693,24 +2158,34 @@
       max-width: calc(100% - 32px);
     }
 
-    .modal {
-      max-width: calc(100% - 20px) !important;
-      padding: 16px 12px;
-      margin: 10px;
+    .header-tabs-group {
+      gap: 5px !important;
     }
 
-    .modal-footer {
-      flex-direction: column-reverse;
-      gap: 8px;
+    .header-tabs-group .main-tab-btn,
+    .main-tabs-clip .main-tab-btn {
+      padding: 6px 2px !important;
+      font-size: 11px !important;
+      gap: 3px !important;
     }
 
-    .modal-footer button {
-      width: 100%;
-      margin: 0;
+    .header-tabs-group .main-tab-btn svg,
+    .main-tabs-clip .main-tab-btn svg {
+      width: 12px !important;
+      height: 12px !important;
+    }
+
+    .btn-copy-quick {
+      width: 32px !important;
+      height: 32px !important;
+      min-width: 32px !important;
     }
 
     .icon-selector-grid {
-      grid-template-columns: repeat(5, 1fr);
+      grid-template-columns: repeat(7, 1fr) !important;
+      gap: 4px !important;
+      max-height: none !important;
+      overflow: visible !important;
     }
 
     .url-input-wrap {
@@ -1758,7 +2233,7 @@
   }
   .analytics-link-item:hover {
     border-color: var(--brand-purple);
-    background-color: rgba(55, 47, 107, 0.03);
+    background-color: rgba(94, 23, 235, 0.04);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
   }
@@ -1855,11 +2330,14 @@
         </button>
       </nav>
 
-      <!-- Quick-access copy button — same public page link as the copier
-           inside the Links tab, but reachable without switching tabs. -->
+      <!-- Quick-access copy & QR Code buttons -->
       <button type="button" class="btn-copy-quick" id="header-copy-link-btn" onclick="copyLink()" title="Copiar link da página">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         <span>Copiar Link</span>
+      </button>
+      <button type="button" class="btn-copy-quick" id="header-qr-code-btn" onclick="openQrCodeModal()" title="Ver e baixar QR Code da Loja" style="background: rgba(124, 58, 237, 0.08); color: var(--brand-purple); border: 1px solid rgba(124, 58, 237, 0.25);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><line x1="14" y1="14" x2="14" y2="21"></line><line x1="21" y1="14" x2="21" y2="21"></line><line x1="14" y1="17.5" x2="21" y2="17.5"></line></svg>
+        <span>QR Code</span>
       </button>
     </div>
 
@@ -1922,7 +2400,7 @@
           </div>
           <div class="preset-card" onclick="applyThemePreset('clean_slate', 'Clean Slate')" title="Aplicar tema Clean Slate">
             <div class="preset-card-preview" style="background: #FFFFFF; border: 1px solid #E2E8F0;">
-              <span style="font-size: 9px; font-weight: 700; color: #372F6B; background: #EEF2FF; padding: 2px 6px; border-radius: 20px;">Botão</span>
+              <span style="font-size: 9px; font-weight: 700; color: #5E17EB; background: #EEF2FF; padding: 2px 6px; border-radius: 20px;">Botão</span>
             </div>
             <div class="preset-card-title">Clean Slate</div>
           </div>
@@ -2044,7 +2522,8 @@
 
       <!-- Intelligent Contrast Warning Badge -->
       <div id="contrast-warning-badge" style="display: none; align-items: center; gap: 6px; margin-top: 8px; margin-bottom: 12px; padding: 6px 10px; background-color: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; font-size: 11px; font-weight: 600; color: #92400e;">
-        ⚠️ Dica: Contraste baixo entre fundo e texto.
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span>Dica: Contraste baixo entre fundo e texto.</span>
       </div>
 
       <!-- ESTILO DO FUNDO DA PÁGINA -->
@@ -2084,8 +2563,9 @@
         <div id="bg-content-image" class="bg-tab-content">
           <div style="display: flex; gap: 8px; align-items: stretch;">
             <div id="bg-image-dropzone" style="flex: 1; border: 1.5px dashed var(--border-color); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--panel-white); padding: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; min-height: 50px; user-select: none;">
-              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="bg-image-upload-label">
-                📂 Clique ou arraste uma imagem aqui
+              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500; display: inline-flex; align-items: center; gap: 5px;" id="bg-image-upload-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Clique ou arraste uma imagem aqui</span>
               </span>
               <input type="file" id="bg-image-file-input" accept="image/*" style="display: none;" onchange="handleBgImageUpload(event)">
             </div>
@@ -2100,7 +2580,7 @@
           </div>
           <details style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 8px;" id="bg-advanced-details">
             <summary style="font-size: 11px; font-weight: 700; color: var(--brand-purple); cursor: pointer; outline: none; user-select: none; list-style: none; display: flex; align-items: center; justify-content: space-between;">
-              <span>⚙️ Mais Configurações da Imagem</span>
+              <span style="display: inline-flex; align-items: center; gap: 5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Mais Configurações da Imagem</span>
               <span class="details-arrow" style="font-size: 9px; transition: transform 0.2s ease; display: inline-block;">▶</span>
             </summary>
             
@@ -2204,11 +2684,36 @@
         <textarea id="store-sub-text" placeholder="Ex: Selecione uma das opções abaixo para falar conosco" oninput="triggerAutosave()"></textarea>
       </div>
 
+      <!-- Selo de Status em Tempo Real & Horários de Funcionamento -->
+      <div style="margin-top: 14px; padding: 12px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 10px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+            <span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; background: rgba(16, 185, 129, 0.12); color: #059669; flex-shrink: 0;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <div style="min-width: 0;">
+              <div style="font-size: 12px; font-weight: 750; color: var(--text-main);">Horários de Atendimento & Status</div>
+              <div style="font-size: 10.5px; color: var(--text-muted); line-height: 1.3;">Selo Aberto/Fechado em tempo real</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <button type="button" class="btn-secondary" onclick="openStoreScheduleModal()" style="font-size: 11px; padding: 5px 10px; font-weight: 700; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1; color: var(--brand-purple); display: flex; align-items: center; gap: 5px; cursor: pointer;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>Configurar</span>
+            </button>
+            <label for="store-show-live-status" style="display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--text-main); cursor: pointer; margin: 0;">
+              <span>Exibir</span>
+              <input type="checkbox" id="store-show-live-status" checked onchange="triggerAutosave(); sendConfigToPreview();" style="width: 17px; height: 17px; cursor: pointer; accent-color: var(--brand-purple);">
+            </label>
+          </div>
+        </div>
+      </div>
+
       <!-- Barra de Redes Sociais Compacta (Social Bar) -->
       <div style="margin-top: 14px; padding: 12px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 10px;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="font-size: 14px;">🌐</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
             <span style="font-size: 12px; font-weight: 750; color: var(--text-main);">Barra de Redes Sociais (Social Bar)</span>
           </div>
           <select id="store-social-position" onchange="triggerAutosave()" style="padding: 3px 8px; font-size: 11px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; font-weight: 600; color: var(--text-main);">
@@ -2222,27 +2727,27 @@
         <div class="builder-form-grid" style="gap: 8px;">
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-instagram" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Instagram:</label>
-            <input type="text" id="social-instagram" placeholder="https://instagram.com/seuperfil ou @seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-instagram" placeholder="https://instagram.com/seuperfil ou @seuperfil" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('instagram', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-whatsapp" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">WhatsApp:</label>
-            <input type="text" id="social-whatsapp" placeholder="Ex: (11) 99999-9999 ou link wa.me" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-whatsapp" placeholder="Ex: (11) 99999-9999 ou link wa.me" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('whatsapp', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-tiktok" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">TikTok:</label>
-            <input type="text" id="social-tiktok" placeholder="https://tiktok.com/@seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-tiktok" placeholder="https://tiktok.com/@seuperfil" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('tiktok', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-youtube" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">YouTube:</label>
-            <input type="text" id="social-youtube" placeholder="https://youtube.com/@seucanal" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-youtube" placeholder="https://youtube.com/@seucanal" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('youtube', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-facebook" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Facebook:</label>
-            <input type="text" id="social-facebook" placeholder="https://facebook.com/suapagina" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-facebook" placeholder="https://facebook.com/suapagina" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('facebook', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="social-threads" style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Threads / X (Twitter):</label>
-            <input type="text" id="social-threads" placeholder="https://threads.net/@seuperfil" oninput="triggerAutosave()" style="font-size: 11px; padding: 5px 8px; background: #fff;">
+            <input type="text" id="social-threads" placeholder="https://threads.net/@seuperfil" oninput="triggerAutosave()" onblur="formatSocialInputOnBlur('threads', this)" style="font-size: 11px; padding: 5px 8px; background: #fff;">
           </div>
         </div>
       </div>
@@ -2276,8 +2781,8 @@
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
               <span style="font-size: 11.5px; font-weight: 700; color: var(--text-main);">QR Code da Loja</span>
               <div style="display: flex; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 14px; padding: 2px;">
-                <button type="button" id="qr-color-btn-brand" onclick="setQrColorMode('brand')" style="padding: 2px 8px; font-size: 10px; font-weight: 700; border: none; border-radius: 12px; background: var(--panel-white); color: var(--brand-purple); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">🎨 Cor da Loja</button>
-                <button type="button" id="qr-color-btn-black" onclick="setQrColorMode('black')" style="padding: 2px 8px; font-size: 10px; font-weight: 600; border: none; border-radius: 12px; background: transparent; color: var(--text-muted); cursor: pointer;">⚫ Preto</button>
+                <button type="button" id="qr-color-btn-brand" onclick="setQrColorMode('brand')" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 10px; font-weight: 700; border: none; border-radius: 12px; background: var(--panel-white); color: var(--brand-purple); cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"></circle><circle cx="17.5" cy="10.5" r=".5"></circle><circle cx="8.5" cy="7.5" r=".5"></circle><circle cx="6.5" cy="12.5" r=".5"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg> <span>Cor da Loja</span></button>
+                <button type="button" id="qr-color-btn-black" onclick="setQrColorMode('black')" style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; font-size: 10px; font-weight: 600; border: none; border-radius: 12px; background: transparent; color: var(--text-muted); cursor: pointer;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #0f172a; display: inline-block;"></span> <span>Preto</span></button>
               </div>
             </div>
             <span style="font-size: 10.5px; color: var(--text-muted); line-height: 1.4;">Use em cardápios, embalagens ou balcão para levar direto aos seus links.</span>
@@ -2302,9 +2807,25 @@
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
               <span>Restaurar</span>
             </button>
+            <button type="button" class="btn-secondary" onclick="importSocialLinksToLinkList()" style="padding: 6px 10px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; color: var(--brand-purple); border-color: rgba(94, 23, 235, 0.3);" title="Criar botões de links automaticamente com base nas redes cadastradas na Barra de Redes">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span>Importar Redes</span>
+            </button>
             <button class="btn-add-link" onclick="openLinkModal()">
               <span>Novo Link +</span>
             </button>
+          </div>
+        </div>
+
+        <!-- Links Quick Search / Filter Bar -->
+        <div id="admin-links-search-bar" style="margin-top: 10px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; position: relative;">
+          <div style="position: relative; flex: 1; display: flex; align-items: center;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 10px; color: var(--text-muted); pointer-events: none;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="admin-links-search-input" placeholder="Filtrar links por título, URL ou tipo..." oninput="filterAdminLinksList()" style="width: 100%; padding: 6px 28px 6px 30px; font-size: 11.5px; border: 1px solid var(--border-color); border-radius: 7px; background: var(--bg-light); color: var(--text-main); outline: none; transition: all 0.15s ease;">
+            <button type="button" id="admin-links-search-clear" onclick="clearAdminLinksSearch()" style="display: none; position: absolute; right: 6px; background: none; border: none; font-size: 14px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 50%; width: 18px; height: 18px; align-items: center; justify-content: center;" title="Limpar busca">&times;</button>
+          </div>
+          <div id="admin-links-count-badge" style="font-size: 11px; font-weight: 700; color: var(--text-muted); background: var(--bg-light); border: 1px solid var(--border-color); padding: 5px 9px; border-radius: 6px; white-space: nowrap;">
+            0 links
           </div>
         </div>
 
@@ -2507,6 +3028,142 @@
   </div>
 </div>
 
+<!-- MODAL: Configurar Horários de Atendimento da Loja -->
+<div class="modal-backdrop" id="store-schedule-modal-backdrop" onclick="if(event.target === this) closeStoreScheduleModal()">
+  <div class="modal" style="max-width: 600px; padding: 22px 24px;">
+    <div class="modal-header" style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #059669; flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div>
+          <h3 style="margin: 0; font-size: 16px; font-weight: 750; color: var(--text-main);">Horários de Atendimento & Status</h3>
+          <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 500; margin-top: 1px;">Configure os turnos da semana para o status Aberto / Fechado em tempo real</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeStoreScheduleModal()" title="Fechar">&times;</button>
+    </div>
+    
+    <div class="modal-body" style="display: flex; flex-direction: column; gap: 14px; max-height: calc(82vh - 140px); overflow-y: auto; padding-right: 4px;">
+      
+      <!-- Modelos Rápidos -->
+      <div style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.03), rgba(59, 130, 246, 0.03)); border: 1px solid rgba(124, 58, 237, 0.15); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 11.5px; font-weight: 750; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-purple)" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Modelos Prontos (1 Clique)
+          </span>
+          <span style="font-size: 10.5px; color: var(--text-muted);">Preenche a semana automaticamente</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+          <button type="button" class="preset-pill-btn" onclick="applyStoreSchedulePreset('restaurante')">
+            <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(225, 29, 72, 0.08); color: #e11d48; flex-shrink: 0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v20"/><path d="M7 2v20"/><path d="M4 2v4a3 3 0 0 0 3 3 3 3 0 0 0 3-3V2"/></svg>
+            </span>
+            <div style="min-width: 0;">
+              <div style="font-size: 11px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Restaurante</div>
+              <div style="font-size: 9px; color: var(--text-muted); white-space: nowrap;">Almoço & Jantar</div>
+            </div>
+          </button>
+          <button type="button" class="preset-pill-btn" onclick="applyStoreSchedulePreset('comercial')">
+            <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(59, 130, 246, 0.08); color: #2563eb; flex-shrink: 0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </span>
+            <div style="min-width: 0;">
+              <div style="font-size: 11px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Comercial</div>
+              <div style="font-size: 9px; color: var(--text-muted); white-space: nowrap;">08h às 18h</div>
+            </div>
+          </button>
+          <button type="button" class="preset-pill-btn" onclick="applyStoreSchedulePreset('todos')">
+            <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(16, 185, 129, 0.08); color: #059669; flex-shrink: 0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+            </span>
+            <div style="min-width: 0;">
+              <div style="font-size: 11px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Todos os Dias</div>
+              <div style="font-size: 9px; color: var(--text-muted); white-space: nowrap;">10h às 23h</div>
+            </div>
+          </button>
+          <button type="button" class="preset-pill-btn" onclick="applyStoreSchedulePreset('delivery')">
+            <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(139, 92, 246, 0.08); color: #8b5cf6; flex-shrink: 0;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </span>
+            <div style="min-width: 0;">
+              <div style="font-size: 11px; font-weight: 750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Delivery / Noite</div>
+              <div style="font-size: 9px; color: var(--text-muted); white-space: nowrap;">18h às 00h</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Grade de Horários dos 7 Dias -->
+      <div style="display: flex; flex-direction: column; gap: 8px;" id="store-schedule-days-container">
+        <!-- Dynamic 7 days rows populated by initStoreScheduleContainer -->
+      </div>
+
+    </div>
+
+    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+      <button type="button" class="btn-secondary" onclick="closeStoreScheduleModal()" style="padding: 8px 16px; font-size: 12px; font-weight: 600; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer;">Cancelar</button>
+      <button type="button" class="btn-primary" onclick="saveStoreScheduleModal()" style="padding: 8px 20px; font-size: 12px; font-weight: 700; border-radius: 8px; background: var(--brand-purple); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(124, 58, 237, 0.25);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>Salvar Horários</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: QR Code da Loja -->
+<div class="modal-backdrop" id="store-qr-modal-backdrop" onclick="if(event.target === this) closeQrCodeModal()">
+  <div class="modal" style="max-width: 440px; text-align: center; padding: 24px 28px;">
+    <div class="modal-header" style="justify-content: flex-end; margin-bottom: 0;">
+      <button class="modal-close" onclick="closeQrCodeModal()" title="Fechar">&times;</button>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+      <span style="display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(124, 58, 237, 0.1); color: var(--brand-purple);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><line x1="14" y1="14" x2="14" y2="21"></line><line x1="21" y1="14" x2="21" y2="21"></line><line x1="14" y1="17.5" x2="21" y2="17.5"></line></svg>
+      </span>
+
+      <div>
+        <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: var(--text-main);">QR Code da sua Loja</h3>
+        <p style="margin: 4px 0 0; font-size: 12px; color: var(--text-muted); line-height: 1.4;">Escaneie com a câmera do celular para acessar os links diretamente.</p>
+      </div>
+
+      <!-- Color Switcher -->
+      <div style="display: flex; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 20px; padding: 3px; gap: 4px;">
+        <button type="button" id="modal-qr-color-brand" onclick="setQrColorMode('brand'); updateModalQrCode();" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; font-size: 11px; font-weight: 700; border: none; border-radius: 16px; background: var(--panel-white); color: var(--brand-purple); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          <span>Cor da Loja</span>
+        </button>
+        <button type="button" id="modal-qr-color-black" onclick="setQrColorMode('black'); updateModalQrCode();" style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 16px; background: transparent; color: var(--text-muted); cursor: pointer;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #0f172a; display: inline-block;"></span>
+          <span>Preto Clássico</span>
+        </button>
+      </div>
+
+      <!-- QR Code Display Box -->
+      <div style="width: 200px; height: 200px; padding: 12px; background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center; position: relative;">
+        <img id="modal-qr-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+      </div>
+
+      <!-- Copy link input -->
+      <div style="width: 100%; display: flex; align-items: center; gap: 6px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 8px; padding: 4px 8px;">
+        <input type="text" id="modal-qr-url-display" readonly style="flex: 1; min-width: 0; background: transparent; border: none; font-size: 11.5px; color: var(--text-main); font-weight: 600; outline: none;">
+        <button type="button" onclick="copyLink()" class="btn-secondary" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 6px; cursor: pointer; flex-shrink: 0;">Copiar</button>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; gap: 8px; width: 100%; margin-top: 4px;">
+        <button type="button" class="btn-secondary" onclick="closeQrCodeModal()" style="flex: 1; padding: 9px 0; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer;">Fechar</button>
+        <button type="button" class="btn-primary" onclick="downloadStoreQrCode()" style="flex: 2; padding: 9px 0; font-size: 12px; font-weight: 700; border-radius: 8px; background: var(--brand-purple); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Baixar HD (1000px)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Add/Edit Link -->
 <div class="modal-backdrop" id="link-modal-backdrop">
   <div class="modal">
@@ -2516,105 +3173,177 @@
     </div>
     <div class="modal-body">
       <input type="hidden" id="modal-link-index">
+
+      <!-- Mini Live Preview of Link Button -->
+      <div id="modal-link-live-preview-wrap" style="margin-bottom: 12px; padding: 10px 14px; background: var(--bg-light); border: 1px dashed #cbd5e1; border-radius: 10px; display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 10px; font-weight: 750; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            Pré-visualização do Botão
+          </span>
+          <span id="modal-preview-platform-tag" style="font-size: 9.5px; font-weight: 700; color: var(--brand-purple); background: rgba(124, 58, 237, 0.1); padding: 1px 6px; border-radius: 4px;">Instagram</span>
+        </div>
+        
+        <!-- Live rendered button replica -->
+        <div id="modal-link-live-button" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; background: #ffffff; border: 1.5px solid var(--border-color); box-shadow: 0 2px 6px rgba(0,0,0,0.03); transition: all 0.2s ease;">
+          <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+            <div id="modal-preview-icon" style="width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(124, 58, 237, 0.08); color: var(--brand-purple); flex-shrink: 0;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width: 16px; height: 16px;"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+              <span id="modal-preview-label" style="font-size: 12.5px; font-weight: 750; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Título do Link</span>
+              <span id="modal-preview-subtitle" style="font-size: 10.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: none;"></span>
+            </div>
+          </div>
+          <span id="modal-preview-badge" style="font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: var(--brand-purple); color: #fff; display: none; margin-left: 8px; flex-shrink: 0;">NOVO</span>
+        </div>
+      </div>
       
       <div class="form-group">
         <label>Escolher Ícone</label>
-        <div class="icon-selector-grid">
-          <!-- Fileira 1: Redes Sociais & Web -->
-          <div class="icon-option" data-icon="instagram" data-title="Instagram" onclick="selectIcon('instagram')">
+        
+        <div class="icon-selector-header">
+          <div class="icon-search-box">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="icon-search-input" class="icon-search-input" placeholder="Buscar ícone (ex: whatsapp, comida, pix, mapa)..." oninput="filterIcons()">
+            <button type="button" id="icon-search-clear" class="btn-icon-search-clear" onclick="clearIconSearch()" style="display: none;" title="Limpar busca">&times;</button>
+          </div>
+
+          <div class="icon-category-pills">
+            <button type="button" class="icon-category-pill active" data-filter="all" onclick="filterIconCategory('all')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+              <span>Todos</span>
+            </button>
+            <button type="button" class="icon-category-pill" data-filter="social" onclick="filterIconCategory('social')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span>Redes</span>
+            </button>
+            <button type="button" class="icon-category-pill" data-filter="comida_vendas" onclick="filterIconCategory('comida_vendas')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+              <span>Vendas & Comida</span>
+            </button>
+            <button type="button" class="icon-category-pill" data-filter="contato" onclick="filterIconCategory('contato')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>Contato</span>
+            </button>
+            <button type="button" class="icon-category-pill" data-filter="local" onclick="filterIconCategory('local')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <span>Localização</span>
+            </button>
+            <button type="button" class="icon-category-pill" data-filter="midia" onclick="filterIconCategory('midia')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <span>Mídia & Extras</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="icon-selector-grid" id="icon-selector-grid">
+          <!-- Redes Sociais & Web -->
+          <div class="icon-option" data-icon="instagram" data-category="social" data-keywords="insta foto stories reels feed rede social instagram" data-title="Instagram" onclick="selectIcon('instagram')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5.5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>
           </div>
-          <div class="icon-option" data-icon="tiktok" data-title="TikTok" onclick="selectIcon('tiktok')">
+          <div class="icon-option" data-icon="tiktok" data-category="social" data-keywords="video dancinha viral rede social tiktok" data-title="TikTok" onclick="selectIcon('tiktok')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46V3z"/><path d="M14 6.4c1.4 1.6 3 2.2 5 2.2V5c-2 0-3.6-.7-5-1.8"/></svg>
           </div>
-          <div class="icon-option" data-icon="threads" data-title="Threads" onclick="selectIcon('threads')">
+          <div class="icon-option" data-icon="threads" data-category="social" data-keywords="meta texto post rede social threads" data-title="Threads" onclick="selectIcon('threads')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 11.5c0 3-1.5 5.5-4 5.5s-4-2.5-4-5.5 1.5-5.5 4-5.5c2.2 0 3.7 1.8 3.9 4.3.2 2.6-1.4 5.2-4.4 5.2-3.6 0-6.5-2.9-6.5-6.5S7.9 2.5 11.5 2.5s6.5 2.9 6.5 6.5c0 4.5-3.5 8-8 8-4.5 0-8-3.5-8-8S5.5 1 10 1"/></svg>
           </div>
-          <div class="icon-option" data-icon="whatsapp" data-title="WhatsApp" onclick="selectIcon('whatsapp')">
+          <div class="icon-option" data-icon="whatsapp" data-category="social,contato" data-keywords="zap whats mensagem conversa chat atendimento suporte whatsapp" data-title="WhatsApp" onclick="selectIcon('whatsapp')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
           </div>
-          <div class="icon-option" data-icon="telegram" data-title="Telegram" onclick="selectIcon('telegram')">
+          <div class="icon-option" data-icon="telegram" data-category="social,contato" data-keywords="canal grupo mensagem chat conversa telegram" data-title="Telegram" onclick="selectIcon('telegram')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
           </div>
-          <div class="icon-option" data-icon="facebook" data-title="Facebook" onclick="selectIcon('facebook')">
+          <div class="icon-option" data-icon="facebook" data-category="social" data-keywords="face pagina grupo rede social facebook" data-title="Facebook" onclick="selectIcon('facebook')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
           </div>
-          <div class="icon-option" data-icon="youtube" data-title="YouTube" onclick="selectIcon('youtube')">
+          <div class="icon-option" data-icon="youtube" data-category="social" data-keywords="video canal streamer assistir youtube" data-title="YouTube" onclick="selectIcon('youtube')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2a29 29 0 0 0-.46 5.33 29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
           </div>
-          <div class="icon-option" data-icon="linkedin" data-title="LinkedIn" onclick="selectIcon('linkedin')">
+          <div class="icon-option" data-icon="linkedin" data-category="social" data-keywords="profissional curriculo emprego networking vagas linkedin" data-title="LinkedIn" onclick="selectIcon('linkedin')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
           </div>
-          <div class="icon-option" data-icon="pinterest" data-title="Pinterest" onclick="selectIcon('pinterest')">
+          <div class="icon-option" data-icon="pinterest" data-category="social" data-keywords="fotos inspiracao ideias pin board pinterest" data-title="Pinterest" onclick="selectIcon('pinterest')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 21a10 10 0 0 1-2-6c0-3.3 2.7-6 6-6 3 0 5 2 5 4.5 0 3-1.7 5.5-4 5.5-1 0-1.8-.6-2-1.3l-.8 3.3"/></svg>
           </div>
-          <div class="icon-option" data-icon="kwai" data-title="Kwai" onclick="selectIcon('kwai')">
+          <div class="icon-option" data-icon="kwai" data-category="social" data-keywords="video viral dancinha rede social kwai" data-title="Kwai" onclick="selectIcon('kwai')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="4"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/></svg>
           </div>
-          <div class="icon-option" data-icon="google_review" data-title="Google Avaliações" onclick="selectIcon('google_review')">
+          <div class="icon-option" data-icon="google_review" data-category="social,local" data-keywords="google avaliacao estrelas review feedback clientes" data-title="Google Avaliações" onclick="selectIcon('google_review')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           </div>
-          <div class="icon-option" data-icon="web" data-title="Website" onclick="selectIcon('web')">
+          <div class="icon-option" data-icon="web" data-category="social,local" data-keywords="site website pagina loja oficial institucional" data-title="Website" onclick="selectIcon('web')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
           </div>
 
-          <!-- Fileira 2: Pagamentos, Contato & Localização -->
-          <div class="icon-option" data-icon="pix" data-title="Chave PIX" onclick="selectIcon('pix')">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>
-          </div>
-          <div class="icon-option" data-icon="telefone" data-title="Telefone" onclick="selectIcon('telefone')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-          </div>
-          <div class="icon-option" data-icon="horario" data-title="Horários de Atendimento" onclick="selectIcon('horario')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="icon-option" data-icon="vcard" data-title="Salvar Contato (Agenda)" onclick="selectIcon('vcard')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>
-          </div>
-          <div class="icon-option" data-icon="email" data-title="E-mail" onclick="selectIcon('email')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-          </div>
-          <div class="icon-option" data-icon="mapa" data-title="Nossa Localização" onclick="selectIcon('mapa')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          </div>
-          <div class="icon-option" data-icon="comida" data-title="Cardápio" onclick="selectIcon('comida')">
+          <!-- Comida, Catálogo & Vendas -->
+          <div class="icon-option" data-icon="comida" data-category="comida_vendas" data-keywords="cardapio menu comida restaurante lanche pizza burger prato almoço jantar refeicao" data-title="Cardápio" onclick="selectIcon('comida')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 2v4M12 2v4M20 2v4M16 6a4 4 0 0 1-8 0V2M12 10v12M20 2v10M20 12h-4M20 12v10"/></svg>
           </div>
-          <div class="icon-option" data-icon="ifood" data-title="iFood" onclick="selectIcon('ifood')">
+          <div class="icon-option" data-icon="ifood" data-category="comida_vendas" data-keywords="ifood delivery comida lanche pedido restaurante" data-title="iFood" onclick="selectIcon('ifood')">
             <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M8.428 1.67c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006c4.244 0 7.184-3.854 7.184-6.998 0-2.29-2.175-3.293-4.244-3.293zm11.328 0c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006C21.061 11.96 24 8.107 24 4.963c0-2.29-2.18-3.293-4.244-3.293zM14.172 14.52l2.435 1.834c-2.17 2.07-6.124 3.525-9.353 3.17A8.913 8.913 0 01.23 14.541H0a9.598 9.598 0 008.828 7.758c3.814.24 7.323-.905 9.947-3.13l-.004.007 1.08 2.988 1.555-7.623-7.234-.02Z"/></svg>
           </div>
-
-          <!-- Fileira 3: Vendas, Logística & Customização -->
-          <div class="icon-option" data-icon="shopee" data-title="Shopee" onclick="selectIcon('shopee')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
-          </div>
-          <div class="icon-option" data-icon="catalago" data-title="Catálogo" onclick="selectIcon('catalago')">
+          <div class="icon-option" data-icon="catalago" data-category="comida_vendas" data-keywords="catalogo pdf revista folheto produtos lista tabela precos" data-title="Catálogo" onclick="selectIcon('catalago')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
           </div>
-          <div class="icon-option" data-icon="catalago_web" data-title="Catálogo Web" onclick="selectIcon('catalago_web')">
+          <div class="icon-option" data-icon="catalago_web" data-category="comida_vendas" data-keywords="catalogo web online ecommerce loja virtual produtos" data-title="Catálogo Web" onclick="selectIcon('catalago_web')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path><circle cx="12" cy="8" r="3" stroke-width="1.2"></circle><line x1="12" y1="5" x2="12" y2="11" stroke-width="1.2"></line><path d="M9.5 8h5" stroke-width="1.2"></path></svg>
           </div>
-          <div class="icon-option" data-icon="retirada" data-title="Retirada" onclick="selectIcon('retirada')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>
+          <div class="icon-option" data-icon="shopee" data-category="comida_vendas" data-keywords="shopee loja compras produtos marketplace" data-title="Shopee" onclick="selectIcon('shopee')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8a3 3 0 0 1 6 0"/></svg>
           </div>
-          <div class="icon-option" data-icon="coleta" data-title="Coleta" onclick="selectIcon('coleta')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>
+          <div class="icon-option" data-icon="pix" data-category="comida_vendas,contato" data-keywords="pix chave pagamento dinheiro banco transferir pagar financeiro" data-title="Chave PIX" onclick="selectIcon('pix')">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.001 2.25c-.32 0-.64.12-.89.37L5.59 8.14a1.25 1.25 0 0 0 0 1.77l5.52 5.52c.25.25.57.37.89.37s.64-.12.89-.37l5.52-5.52a1.25 1.25 0 0 0 0-1.77l-5.52-5.52a1.25 1.25 0 0 0-.89-.37z"/><path d="M17.52 13.66l-5.52 5.52c-.25.25-.57.37-.89.37s-.64-.12-.89-.37l-5.52-5.52a1.25 1.25 0 0 0-1.77 1.77l5.52 5.52c.74.74 1.7.11 2.66.11s1.92.63 2.66-.11l5.52-5.52a1.25 1.25 0 0 0-1.77-1.77z"/></svg>
           </div>
-          <div class="icon-option" data-icon="construcao" data-title="Em Construção" onclick="selectIcon('construcao')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18 M9 22V5 M12 22V5 M9 17h3 M9 12h3 M9 7h3 M9 22l3-5 M12 22l-3-5 M9 17l3-5 M12 17l-3-5 M9 12l3-5 M12 12l-3-5 M2 5h20 M19 5v8 M17 13a2 2 0 0 0 4 0"/><rect x="9" y="2" width="4" height="3" rx="0.5" fill="currentColor" fill-opacity="0.1"/></svg>
-          </div>
-          <div class="icon-option" data-icon="custom" data-title="Imagem Externa" onclick="selectIcon('custom')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          </div>
-          <div class="icon-option" data-icon="carousel" data-title="Carrossel de Fotos" onclick="selectIcon('carousel')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>
-          </div>
-          <div class="icon-option" data-icon="cupom" data-title="Cupom de Desconto" onclick="selectIcon('cupom')">
+          <div class="icon-option" data-icon="cupom" data-category="comida_vendas" data-keywords="cupom desconto promocao oferta voucher codigo benefício" data-title="Cupom de Desconto" onclick="selectIcon('cupom')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2" stroke-dasharray="2 2"></rect><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle><path d="M10 9l4 6M14 9l-4 6"></path></svg>
           </div>
-          <div class="icon-option" data-icon="fallback" data-title="Outro Link" onclick="selectIcon('fallback')">
+
+          <!-- Contato & Atendimento -->
+          <div class="icon-option" data-icon="telefone" data-category="contato" data-keywords="telefone fone ligacao ligar chamada celular contato voz" data-title="Telefone" onclick="selectIcon('telefone')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          </div>
+          <div class="icon-option" data-icon="horario" data-category="contato" data-keywords="horario atendimento funcionamento turnos expediente aberto fechado relogio" data-title="Horários de Atendimento" onclick="selectIcon('horario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="icon-option" data-icon="vcard" data-category="contato" data-keywords="vcard salvar contato agenda cartao visita telefone celular" data-title="Salvar Contato (Agenda)" onclick="selectIcon('vcard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/><line x1="15" y1="8" x2="19" y2="8"/><line x1="15" y1="12" x2="19" y2="12"/><path d="M5 18c0-2 2-3 4-3s4 1 4 3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="email" data-category="contato" data-keywords="email correio mensagem suporte contato mail" data-title="E-mail" onclick="selectIcon('email')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+
+          <!-- Localização & Logística -->
+          <div class="icon-option" data-icon="mapa" data-category="local" data-keywords="mapa localizacao endereco como chegar rota gps waze google maps ponto" data-title="Nossa Localização" onclick="selectIcon('mapa')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="icon-option" data-icon="retirada" data-category="local" data-keywords="retirada balcao loja buscar pegar local retirar" data-title="Retirada" onclick="selectIcon('retirada')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line><path d="M9 17l2 2 4-4"/></svg>
+          </div>
+          <div class="icon-option" data-icon="coleta" data-category="local" data-keywords="coleta entrega frete transportadora envio logistica motoboy" data-title="Coleta" onclick="selectIcon('coleta')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line><path d="M12 8V2M12 2l-3 3M12 2l3 3"/></svg>
+          </div>
+
+          <!-- Mídia & Extras -->
+          <div class="icon-option" data-icon="divisor" data-category="midia" data-keywords="divisor secao titulo separador categoria grupo bloco cabecalho" data-title="Título de Seção" onclick="selectIcon('divisor')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="12" x2="21" y2="12" stroke-dasharray="3 3"/><circle cx="12" cy="12" r="2.5"/></svg>
+          </div>
+          <div class="icon-option" data-icon="carousel" data-category="midia" data-keywords="carrossel fotos galeria album slides imagens portfolio" data-title="Carrossel de Fotos" onclick="selectIcon('carousel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="14" height="14" rx="2"/><path d="M7 3h11a2 2 0 0 1 2 2v11"/></svg>
+          </div>
+          <div class="icon-option" data-icon="custom" data-category="midia" data-keywords="imagem personalizada url externa icone customizado foto logo" data-title="Imagem Externa" onclick="selectIcon('custom')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div class="icon-option" data-icon="construcao" data-category="midia" data-keywords="construcao em breve novidade lancamento manutencao obra" data-title="Em Construção" onclick="selectIcon('construcao')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18 M9 22V5 M12 22V5 M9 17h3 M9 12h3 M9 7h3 M9 22l3-5 M12 22l-3-5 M9 17l3-5 M12 17l-3-5 M9 12l3-5 M12 12l-3-5 M2 5h20 M19 5v8 M17 13a2 2 0 0 0 4 0"/><rect x="9" y="2" width="4" height="3" rx="0.5" fill="currentColor" fill-opacity="0.1"/></svg>
+          </div>
+          <div class="icon-option" data-icon="fallback" data-category="midia" data-keywords="link generico outro padrao seta url comum padrao" data-title="Outro Link" onclick="selectIcon('fallback')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
           </div>
+        </div>
+
+        <div id="icon-empty-state" style="display: none; padding: 18px 12px; text-align: center; color: var(--text-muted); font-size: 12px; font-weight: 500;">
+          Nenhum ícone encontrado para essa busca.
         </div>
       </div>
 
@@ -2631,13 +3360,17 @@
             </div>
           </div>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <button type="button" class="btn-secondary" onclick="applySchedulePreset('restaurante')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 700; border-radius: 6px; background: rgba(225, 29, 72, 0.08); color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.2);">🍣 Restaurante (Almoço & Jantar)</button>
+            <button type="button" class="btn-secondary" onclick="applySchedulePreset('restaurante')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 700; border-radius: 6px; background: rgba(225, 29, 72, 0.08); color: #e11d48; border: 1px solid rgba(225, 29, 72, 0.2);">Restaurante (Almoço & Jantar)</button>
             <button type="button" class="btn-secondary" onclick="applySchedulePreset('comercial')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 600; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1;">Comercial (08h-18h)</button>
             <button type="button" class="btn-secondary" onclick="applySchedulePreset('todos')" style="font-size: 10.5px; padding: 4px 8px; font-weight: 600; border-radius: 6px; background: #fff; border: 1px solid #cbd5e1;">Todos os Dias</button>
           </div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 8px;" id="schedule-days-rows-container">
           <!-- Dynamically populated 7 days with multiple shifts -->
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.08); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 8px 12px; margin-top: 2px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          <span style="font-size: 11px; color: #065f46; font-weight: 500; line-height: 1.3;">O selo de status (Aberto / Fechado) no topo da página pública pode ser ativado ou desativado na aba <strong>Aparência</strong>.</span>
         </div>
       </div>
 
@@ -2696,8 +3429,8 @@
         <div class="form-group" style="margin-bottom: 0;">
           <label for="mapa-mode-select" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Modo de Exibição do Mapa</label>
           <select id="mapa-mode-select" style="padding: 7px 10px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; width: 100%;" onchange="toggleMapModeFields()">
-            <option value="modal">📍 Modal "Como Chegar" (Waze, Google Maps e Apple Maps)</option>
-            <option value="iframe">🗺️ Incorporar Mapa Interativo na Página (Iframe)</option>
+            <option value="modal">Modal "Como Chegar" (Waze, Google Maps e Apple Maps)</option>
+            <option value="iframe">Incorporar Mapa Interativo na Página (Iframe)</option>
           </select>
         </div>
         <div id="mapa-address-container" class="form-group" style="margin-bottom: 0;">
@@ -2748,6 +3481,15 @@
             <label for="wa-message" style="font-size: 11px; font-weight: 700; color: var(--text-main); margin-bottom: 4px;">Mensagem Pré-definida (Opcional)</label>
             <input type="text" id="wa-message" placeholder="Ex: Olá! Gostaria de fazer um pedido." oninput="generateWhatsAppUrl();" style="font-size: 12px; padding: 7px 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px;">
           </div>
+        </div>
+
+        <!-- Sugestão vinculada da Barra de Redes Sociais para WhatsApp -->
+        <div id="whatsapp-sync-suggestion" style="display: none; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(37, 211, 102, 0.08); border: 1px dashed rgba(37, 211, 102, 0.4); font-size: 11px; color: #15803d; margin-top: 2px;">
+          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Da Barra de Redes: <strong id="whatsapp-sync-val">...</strong></span>
+          </div>
+          <button type="button" onclick="applyWhatsAppSocialSuggestion()" style="background: #16a34a; color: #fff; border: none; padding: 3px 8px; border-radius: 5px; font-size: 10.5px; font-weight: 700; cursor: pointer; flex-shrink: 0;">Usar número</button>
         </div>
       </div>
 
@@ -2806,8 +3548,9 @@
           <label style="font-size: 11px; font-weight: 700;">Imagem do Ícone Personalizado</label>
           <div style="display: flex; gap: 8px; align-items: stretch; margin-top: 4px;">
             <div id="custom-icon-dropzone" style="flex: 1; border: 1.5px dashed var(--border-color); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: var(--panel-white); padding: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; min-height: 50px; user-select: none;">
-              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;" id="custom-icon-upload-label">
-                📂 Clique ou arraste uma imagem aqui
+              <span style="font-size: 10px; color: var(--text-muted); font-weight: 500; display: inline-flex; align-items: center; gap: 5px;" id="custom-icon-upload-label">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                <span>Clique ou arraste uma imagem aqui</span>
               </span>
               <input type="file" id="custom-icon-file-input" accept="image/*" style="display: none;" onchange="handleCustomIconUpload(event)">
             </div>
@@ -2825,20 +3568,38 @@
       
       <div class="form-group" id="label-field-group">
         <label for="modal-link-label">Texto do Link</label>
-        <input type="text" id="modal-link-label" placeholder="ex: Instagram Oficial">
+        <input type="text" id="modal-link-label" placeholder="ex: Instagram Oficial" oninput="updateModalLinkLivePreview()">
+      </div>
+
+      <div class="form-group" id="subtitle-field-group">
+        <label for="modal-link-subtitle">Subtítulo / Descrição Curta (Opcional)</label>
+        <input type="text" id="modal-link-subtitle" placeholder="ex: Peça online sem taxas • Entrega rápida" oninput="updateModalLinkLivePreview()">
       </div>
 
       <div class="form-group" id="url-field-group">
         <label for="modal-link-url">URL do Link</label>
         <input type="text" id="modal-link-url" placeholder="https://...">
+        
+        <!-- Sugestão vinculada da Barra de Redes Sociais -->
+        <div id="social-sync-suggestion" style="display: none; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 10px; border-radius: 8px; background: rgba(94, 23, 235, 0.07); border: 1px dashed rgba(94, 23, 235, 0.35); font-size: 11.5px; color: var(--brand-purple); margin-top: 6px;">
+          <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Da Barra de Redes: <strong id="social-sync-val">...</strong></span>
+          </div>
+          <button type="button" id="social-sync-btn" onclick="applySocialSuggestion()" style="background: var(--brand-purple); color: #fff; border: none; padding: 4px 9px; border-radius: 5px; font-size: 11px; font-weight: 700; cursor: pointer; flex-shrink: 0; display: inline-flex; align-items: center; gap: 3px;">
+            <span>Usar sugestão</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+
         <div id="map-helper-text" style="display: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; margin-top: 6px;">
-          💡 <strong>Como mostrar o mapa:</strong> No Google Maps, clique em <strong>Compartilhar</strong> -> <strong>Incorporar mapa</strong> -> <strong>Copiar HTML</strong> e cole o código iframe completo no campo acima. O mapa interativo aparecerá na página.
+          <span style="display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <strong>Como mostrar o mapa:</strong></span> No Google Maps, clique em <strong>Compartilhar</strong> -> <strong>Incorporar mapa</strong> -> <strong>Copiar HTML</strong> e cole o código iframe completo no campo acima. O mapa interativo aparecerá na página.
         </div>
       </div>
 
       <div class="form-group" id="badge-field-group">
         <label for="modal-link-badge">Etiqueta do Link (ex: Em Breve, Novo)</label>
-        <input type="text" id="modal-link-badge" placeholder="Opcional. Ex: Em Breve">
+        <input type="text" id="modal-link-badge" placeholder="Opcional. Ex: Em Breve" oninput="updateModalLinkLivePreview()">
       </div>
 
       <!-- PDF upload helper (only shown for catalago and catalago_web) -->
@@ -2903,16 +3664,32 @@
         </div>
       </div>
 
+      <!-- Status Ativo / Inativo do Link -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 8px; margin-top: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(59, 130, 246, 0.12); color: #2563eb; flex-shrink: 0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </span>
+          <div>
+            <label for="modal-link-active" style="font-size: 11.5px; font-weight: 700; color: var(--text-main); margin: 0; cursor: pointer;">Link Ativo (Visível na página pública)</label>
+            <div style="font-size: 10px; color: var(--text-muted);">Desative para pausar a exibição sem precisar apagar o link.</div>
+          </div>
+        </div>
+        <input type="checkbox" id="modal-link-active" checked style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--brand-purple);">
+      </div>
+
       <!-- Efeito Link em Destaque (Glow / Pulse) -->
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px; margin-top: 8px;">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="font-size: 18px; line-height: 1;">⭐</span>
+          <span style="display: flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #d97706; flex-shrink: 0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </span>
           <div>
             <label for="modal-link-highlight" style="font-size: 11.5px; font-weight: 700; color: var(--text-main); margin: 0; cursor: pointer;">Destacar este Link (Brilho Pulsante)</label>
             <div style="font-size: 10px; color: var(--text-muted);">Aplica um efeito luminoso pulsante contínuo na cor da loja para atrair mais cliques.</div>
           </div>
         </div>
-        <input type="checkbox" id="modal-link-highlight" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--brand-purple);">
+        <input type="checkbox" id="modal-link-highlight" onchange="updateModalLinkLivePreview()" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--brand-purple);">
       </div>
 
       <!-- Agendamento & Validade do Link (Opcional) -->
@@ -2981,7 +3758,10 @@
         Selecione um arquivo de backup <code>.json</code> exportado anteriormente. Isso restaurará as cores, imagens, textos e links para a loja atual.
       </p>
       <div id="backup-dropzone" style="border: 1.5px dashed var(--border-color); border-radius: 8px; padding: 20px; text-align: center; background: var(--bg-light); cursor: pointer;" onclick="document.getElementById('backup-file-input').click()">
-        <span style="font-size: 12px; font-weight: 600; color: var(--brand-purple);">📂 Clique para escolher o arquivo .json</span>
+        <span style="font-size: 12px; font-weight: 600; color: var(--brand-purple); display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Clique para escolher o arquivo .json</span>
+        </span>
         <input type="file" id="backup-file-input" accept=".json" style="display: none;" onchange="handleBackupFileSelect(event)">
       </div>
       <div id="backup-preview-info" style="display: none; font-size: 11px; padding: 10px; background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 6px; color: #0369a1; line-height: 1.4;"></div>
@@ -3002,7 +3782,10 @@
     </div>
     <div class="modal-body">
       <div class="sql-hint-container">
-        ⚠️ <strong>Tabela Não Encontrada:</strong> Certifique-se de criar a nova tabela <code>stores</code> no Supabase SQL Editor.
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <strong>Tabela Não Encontrada:</strong> Certifique-se de criar a nova tabela <code>stores</code> no Supabase SQL Editor.
+        </div>
         <pre>
 create table if not exists stores (
   id text primary key,
@@ -3028,8 +3811,9 @@ revoke select on stores from anon, authenticated;
 grant select (id, config) on stores to anon, authenticated;
 -- Depois de rodar isso, rode também o conteúdo de supabase_security_hardening.sql.
         </pre>
-        <p style="margin-top: 12px; font-weight: 600; font-size: 12px; color: #854d0e; border-top: 1px dashed #fed7aa; padding-top: 10px;">
-          📦 SUPABASE STORAGE: Crie um bucket público chamado <code>logos</code> (Storage -> New Bucket -> Nome: "logos" -> Marque como "Public").
+        <p style="margin-top: 12px; font-weight: 600; font-size: 12px; color: #854d0e; border-top: 1px dashed #fed7aa; padding-top: 10px; display: flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <span>SUPABASE STORAGE: Crie um bucket público chamado <code>logos</code> (Storage -> New Bucket -> Nome: "logos" -> Marque como "Public").</span>
         </p>
         <p style="font-size: 11.5px; color: #b45309; margin-top: 6px; font-weight: 600;">
           Para liberar os uploads de imagem neste bucket, copie e execute este código no SQL Editor do Supabase:
@@ -3145,6 +3929,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     btnOpacity: 100,
     btnBorderRadius: "30px",
     bgParallax: false,
+    showLiveStatus: true,
     stats: { views: 0, clicks: {} }
   };
   let selectedIconType = "fallback";
@@ -3272,7 +4057,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       bgType: 'solid',
       bgColor: '#FFFFFF',
       textColor: '#0F172A',
-      themeColor: '#372F6B',
+      themeColor: '#5E17EB',
       btnColor: '#EEF2FF',
       btnTextColor: '#0F172A',
       btnBorderRadius: '30px',
@@ -3534,7 +4319,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       gsap.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.22, ease: 'power2.out' });
       const modal = backdrop.querySelector('.modal');
       if (modal) {
-        gsap.fromTo(modal, { scale: 0.92, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.32, ease: 'back.out(1.4)' });
+        const isMobile = window.innerWidth <= 640;
+        if (isMobile) {
+          gsap.fromTo(modal, { y: '100%', opacity: 1 }, { y: '0%', opacity: 1, duration: 0.32, ease: 'power3.out' });
+        } else {
+          gsap.fromTo(modal, { scale: 0.94, y: 15, opacity: 0 }, { scale: 1, y: 0, opacity: 1, duration: 0.28, ease: 'power2.out' });
+        }
       }
     }
   }
@@ -3544,17 +4334,25 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (!backdrop) return;
     if (typeof gsap !== 'undefined') {
       const modal = backdrop.querySelector('.modal');
+      const isMobile = window.innerWidth <= 640;
       if (modal) {
-        gsap.to(modal, { scale: 0.94, y: 10, opacity: 0, duration: 0.18, ease: 'power2.in' });
+        if (isMobile) {
+          gsap.to(modal, { y: '100%', duration: 0.22, ease: 'power3.in' });
+        } else {
+          gsap.to(modal, { scale: 0.95, y: 10, opacity: 0, duration: 0.18, ease: 'power2.in' });
+        }
       }
       gsap.to(backdrop, {
         opacity: 0,
-        duration: 0.18,
+        duration: 0.2,
         ease: 'power2.in',
         onComplete: () => {
           backdrop.classList.remove('open');
           backdrop.style.opacity = '';
-          if (modal) modal.style.opacity = '';
+          if (modal) {
+            modal.style.opacity = '';
+            modal.style.transform = '';
+          }
           if (onDone) onDone();
         }
       });
@@ -3578,7 +4376,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       modal.innerHTML = `
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
-          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(55, 47, 107, 0.08); display: flex; align-items: center; justify-content: center; color: var(--brand-purple);">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: rgba(94, 23, 235, 0.08); display: flex; align-items: center; justify-content: center; color: var(--brand-purple);">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
@@ -3628,7 +4426,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       
       modal.innerHTML = `
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
-          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(55, 47, 107, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : 'var(--brand-purple)'};">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: ${isDanger ? 'rgba(239, 68, 68, 0.08)' : 'rgba(94, 23, 235, 0.08)'}; display: flex; align-items: center; justify-content: center; color: ${isDanger ? '#ef4444' : 'var(--brand-purple)'};">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
               <line x1="12" y1="9" x2="12" y2="13"></line>
@@ -3895,6 +4693,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('social-facebook').value = "";
     document.getElementById('social-threads').value = "";
     document.getElementById('store-social-position').value = "top";
+    if (document.getElementById('store-show-live-status')) {
+      document.getElementById('store-show-live-status').checked = true;
+    }
+    if (typeof initStoreScheduleContainer === 'function') {
+      initStoreScheduleContainer(null);
+    }
     document.getElementById('links-container').innerHTML = "";
     document.getElementById('links-empty-state').style.display = 'block';
     updatePublicLinkDisplay();
@@ -3969,6 +4773,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
           bgRepeat: parsed.bgRepeat || false,
           btnOpacity: parsed.btnOpacity !== undefined ? parsed.btnOpacity : 100,
           bgParallax: parsed.bgParallax || false,
+          showLiveStatus: parsed.showLiveStatus !== false,
+          scheduleData: parsed.scheduleData || null,
+          socialPosition: parsed.socialPosition || "top",
+          socialLinks: parsed.socialLinks || {},
           stats: parsed.stats || { views: 0, clicks: {} }
         };
 
@@ -4098,6 +4906,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     document.getElementById('social-facebook').value = social.facebook || "";
     document.getElementById('social-threads').value = social.threads || "";
     document.getElementById('store-social-position').value = storeConfig.socialPosition || "top";
+    if (document.getElementById('store-show-live-status')) {
+      document.getElementById('store-show-live-status').checked = storeConfig.showLiveStatus !== false;
+    }
+    if (typeof initStoreScheduleContainer === 'function') {
+      initStoreScheduleContainer(storeConfig.scheduleData || null);
+    }
   }
 
   // CONFIG PUBLIC LINK DISPLAY
@@ -4175,7 +4989,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#372f6b';
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#5e17eb';
     const colorParam = (activeQrColorMode === 'brand') ? hexToRgbDash(themeColor) : '0-0-0';
 
     img.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&margin=8&color=${colorParam}&data=${encodeURIComponent(url)}`;
@@ -4190,7 +5004,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (!urlInput || !urlInput.value) return;
 
     const url = urlInput.value;
-    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#372f6b';
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#5e17eb';
     const colorParam = (activeQrColorMode === 'brand') ? hexToRgbDash(themeColor) : '0-0-0';
     const hdQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&margin=16&color=${colorParam}&data=${encodeURIComponent(url)}`;
 
@@ -4211,6 +5025,110 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       console.error("Erro ao baixar QR Code:", e);
       showToast("Não foi possível baixar o QR Code.", "error");
     }
+  }
+
+  function openQrCodeModal() {
+    updateModalQrCode();
+    if (typeof openModalWithGsap === 'function') {
+      openModalWithGsap('store-qr-modal-backdrop');
+    } else {
+      const b = document.getElementById('store-qr-modal-backdrop');
+      if (b) b.classList.add('open');
+    }
+  }
+
+  function closeQrCodeModal() {
+    if (typeof closeModalWithGsap === 'function') {
+      closeModalWithGsap('store-qr-modal-backdrop');
+    } else {
+      const b = document.getElementById('store-qr-modal-backdrop');
+      if (b) b.classList.remove('open');
+    }
+  }
+
+  function updateModalQrCode() {
+    const urlInput = document.getElementById('public-link-url');
+    const modalUrlDisplay = document.getElementById('modal-qr-url-display');
+    const modalImg = document.getElementById('modal-qr-img');
+    const brandBtn = document.getElementById('modal-qr-color-brand');
+    const blackBtn = document.getElementById('modal-qr-color-black');
+
+    const url = (urlInput && urlInput.value) ? urlInput.value : `${window.location.origin}${window.location.pathname.replace(/\/index\.html$/i, '')}/cliente.html?loja=${activeStore || ''}`;
+    if (modalUrlDisplay) modalUrlDisplay.value = url;
+
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#7c3aed';
+    const colorParam = (activeQrColorMode === 'brand') ? hexToRgbDash(themeColor) : '0-0-0';
+
+    if (modalImg) {
+      modalImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&color=${colorParam}&data=${encodeURIComponent(url)}`;
+    }
+
+    if (brandBtn && blackBtn) {
+      if (activeQrColorMode === 'brand') {
+        brandBtn.style.background = 'var(--panel-white)';
+        brandBtn.style.color = 'var(--brand-purple)';
+        brandBtn.style.fontWeight = '700';
+        brandBtn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+        blackBtn.style.background = 'transparent';
+        blackBtn.style.color = 'var(--text-muted)';
+        blackBtn.style.fontWeight = '600';
+        blackBtn.style.boxShadow = 'none';
+      } else {
+        blackBtn.style.background = 'var(--panel-white)';
+        blackBtn.style.color = 'var(--text-main)';
+        blackBtn.style.fontWeight = '700';
+        blackBtn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+        brandBtn.style.background = 'transparent';
+        brandBtn.style.color = 'var(--text-muted)';
+        brandBtn.style.fontWeight = '600';
+        brandBtn.style.boxShadow = 'none';
+      }
+    }
+  }
+
+  function formatSocialInputOnBlur(type, input) {
+    let val = (input.value || '').trim();
+    if (!val) return;
+
+    if (type === 'instagram') {
+      if (!val.startsWith('http')) {
+        const clean = val.replace('@', '').replace(/^instagram\.com\//i, '').replace(/^www\.instagram\.com\//i, '').trim();
+        if (clean) input.value = `https://instagram.com/${clean}`;
+      }
+    } else if (type === 'whatsapp') {
+      if (!val.startsWith('http')) {
+        const digits = val.replace(/\D/g, '');
+        if (digits) {
+          const full = (digits.length === 10 || digits.length === 11) ? '55' + digits : digits;
+          input.value = `https://wa.me/${full}`;
+        }
+      }
+    } else if (type === 'tiktok') {
+      if (!val.startsWith('http')) {
+        let clean = val.replace(/^tiktok\.com\/@?/i, '').replace(/^www\.tiktok\.com\/@?/i, '').trim();
+        clean = clean.startsWith('@') ? clean : '@' + clean;
+        if (clean !== '@') input.value = `https://tiktok.com/${clean}`;
+      }
+    } else if (type === 'youtube') {
+      if (!val.startsWith('http')) {
+        let clean = val.replace(/^youtube\.com\/@?/i, '').replace(/^www\.youtube\.com\/@?/i, '').trim();
+        clean = clean.startsWith('@') ? clean : '@' + clean;
+        if (clean !== '@') input.value = `https://youtube.com/${clean}`;
+      }
+    } else if (type === 'facebook') {
+      if (!val.startsWith('http')) {
+        const clean = val.replace(/^facebook\.com\//i, '').replace(/^www\.facebook\.com\//i, '').trim();
+        if (clean) input.value = `https://facebook.com/${clean}`;
+      }
+    } else if (type === 'threads') {
+      if (!val.startsWith('http')) {
+        let clean = val.replace('@', '').replace(/^threads\.net\/@?/i, '').replace(/^www\.threads\.net\/@?/i, '').trim();
+        if (clean) input.value = `https://threads.net/@${clean}`;
+      }
+    }
+
+    triggerAutosave();
+    sendConfigToPreview();
   }
 
   function copyLink() {
@@ -4691,6 +5609,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     return LINK_ICONS.fallback;
   }
 
+  let draggedLinkIndex = null;
+
   // RENDER LINKS LIST
   function renderLinksList() {
     const container = document.getElementById('links-container');
@@ -4707,8 +5627,61 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     container.innerHTML = "";
 
     storeConfig.links.forEach((link, index) => {
+      const isLinkActive = link.active !== false;
       const item = document.createElement('div');
-      item.className = 'link-item';
+      item.className = `link-item ${isLinkActive ? '' : 'is-inactive'}`;
+      item.draggable = true;
+      item.dataset.index = index;
+
+      // Drag and Drop Event Listeners
+      item.addEventListener('dragstart', (e) => {
+        draggedLinkIndex = index;
+        item.classList.add('is-dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', index);
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('is-dragging');
+        document.querySelectorAll('.link-item').forEach(el => {
+          el.classList.remove('drag-over-top', 'drag-over-bottom', 'is-dragging');
+        });
+        draggedLinkIndex = null;
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        if (draggedLinkIndex === null || draggedLinkIndex === index) return;
+        const rect = item.getBoundingClientRect();
+        const midY = rect.top + rect.height / 2;
+        if (e.clientY < midY) {
+          item.classList.add('drag-over-top');
+          item.classList.remove('drag-over-bottom');
+        } else {
+          item.classList.add('drag-over-bottom');
+          item.classList.remove('drag-over-top');
+        }
+      });
+
+      item.addEventListener('dragleave', () => {
+        item.classList.remove('drag-over-top', 'drag-over-bottom');
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (draggedLinkIndex === null || draggedLinkIndex === index) return;
+        
+        const fromIdx = draggedLinkIndex;
+        const toIdx = index;
+        const movedItem = storeConfig.links.splice(fromIdx, 1)[0];
+        storeConfig.links.splice(toIdx, 0, movedItem);
+        draggedLinkIndex = null;
+        renderLinksList();
+        triggerAutosave(true);
+        showToast("Links reordenados com sucesso!");
+      });
+
       const iconHTML = getLinkIconHTML(link.image, link.label);
       const isCustomUrl = link.image && (link.image.startsWith("http://") || link.image.startsWith("https://") || link.image.startsWith("data:"));
 
@@ -4721,52 +5694,66 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         if (start && now < start) {
           const dateStr = start.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
           const timeStr = start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fef3c7; color: #92400e;">⏳ Inicia ${dateStr} ${timeStr}</span>`;
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fef3c7; color: #92400e; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Inicia ${dateStr} ${timeStr}</span>`;
         } else if (end && now > end) {
-          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fee2e2; color: #b91c1c;">⛔ Expirado</span>`;
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #fee2e2; color: #b91c1c; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #ef4444;"></span> Expirado</span>`;
         } else if (end) {
           const endDateStr = end.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
           const endTimeStr = end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d;">🟢 Ativo (até ${endDateStr} ${endTimeStr})</span>`;
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span> Ativo (até ${endDateStr} ${endTimeStr})</span>`;
         } else {
-          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d;">🟢 Ativo</span>`;
+          scheduleBadgeHTML = `<span class="link-item-badge" style="background-color: #dcfce7; color: #15803d; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e;"></span> Ativo</span>`;
         }
       }
 
       let extraInfoBadge = '';
-      let highlightBadge = link.highlight ? `<span class="link-item-badge" style="background-color: #fef3c7; color: #b45309; font-weight: 700;">⭐ Destaque</span>` : '';
+      let highlightBadge = link.highlight ? `<span class="link-item-badge" style="background-color: #fef3c7; color: #b45309; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destaque</span>` : '';
+      let inactiveBadge = !isLinkActive ? `<span class="link-item-badge" style="background-color: #f1f5f9; color: #64748b; font-weight: 700; border: 1px solid #cbd5e1;">⏸️ Inativo</span>` : '';
       let urlSubtitle = link.url ? escapeHtml(link.url) : (link.type === 'carousel' ? '' : 'Sem link (Em Construção)');
 
-      if (link.image === 'horario' || link.type === 'horario') {
-        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(16, 185, 129, 0.1); color: #059669;">🕒 Horários Semanais</span>`;
+      if (link.image === 'divisor' || link.type === 'section') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: #f1f5f9; color: #475569; font-weight: 700;">Título de Seção</span>`;
+        urlSubtitle = 'Divisor visual de categoria na página';
+      } else if (link.image === 'horario' || link.type === 'horario') {
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(16, 185, 129, 0.1); color: #059669; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horários Semanais</span>`;
         urlSubtitle = 'Grade semanal com status aberto/fechado em tempo real';
       } else if (link.image === 'cupom' || link.type === 'cupom') {
-        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(245, 158, 11, 0.15); color: #d97706;">🏷️ Cupom: ${escapeHtml(link.cupomData?.code || 'CUPOM')}</span>`;
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(245, 158, 11, 0.15); color: #d97706; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg> Cupom: ${escapeHtml(link.cupomData?.code || 'CUPOM')}</span>`;
         urlSubtitle = link.cupomData ? `Código ${escapeHtml(link.cupomData.code || '')} • ${escapeHtml(link.cupomData.title || '')}` : 'Cupom de Desconto';
       } else if (link.image === 'vcard' || link.type === 'vcard') {
-        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(59, 130, 246, 0.1); color: #2563eb;">📇 Salvar na Agenda</span>`;
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(59, 130, 246, 0.1); color: #2563eb; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2.5"/></svg> Salvar na Agenda</span>`;
         urlSubtitle = link.vcardData ? `Cartão vCard: ${escapeHtml(link.vcardData.name || link.label)} (${escapeHtml(link.vcardData.phone || 'Sem fone')})` : 'Cartão de contato (.vcf)';
       } else if (link.image === 'mapa' && link.mapMode === 'modal') {
-        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(145, 165, 233, 0.1); color: #0284c7;">📍 Waze / Google Maps</span>`;
+        extraInfoBadge = `<span class="link-item-badge" style="background-color: rgba(145, 165, 233, 0.1); color: #0284c7; display: inline-flex; align-items: center; gap: 4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Waze / Google Maps</span>`;
         urlSubtitle = link.address ? `Endereço: ${escapeHtml(link.address)}` : 'Rotas para Waze, Google e Apple Maps';
       }
 
       item.innerHTML = `
+        <div class="link-drag-handle" title="Arraste para reordenar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.8"/><circle cx="15" cy="6" r="1.8"/><circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="9" cy="18" r="1.8"/><circle cx="15" cy="18" r="1.8"/></svg>
+        </div>
         <div class="link-item-icon" data-platform="${isCustomUrl ? 'fallback' : (link.image || 'fallback')}">
           ${iconHTML}
         </div>
         <div class="link-item-details">
           <div class="link-item-title">
             ${escapeHtml(link.label)}
+            ${inactiveBadge}
             ${highlightBadge}
             ${link.badge ? `<span class="link-item-badge">${escapeHtml(link.badge)}</span>` : ''}
             ${scheduleBadgeHTML}
             ${extraInfoBadge}
-            ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(55, 47, 107, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''} • ${link.displayCount == 3 ? 'Pequeno' : link.displayCount == 2 ? 'Médio' : 'Grande'}</span>` : ''}
+            ${Array.isArray(link.images) && link.images.length > 0 ? `<span class="link-item-badge" style="background-color: rgba(94, 23, 235, 0.1); color: var(--brand-purple);">${link.images.length} foto${link.images.length > 1 ? 's' : ''} • ${link.displayCount == 3 ? 'Pequeno' : link.displayCount == 2 ? 'Médio' : 'Grande'}</span>` : ''}
           </div>
+          ${link.subtitle ? `<div style="font-size: 11.5px; color: var(--brand-purple); font-weight: 500;">Subtítulo: "${escapeHtml(link.subtitle)}"</div>` : ''}
           <div class="link-item-url">${urlSubtitle}</div>
         </div>
         <div class="link-item-controls">
+          <button class="btn-control toggle-active ${isLinkActive ? '' : 'inactive'}" onclick="toggleLinkActive(${index})" title="${isLinkActive ? 'Desativar Link (Ocultar da página)' : 'Ativar Link (Exibir na página)'}">
+            ${isLinkActive 
+              ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' 
+              : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'}
+          </button>
           <button class="btn-control" onclick="moveLink(${index}, -1)" title="Mover para cima" ${index === 0 ? 'disabled style="opacity:0.2; cursor:not-allowed;"' : ''}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
           </button>
@@ -4786,6 +5773,135 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       `;
       container.appendChild(item);
     });
+
+    updateAdminLinksCount();
+    filterAdminLinksList(false);
+  }
+
+  function updateAdminLinksCount() {
+    const countBadge = document.getElementById('admin-links-count-badge');
+    const searchBar = document.getElementById('admin-links-search-bar');
+    const totalLinks = (storeConfig.links || []).length;
+    if (countBadge) {
+      countBadge.textContent = `${totalLinks} link${totalLinks === 1 ? '' : 's'}`;
+    }
+    if (searchBar) {
+      searchBar.style.display = totalLinks >= 2 ? 'flex' : 'none';
+    }
+  }
+
+  function filterAdminLinksList(shouldFocus = false) {
+    const input = document.getElementById('admin-links-search-input');
+    const clearBtn = document.getElementById('admin-links-search-clear');
+    const countBadge = document.getElementById('admin-links-count-badge');
+    const term = (input ? input.value : '').toLowerCase().trim();
+
+    if (clearBtn) clearBtn.style.display = term ? 'flex' : 'none';
+
+    const linkItems = document.querySelectorAll('#links-container .link-item');
+    let visibleCount = 0;
+
+    linkItems.forEach(item => {
+      const title = (item.querySelector('.link-item-title')?.textContent || '').toLowerCase();
+      const url = (item.querySelector('.link-item-url')?.textContent || '').toLowerCase();
+      const isMatch = !term || title.includes(term) || url.includes(term);
+      item.style.display = isMatch ? 'flex' : 'none';
+      if (isMatch) visibleCount++;
+    });
+
+    if (countBadge) {
+      if (term) {
+        countBadge.textContent = `${visibleCount} de ${linkItems.length} link${linkItems.length === 1 ? '' : 's'}`;
+        countBadge.style.color = 'var(--brand-purple)';
+      } else {
+        countBadge.textContent = `${linkItems.length} link${linkItems.length === 1 ? '' : 's'}`;
+        countBadge.style.color = 'var(--text-muted)';
+      }
+    }
+  }
+
+  function clearAdminLinksSearch() {
+    const input = document.getElementById('admin-links-search-input');
+    if (input) {
+      input.value = '';
+      filterAdminLinksList();
+      input.focus();
+    }
+  }
+
+  function updateModalLinkLivePreview() {
+    const previewWrap = document.getElementById('modal-link-live-preview-wrap');
+    const previewBtn = document.getElementById('modal-link-live-button');
+    const iconEl = document.getElementById('modal-preview-icon');
+    const labelEl = document.getElementById('modal-preview-label');
+    const subtitleEl = document.getElementById('modal-preview-subtitle');
+    const badgeEl = document.getElementById('modal-preview-badge');
+    const tagEl = document.getElementById('modal-preview-platform-tag');
+
+    if (!previewBtn || !iconEl || !labelEl) return;
+
+    const labelInput = document.getElementById('modal-link-label');
+    const subtitleInput = document.getElementById('modal-link-subtitle');
+    const badgeInput = document.getElementById('modal-link-badge');
+    const highlightInput = document.getElementById('modal-link-highlight');
+
+    const selectedIconEl = document.querySelector('.icon-option.selected');
+    const iconKey = selectedIconEl ? selectedIconEl.getAttribute('data-icon') : (selectedIconType || 'instagram');
+    const iconTitle = selectedIconEl ? (selectedIconEl.getAttribute('data-title') || iconKey) : 'Link';
+
+    if (tagEl) tagEl.textContent = iconTitle;
+
+    // Theme color support
+    const themeColor = (storeConfig && storeConfig.themeColor) ? storeConfig.themeColor : '#7c3aed';
+
+    // Icon HTML
+    iconEl.innerHTML = getLinkIconHTML(iconKey, labelInput ? labelInput.value : '');
+    iconEl.style.color = themeColor;
+    iconEl.style.background = `rgba(${hexToRgbDash(themeColor).replace(/-/g, ', ')}, 0.1)`;
+
+    // Label
+    const labelText = (labelInput && labelInput.value.trim()) ? labelInput.value.trim() : 'Título do Link';
+    labelEl.textContent = labelText;
+
+    // Subtitle
+    const subText = subtitleInput ? subtitleInput.value.trim() : '';
+    if (subText) {
+      subtitleEl.textContent = subText;
+      subtitleEl.style.display = 'block';
+    } else {
+      subtitleEl.style.display = 'none';
+    }
+
+    // Badge
+    const badgeText = badgeInput ? badgeInput.value.trim() : '';
+    if (badgeText) {
+      badgeEl.textContent = badgeText;
+      badgeEl.style.background = themeColor;
+      badgeEl.style.display = 'inline-block';
+    } else {
+      badgeEl.style.display = 'none';
+    }
+
+    // Highlight styling
+    const isHighlight = highlightInput ? highlightInput.checked : false;
+    if (isHighlight) {
+      previewBtn.style.borderColor = '#f59e0b';
+      previewBtn.style.boxShadow = '0 0 12px rgba(245, 158, 11, 0.3)';
+      previewBtn.style.background = '#fffdfa';
+    } else {
+      previewBtn.style.borderColor = 'var(--border-color)';
+      previewBtn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.03)';
+      previewBtn.style.background = '#ffffff';
+    }
+  }
+
+  function toggleLinkActive(index) {
+    if (!storeConfig.links || !storeConfig.links[index]) return;
+    const link = storeConfig.links[index];
+    link.active = link.active === false ? true : false;
+    renderLinksList();
+    triggerAutosave(true);
+    showToast(link.active ? "Link ativado!" : "Link desativado (oculto na página)!");
   }
 
   function duplicateLink(index) {
@@ -4867,6 +5983,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       btnOpacity: parseInt(document.getElementById('store-btn-opacity').value) || 100,
       btnBorderRadius: document.getElementById('store-btn-radius').value,
       socialPosition: document.getElementById('store-social-position') ? document.getElementById('store-social-position').value : 'top',
+      showLiveStatus: document.getElementById('store-show-live-status') ? document.getElementById('store-show-live-status').checked : true,
+      scheduleData: (typeof getStoreScheduleFromBuilder === 'function') ? getStoreScheduleFromBuilder() : (storeConfig.scheduleData || null),
       socialLinks: {
         instagram: document.getElementById('social-instagram') ? document.getElementById('social-instagram').value.trim() : '',
         whatsapp: document.getElementById('social-whatsapp') ? document.getElementById('social-whatsapp').value.trim() : '',
@@ -5123,22 +6241,22 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const totalViews = entries.reduce((acc, curr) => acc + curr[1], 0);
 
     const sourceIcons = {
-      instagram: '📸 Instagram',
-      tiktok: '🎵 TikTok',
-      whatsapp: '💬 WhatsApp',
-      facebook: '📘 Facebook',
-      google: '🔍 Google',
-      twitter: '🐦 Twitter/X',
-      threads: '🧵 Threads',
-      direto: '🔗 Acesso Direto / Bio',
-      youtube: '▶️ YouTube',
-      linkedin: '💼 LinkedIn',
-      pinterest: '📌 Pinterest',
-      kwai: '🎥 Kwai'
+      instagram: 'Instagram',
+      tiktok: 'TikTok',
+      whatsapp: 'WhatsApp',
+      facebook: 'Facebook',
+      google: 'Google',
+      twitter: 'Twitter / X',
+      threads: 'Threads',
+      direto: 'Acesso Direto / Bio',
+      youtube: 'YouTube',
+      linkedin: 'LinkedIn',
+      pinterest: 'Pinterest',
+      kwai: 'Kwai'
     };
 
     entries.slice(0, 8).forEach(([src, count]) => {
-      const label = sourceIcons[src.toLowerCase()] || `🌐 ${src}`;
+      const label = sourceIcons[src.toLowerCase()] || src;
       const pct = maxVal > 0 ? Math.round((count / maxVal) * 100) : 0;
       const sharePct = totalViews > 0 ? ((count / totalViews) * 100).toFixed(1) : '0.0';
 
@@ -5386,7 +6504,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
   // MONTHLY PER-LINK CLICK TREND
   let monthlyChartInstance = null;
-  const MONTHLY_CHART_COLORS = ['#372f6b', '#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899', '#14b8a6', '#f97316', '#6366f1'];
+  const MONTHLY_CHART_COLORS = ['#5e17eb', '#0066ff', '#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ec4899', '#14b8a6', '#f97316'];
   const MONTHLY_CHART_MONTH_NAMES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
   // Builds a month-by-month click trend per link, aggregated client-side
@@ -5563,6 +6681,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     storeConfig.bgParallax = document.getElementById('store-bg-parallax').checked;
     storeConfig.btnOpacity = parseInt(document.getElementById('store-btn-opacity').value) || 100;
     storeConfig.socialPosition = document.getElementById('store-social-position') ? document.getElementById('store-social-position').value : 'top';
+    storeConfig.showLiveStatus = document.getElementById('store-show-live-status') ? document.getElementById('store-show-live-status').checked : true;
+    storeConfig.scheduleData = (typeof getStoreScheduleFromBuilder === 'function') ? getStoreScheduleFromBuilder() : (storeConfig.scheduleData || null);
     storeConfig.socialLinks = {
       instagram: document.getElementById('social-instagram') ? document.getElementById('social-instagram').value.trim() : '',
       whatsapp: document.getElementById('social-whatsapp') ? document.getElementById('social-whatsapp').value.trim() : '',
@@ -5858,7 +6978,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         bgPositionY: 50,
         bgRepeat: false,
         btnOpacity: 100,
-        bgParallax: false
+        bgParallax: false,
+        showLiveStatus: true
       };
 
       const { data, error } = await supabaseClient
@@ -6070,6 +7191,287 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     return schedule;
   }
 
+  // STORE-LEVEL SCHEDULE BUILDER (Appearance Panel)
+  let currentStoreSchedule = {};
+
+  function initStoreScheduleContainer(existingSchedule = null) {
+    currentStoreSchedule = {};
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0]; // Seg a Dom
+
+    dayOrder.forEach((dayIdx) => {
+      let dayData = existingSchedule && existingSchedule[dayIdx] ? existingSchedule[dayIdx] : null;
+      if (!dayData) {
+        dayData = {
+          enabled: dayIdx !== 0,
+          intervals: dayIdx === 6 ? [{ open: '08:00', close: '12:00' }] : [{ open: '08:00', close: '18:00' }]
+        };
+      } else if (!dayData.intervals || !Array.isArray(dayData.intervals) || dayData.intervals.length === 0) {
+        dayData.intervals = [{ open: dayData.open || '08:00', close: dayData.close || '18:00' }];
+      }
+
+      currentStoreSchedule[dayIdx] = {
+        enabled: Boolean(dayData.enabled),
+        intervals: JSON.parse(JSON.stringify(dayData.intervals))
+      };
+    });
+
+    const container = document.getElementById('store-schedule-days-container');
+    if (container) {
+      container.innerHTML = '';
+      dayOrder.forEach((dayIdx) => {
+        renderStoreScheduleDayCard(dayIdx, container);
+      });
+    }
+  }
+
+  function renderStoreScheduleDayCard(dayIdx, parentContainer = null) {
+    const container = parentContainer || document.getElementById('store-schedule-days-container');
+    if (!container) return;
+
+    let row = document.getElementById(`store-sched-day-card-${dayIdx}`);
+    if (!row) {
+      row = document.createElement('div');
+      row.id = `store-sched-day-card-${dayIdx}`;
+      container.appendChild(row);
+    }
+
+    const dayState = currentStoreSchedule[dayIdx] || { enabled: true, intervals: [{ open: '08:00', close: '18:00' }] };
+    row.className = `sched-day-row ${dayState.enabled ? 'is-enabled' : 'is-disabled'}`;
+
+    row.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <label class="sched-switch" title="${dayState.enabled ? 'Clique para fechar este dia' : 'Clique para abrir este dia'}">
+            <input type="checkbox" id="store-sched-day-enabled-${dayIdx}" ${dayState.enabled ? 'checked' : ''} onchange="toggleStoreScheduleDayEnabled(${dayIdx})">
+            <span class="sched-slider"></span>
+          </label>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 13px; font-weight: 750; color: ${dayState.enabled ? 'var(--text-main)' : 'var(--text-muted)'};">${WEEKDAY_NAMES_PT[dayIdx]}</span>
+            ${dayState.enabled 
+              ? '<span style="font-size: 10px; font-weight: 700; color: #059669; background: rgba(16, 185, 129, 0.1); padding: 1.5px 7px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #10b981;"></span> Aberto</span>' 
+              : '<span style="font-size: 10px; font-weight: 700; color: #94a3b8; background: #f1f5f9; padding: 1.5px 7px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #cbd5e1;"></span> Fechado</span>'
+            }
+          </div>
+        </div>
+        ${dayState.enabled ? `
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button type="button" onclick="copyStoreScheduleDayToAll(${dayIdx})" class="btn-copy-day" title="Copiar este horário para todos os outros dias">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copiar p/ Todos</span>
+            </button>
+            <button type="button" onclick="addStoreScheduleInterval(${dayIdx})" class="btn-add-shift" title="Adicionar mais um turno neste dia">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Adicionar Turno</span>
+            </button>
+          </div>
+        ` : ''}
+      </div>
+
+      ${dayState.enabled ? `
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+          ${dayState.intervals.map((interval, iIdx) => `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; background: #fff; padding: 6px 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 11px; font-weight: 700; color: #64748b; min-width: 65px; display: inline-flex; align-items: center; gap: 4px;">
+                  ${dayState.intervals.length > 1 
+                    ? (iIdx === 0 
+                      ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg> Almoço:' 
+                      : (iIdx === 1 
+                        ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Jantar:' 
+                        : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Turno ${iIdx+1}:`))
+                    : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horário:'}
+                </span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <input type="time" class="sched-time-input" value="${interval.open || '08:00'}" onchange="updateStoreScheduleIntervalValue(${dayIdx}, ${iIdx}, 'open', this.value)">
+                  <span style="color: #94a3b8; font-size: 11.5px; font-weight: 600;">às</span>
+                  <input type="time" class="sched-time-input" value="${interval.close || '18:00'}" onchange="updateStoreScheduleIntervalValue(${dayIdx}, ${iIdx}, 'close', this.value)">
+                </div>
+              </div>
+              ${dayState.intervals.length > 1 ? `
+                <button type="button" onclick="removeStoreScheduleInterval(${dayIdx}, ${iIdx})" class="btn-remove-shift" title="Remover este turno">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+    `;
+  }
+
+  function copyStoreScheduleDayToAll(sourceDayIdx) {
+    const sourceDay = currentStoreSchedule[sourceDayIdx];
+    if (!sourceDay) return;
+    const intervalsCopy = JSON.parse(JSON.stringify(sourceDay.intervals));
+    for (let d = 0; d <= 6; d++) {
+      if (d !== sourceDayIdx) {
+        currentStoreSchedule[d] = {
+          enabled: sourceDay.enabled,
+          intervals: JSON.parse(JSON.stringify(intervalsCopy))
+        };
+        renderStoreScheduleDayCard(d);
+      }
+    }
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    triggerAutosave();
+    showToast(`Horário de ${WEEKDAY_NAMES_PT[sourceDayIdx]} copiado para todos os dias!`);
+  }
+
+  function toggleStoreScheduleDayEnabled(dayIdx) {
+    const chk = document.getElementById(`store-sched-day-enabled-${dayIdx}`);
+    if (!chk) return;
+    if (!currentStoreSchedule[dayIdx]) {
+      currentStoreSchedule[dayIdx] = { enabled: true, intervals: [{ open: '08:00', close: '18:00' }] };
+    }
+    currentStoreSchedule[dayIdx].enabled = chk.checked;
+    renderStoreScheduleDayCard(dayIdx);
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    triggerAutosave();
+  }
+
+  function addStoreScheduleInterval(dayIdx) {
+    if (!currentStoreSchedule[dayIdx]) {
+      currentStoreSchedule[dayIdx] = { enabled: true, intervals: [] };
+    }
+    const intervals = currentStoreSchedule[dayIdx].intervals;
+    if (intervals.length === 0) {
+      intervals.push({ open: '11:00', close: '15:00' });
+    } else if (intervals.length === 1) {
+      intervals.push({ open: '18:00', close: '23:30' });
+    } else {
+      intervals.push({ open: '19:00', close: '23:00' });
+    }
+    renderStoreScheduleDayCard(dayIdx);
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    triggerAutosave();
+  }
+
+  function removeStoreScheduleInterval(dayIdx, iIdx) {
+    if (!currentStoreSchedule[dayIdx] || !currentStoreSchedule[dayIdx].intervals) return;
+    currentStoreSchedule[dayIdx].intervals.splice(iIdx, 1);
+    if (currentStoreSchedule[dayIdx].intervals.length === 0) {
+      currentStoreSchedule[dayIdx].intervals.push({ open: '08:00', close: '18:00' });
+    }
+    renderStoreScheduleDayCard(dayIdx);
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    triggerAutosave();
+  }
+
+  function updateStoreScheduleIntervalValue(dayIdx, iIdx, field, val) {
+    if (currentStoreSchedule[dayIdx] && currentStoreSchedule[dayIdx].intervals[iIdx]) {
+      currentStoreSchedule[dayIdx].intervals[iIdx][field] = val;
+      storeConfig.scheduleData = getStoreScheduleFromBuilder();
+      triggerAutosave();
+    }
+  }
+
+  function applyStoreSchedulePreset(preset) {
+    const dayOrder = [1, 2, 3, 4, 5, 6, 0];
+    dayOrder.forEach((dayIdx) => {
+      if (preset === 'restaurante') {
+        if (dayIdx >= 1 && dayIdx <= 5) {
+          currentStoreSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '11:00', close: '15:00' },
+              { open: '18:00', close: '23:30' }
+            ]
+          };
+        } else if (dayIdx === 6) { // Sab
+          currentStoreSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '11:30', close: '16:00' },
+              { open: '18:00', close: '00:00' }
+            ]
+          };
+        } else { // Dom
+          currentStoreSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [
+              { open: '18:00', close: '23:00' }
+            ]
+          };
+        }
+      } else if (preset === 'comercial') {
+        if (dayIdx >= 1 && dayIdx <= 5) {
+          currentStoreSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [{ open: '08:00', close: '18:00' }]
+          };
+        } else if (dayIdx === 6) {
+          currentStoreSchedule[dayIdx] = {
+            enabled: true,
+            intervals: [{ open: '08:00', close: '12:00' }]
+          };
+        } else {
+          currentStoreSchedule[dayIdx] = {
+            enabled: false,
+            intervals: [{ open: '08:00', close: '18:00' }]
+          };
+        }
+      } else if (preset === 'todos') {
+        currentStoreSchedule[dayIdx] = {
+          enabled: true,
+          intervals: [{ open: '10:00', close: '23:00' }]
+        };
+      } else if (preset === 'delivery') {
+        currentStoreSchedule[dayIdx] = {
+          enabled: true,
+          intervals: [{ open: '18:00', close: '00:00' }]
+        };
+      }
+      renderStoreScheduleDayCard(dayIdx);
+    });
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    triggerAutosave();
+    showToast(`Modelo '${preset}' aplicado aos horários da loja!`);
+  }
+
+  function getStoreScheduleFromBuilder() {
+    if (Object.keys(currentStoreSchedule).length === 0) {
+      return storeConfig && storeConfig.scheduleData ? storeConfig.scheduleData : null;
+    }
+    const schedule = {};
+    for (let dayIdx = 0; dayIdx <= 6; dayIdx++) {
+      const dayData = currentStoreSchedule[dayIdx] || { enabled: false, intervals: [{ open: '08:00', close: '18:00' }] };
+      schedule[dayIdx] = {
+        enabled: Boolean(dayData.enabled),
+        open: dayData.intervals[0] ? dayData.intervals[0].open : '08:00',
+        close: dayData.intervals[0] ? dayData.intervals[0].close : '18:00',
+        intervals: dayData.intervals && dayData.intervals.length > 0 ? dayData.intervals : [{ open: '08:00', close: '18:00' }]
+      };
+    }
+    return schedule;
+  }
+
+  function openStoreScheduleModal() {
+    initStoreScheduleContainer(storeConfig.scheduleData || null);
+    if (typeof openModalWithGsap === 'function') {
+      openModalWithGsap('store-schedule-modal-backdrop');
+    } else {
+      const backdrop = document.getElementById('store-schedule-modal-backdrop');
+      if (backdrop) backdrop.classList.add('open');
+    }
+  }
+
+  function closeStoreScheduleModal() {
+    if (typeof closeModalWithGsap === 'function') {
+      closeModalWithGsap('store-schedule-modal-backdrop');
+    } else {
+      const backdrop = document.getElementById('store-schedule-modal-backdrop');
+      if (backdrop) backdrop.classList.remove('open');
+    }
+  }
+
+  function saveStoreScheduleModal() {
+    storeConfig.scheduleData = getStoreScheduleFromBuilder();
+    closeStoreScheduleModal();
+    triggerAutosave();
+    sendConfigToPreview();
+    showToast("Horários de atendimento salvos!");
+  }
+
   function syncVcardLabel() {
     const name = document.getElementById('vcard-name-input').value.trim();
     const labelInp = document.getElementById('modal-link-label');
@@ -6142,7 +7544,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     if (index === -1) {
       title.textContent = "Adicionar Link";
       labelInput.value = "";
+      document.getElementById('modal-link-subtitle').value = "";
       urlInput.value = "";
+      if (document.getElementById('modal-link-active')) {
+        document.getElementById('modal-link-active').checked = true;
+      }
       document.getElementById('modal-link-schedule-start').value = "";
       document.getElementById('modal-link-schedule-end').value = "";
       const schedDetails = document.getElementById('link-schedule-details');
@@ -6158,7 +7564,11 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       title.textContent = "Editar Link";
       const link = storeConfig.links[index];
       labelInput.value = link.label;
+      document.getElementById('modal-link-subtitle').value = link.subtitle || "";
       urlInput.value = link.url;
+      if (document.getElementById('modal-link-active')) {
+        document.getElementById('modal-link-active').checked = link.active !== false;
+      }
       document.getElementById('modal-link-badge').value = link.badge || "";
       document.getElementById('modal-link-highlight').checked = Boolean(link.highlight);
       document.getElementById('modal-link-schedule-start').value = link.scheduleStart || "";
@@ -6223,11 +7633,71 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       selectIcon(link.image || "fallback");
     }
 
+    filterIconCategory('all');
+    clearIconSearch();
+    updateModalLinkLivePreview();
     openModalWithGsap('link-modal-backdrop');
   }
 
   function closeLinkModal() {
     closeModalWithGsap('link-modal-backdrop');
+  }
+
+  let currentIconCategory = 'all';
+
+  function filterIconCategory(cat) {
+    currentIconCategory = cat || 'all';
+    document.querySelectorAll('.icon-category-pill').forEach(btn => {
+      if (btn.getAttribute('data-filter') === currentIconCategory) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    filterIcons();
+  }
+
+  function filterIcons() {
+    const searchInput = document.getElementById('icon-search-input');
+    const clearBtn = document.getElementById('icon-search-clear');
+    const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+    
+    if (clearBtn) {
+      clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+    }
+
+    let visibleCount = 0;
+    document.querySelectorAll('.icon-option').forEach(opt => {
+      const categoriesStr = opt.getAttribute('data-category') || 'all';
+      const categories = categoriesStr.split(',').map(s => s.trim());
+      const title = (opt.getAttribute('data-title') || '').toLowerCase();
+      const iconKey = (opt.getAttribute('data-icon') || '').toLowerCase();
+      const keywords = (opt.getAttribute('data-keywords') || '').toLowerCase();
+      
+      const matchesCategory = (currentIconCategory === 'all') || categories.includes(currentIconCategory);
+      const matchesSearch = !query || title.includes(query) || iconKey.includes(query) || keywords.includes(query);
+      
+      if (matchesCategory && matchesSearch) {
+        opt.style.display = 'flex';
+        visibleCount++;
+      } else {
+        opt.style.display = 'none';
+      }
+    });
+
+    const emptyState = document.getElementById('icon-empty-state');
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  function clearIconSearch() {
+    const searchInput = document.getElementById('icon-search-input');
+    if (searchInput) {
+      searchInput.value = '';
+      filterIcons();
+      searchInput.focus();
+    }
   }
 
   function selectIcon(iconName) {
@@ -6247,7 +7717,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     // Auto-populate link text based on icon clicked
     const labelInput = document.getElementById('modal-link-label');
     const currentVal = labelInput.value.trim().toLowerCase();
-    const isDefault = currentVal === "" || ["instagram", "tiktok", "threads", "shopee", "whatsapp", "telegram", "pix", "chave pix", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "catálogo web", "catálogo online", "catalago web", "catalago_web", "catalago online", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "pinterest", "kwai", "google", "avalie no google", "avaliações", "personalizado", "ícone personalizado", "construcao", "em construção", "em breve", "horários de atendimento", "horários", "horario", "salvar contato", "salvar contato na agenda", "cupom de desconto", "cupom"].includes(currentVal);
+    const isDefault = currentVal === "" || ["instagram", "tiktok", "threads", "shopee", "whatsapp", "telegram", "pix", "chave pix", "website", "link", "nossa localização", "como chegar", "cardápio", "ifood", "coleta", "descarga", "catálogo", "catalago", "catálogo web", "catálogo online", "catalago web", "catalago_web", "catalago online", "retirada", "e-mail", "email", "telefone", "ligar", "facebook", "youtube", "linkedin", "pinterest", "kwai", "google", "avalie no google", "avaliações", "personalizado", "ícone personalizado", "construcao", "em construção", "em breve", "horários de atendimento", "horários", "horario", "salvar contato", "salvar contato na agenda", "cupom de desconto", "cupom", "divisor", "título de seção", "seção", "cardápio & pedidos"].includes(currentVal);
 
     if (isDefault) {
       if (iconName === 'instagram') labelInput.value = "Instagram";
@@ -6278,6 +7748,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       else if (iconName === 'kwai') labelInput.value = "Kwai";
       else if (iconName === 'google_review') labelInput.value = "Avalie no Google";
       else if (iconName === 'construcao') labelInput.value = "Em Construção";
+      else if (iconName === 'divisor') labelInput.value = "Cardápio & Pedidos";
       else if (iconName === 'custom') labelInput.value = "Link";
       else if (iconName === 'carousel') labelInput.value = "Fotos";
       else if (iconName === 'fallback') labelInput.value = "Link";
@@ -6301,11 +7772,29 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const emailFields = document.getElementById('email-builder-fields');
     const telFields = document.getElementById('telefone-builder-fields');
     const customIconFields = document.getElementById('custom-icon-fields');
+    const subtitleGroup = document.getElementById('subtitle-field-group');
+    const urlGroup = document.getElementById('url-field-group');
+    const badgeGroup = document.getElementById('badge-field-group');
+    const schedDetails = document.getElementById('link-schedule-details');
     const urlInput = document.getElementById('modal-link-url');
     const mapHelper = document.getElementById('map-helper-text');
 
+    if (iconName === 'divisor') {
+      labelInput.placeholder = "Ex: Cardápio & Delivery / Contatos";
+      if (subtitleGroup) subtitleGroup.style.display = 'none';
+      if (urlGroup) urlGroup.style.display = 'none';
+      if (badgeGroup) badgeGroup.style.display = 'none';
+      if (schedDetails) schedDetails.style.display = 'none';
+    } else {
+      labelInput.placeholder = "ex: Instagram Oficial";
+      if (subtitleGroup) subtitleGroup.style.display = 'block';
+      if (urlGroup) urlGroup.style.display = 'block';
+      if (badgeGroup) badgeGroup.style.display = 'block';
+      if (schedDetails) schedDetails.style.display = 'block';
+    }
+
     // Handle builders and URL readonly status
-    if (iconName === 'whatsapp' || iconName === 'email' || iconName === 'telefone' || iconName === 'pix' || iconName === 'horario' || iconName === 'vcard' || iconName === 'cupom') {
+    if (iconName === 'whatsapp' || iconName === 'email' || iconName === 'telefone' || iconName === 'pix' || iconName === 'horario' || iconName === 'vcard' || iconName === 'cupom' || iconName === 'divisor') {
       urlInput.setAttribute('readonly', 'true');
       urlInput.style.backgroundColor = 'var(--bg-light)';
       urlInput.style.cursor = 'not-allowed';
@@ -6404,11 +7893,216 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const isCarousel = iconName === 'carousel';
     const isSpecialLink = iconName === 'horario' || iconName === 'vcard' || iconName === 'cupom' || (iconName === 'mapa' && document.getElementById('mapa-mode-select').value === 'modal');
     const labelGroup = document.getElementById('label-field-group');
-    const urlGroup = document.getElementById('url-field-group');
-    const badgeGroup = document.getElementById('badge-field-group');
-    if (labelGroup) labelGroup.style.display = isCarousel ? 'none' : 'flex';
-    if (urlGroup) urlGroup.style.display = (isCarousel || isSpecialLink) ? 'none' : 'flex';
-    if (badgeGroup) badgeGroup.style.display = isCarousel ? 'none' : 'flex';
+    if (labelGroup) labelGroup.style.display = isCarousel ? 'none' : 'block';
+    if (subtitleGroup) subtitleGroup.style.display = (isCarousel || iconName === 'divisor') ? 'none' : 'block';
+    if (urlGroup) urlGroup.style.display = (isCarousel || isSpecialLink || iconName === 'divisor') ? 'none' : 'block';
+    if (badgeGroup) badgeGroup.style.display = (isCarousel || iconName === 'divisor') ? 'none' : 'block';
+
+    checkSocialBarSuggestion(iconName);
+    updateModalLinkLivePreview();
+  }
+
+  // SOCIAL BAR & LINKS INTERCONNECTION
+  function getSocialBarLink(network) {
+    let val = '';
+    const elem = document.getElementById('social-' + network);
+    if (elem && elem.value.trim()) {
+      val = elem.value.trim();
+    } else if (storeConfig && storeConfig.socialLinks && storeConfig.socialLinks[network]) {
+      val = storeConfig.socialLinks[network].trim();
+    }
+    if (!val) return '';
+
+    if (network === 'instagram') {
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      const handle = val.replace(/^@/, '').trim();
+      return `https://instagram.com/${handle}`;
+    }
+    if (network === 'tiktok') {
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      const handle = val.startsWith('@') ? val : `@${val}`;
+      return `https://tiktok.com/${handle}`;
+    }
+    if (network === 'facebook') {
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      return `https://facebook.com/${val.replace(/^@/, '').trim()}`;
+    }
+    if (network === 'youtube') {
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      const handle = val.startsWith('@') ? val : (val.includes('/') ? val : `@${val}`);
+      return `https://youtube.com/${handle}`;
+    }
+    if (network === 'threads') {
+      if (val.startsWith('http://') || val.startsWith('https://')) return val;
+      const handle = val.startsWith('@') ? val : `@${val}`;
+      return `https://threads.net/${handle}`;
+    }
+    if (network === 'whatsapp') {
+      return val;
+    }
+    return val;
+  }
+
+  let activeSocialSuggestion = { network: '', value: '' };
+
+  function checkSocialBarSuggestion(iconName) {
+    const suggBox = document.getElementById('social-sync-suggestion');
+    const suggVal = document.getElementById('social-sync-val');
+    const waSuggBox = document.getElementById('whatsapp-sync-suggestion');
+    const waSuggVal = document.getElementById('whatsapp-sync-val');
+    const urlInput = document.getElementById('modal-link-url');
+    const waPhoneInput = document.getElementById('wa-phone');
+
+    const socialNetworks = ['instagram', 'tiktok', 'youtube', 'facebook', 'threads'];
+
+    if (iconName === 'whatsapp') {
+      if (suggBox) suggBox.style.display = 'none';
+      const waVal = getSocialBarLink('whatsapp');
+      if (waVal) {
+        activeSocialSuggestion = { network: 'whatsapp', value: waVal };
+        if (waSuggVal) waSuggVal.textContent = waVal;
+        if (waSuggBox) waSuggBox.style.display = 'flex';
+        // Auto-fill wa-phone if empty
+        if (waPhoneInput && !waPhoneInput.value.trim()) {
+          const rawDigits = waVal.replace(/\D/g, '');
+          const phoneClean = rawDigits.startsWith('55') && rawDigits.length >= 12 ? rawDigits.slice(2) : rawDigits;
+          waPhoneInput.value = maskPhone(phoneClean || waVal);
+          generateWhatsAppUrl();
+        }
+      } else {
+        if (waSuggBox) waSuggBox.style.display = 'none';
+      }
+      return;
+    }
+
+    if (waSuggBox) waSuggBox.style.display = 'none';
+
+    if (socialNetworks.includes(iconName)) {
+      const socialLink = getSocialBarLink(iconName);
+      if (socialLink) {
+        activeSocialSuggestion = { network: iconName, value: socialLink };
+        if (suggVal) suggVal.textContent = socialLink;
+        if (suggBox) suggBox.style.display = 'flex';
+        
+        // Auto-fill URL if empty or default '#'
+        if (urlInput && (!urlInput.value || urlInput.value === '#' || urlInput.value.trim() === '')) {
+          urlInput.value = socialLink;
+        }
+      } else {
+        if (suggBox) suggBox.style.display = 'none';
+      }
+    } else {
+      if (suggBox) suggBox.style.display = 'none';
+    }
+  }
+
+  function applySocialSuggestion() {
+    if (!activeSocialSuggestion.value) return;
+    const urlInput = document.getElementById('modal-link-url');
+    if (urlInput) {
+      urlInput.value = activeSocialSuggestion.value;
+      showToast('Link da Barra de Redes aplicado!');
+    }
+  }
+
+  function applyWhatsAppSocialSuggestion() {
+    if (!activeSocialSuggestion.value) return;
+    const waPhoneInput = document.getElementById('wa-phone');
+    if (waPhoneInput) {
+      const rawDigits = activeSocialSuggestion.value.replace(/\D/g, '');
+      const phoneClean = rawDigits.startsWith('55') && rawDigits.length >= 12 ? rawDigits.slice(2) : rawDigits;
+      waPhoneInput.value = maskPhone(phoneClean || activeSocialSuggestion.value);
+      generateWhatsAppUrl();
+      showToast('Número do WhatsApp aplicado!');
+    }
+  }
+
+  function syncLinkToSocialBar(iconName, linkUrl, linkData) {
+    if (!iconName) return;
+    const netMap = {
+      'instagram': 'social-instagram',
+      'whatsapp': 'social-whatsapp',
+      'tiktok': 'social-tiktok',
+      'youtube': 'social-youtube',
+      'facebook': 'social-facebook',
+      'threads': 'social-threads'
+    };
+    const inputId = netMap[iconName];
+    if (!inputId) return;
+
+    const inputEl = document.getElementById(inputId);
+    if (!inputEl) return;
+
+    if (!storeConfig.socialLinks) storeConfig.socialLinks = {};
+
+    let valToSync = linkUrl;
+    if (iconName === 'whatsapp') {
+      const waPhone = document.getElementById('wa-phone');
+      if (waPhone && waPhone.value.trim()) {
+        valToSync = waPhone.value.trim();
+      }
+    }
+
+    if (valToSync && valToSync !== '#' && !inputEl.value.trim()) {
+      inputEl.value = valToSync;
+      storeConfig.socialLinks[iconName] = valToSync;
+    }
+  }
+
+  function importSocialLinksToLinkList() {
+    const social = storeConfig.socialLinks || {};
+    const networks = [
+      { key: 'whatsapp', label: 'WhatsApp', icon: 'whatsapp' },
+      { key: 'instagram', label: 'Instagram', icon: 'instagram' },
+      { key: 'tiktok', label: 'TikTok', icon: 'tiktok' },
+      { key: 'youtube', label: 'YouTube', icon: 'youtube' },
+      { key: 'facebook', label: 'Facebook', icon: 'facebook' },
+      { key: 'threads', label: 'Threads', icon: 'threads' }
+    ];
+
+    if (!storeConfig.links) storeConfig.links = [];
+    let addedCount = 0;
+
+    networks.forEach(net => {
+      const rawVal = (document.getElementById('social-' + net.key)?.value || social[net.key] || '').trim();
+      if (!rawVal) return;
+
+      const formattedUrl = getSocialBarLink(net.key);
+      const alreadyExists = storeConfig.links.some(l => (l.image === net.icon || l.label.toLowerCase() === net.label.toLowerCase()));
+
+      if (!alreadyExists && formattedUrl) {
+        let finalUrl = formattedUrl;
+        if (net.key === 'whatsapp') {
+          const rawDigits = rawVal.replace(/\D/g, '');
+          const phoneWith55 = rawDigits.startsWith('55') ? rawDigits : `55${rawDigits}`;
+          finalUrl = `https://wa.me/${phoneWith55}`;
+        }
+
+        storeConfig.links.push({
+          id: 'lnk_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+          label: net.label,
+          subtitle: '',
+          url: finalUrl,
+          image: net.icon,
+          badge: '',
+          highlight: false
+        });
+        addedCount++;
+      }
+    });
+
+    if (addedCount > 0) {
+      renderLinksList();
+      triggerAutosave();
+      showToast(`${addedCount} link(s) da Barra de Redes foram adicionados à lista!`);
+    } else {
+      const hasAny = networks.some(n => Boolean((document.getElementById('social-' + n.key)?.value || social[n.key] || '').trim()));
+      if (!hasAny) {
+        showAlert('Barra de Redes Vazia', 'Preencha suas redes sociais na aba "Aparência" -> "Barra de Redes Sociais" antes de importar.');
+      } else {
+        showToast('Todas as suas redes da barra já estão na lista de links!');
+      }
+    }
   }
 
   function syncCupomLabel() {
@@ -6645,7 +8339,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const label = document.getElementById('custom-icon-upload-label');
     
     dropzone.style.pointerEvents = 'none';
-    label.textContent = "⏳ Enviando ícone...";
+    label.textContent = "Enviando ícone...";
     
     try {
       const fileExt = file.name.split('.').pop();
@@ -6676,7 +8370,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       showToast("Erro no envio do ícone.", "error");
     } finally {
       dropzone.style.pointerEvents = 'auto';
-      label.textContent = "📂 Clique ou arraste uma imagem aqui";
+      label.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg><span>Clique ou arraste uma imagem aqui</span>';
     }
   }
 
@@ -6889,7 +8583,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const label = document.getElementById('bg-image-upload-label');
     
     dropzone.style.pointerEvents = 'none';
-    label.textContent = "⏳ Enviando imagem...";
+    label.textContent = "Enviando imagem...";
     
     try {
       const fileExt = file.name.split('.').pop();
@@ -6920,7 +8614,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       showToast("Erro no envio da imagem.", "error");
     } finally {
       dropzone.style.pointerEvents = 'auto';
-      label.textContent = "📂 Clique ou arraste uma imagem aqui";
+      label.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg><span>Clique ou arraste uma imagem aqui</span>';
     }
   }
 
@@ -6944,6 +8638,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function submitLinkModal() {
     const index = parseInt(document.getElementById('modal-link-index').value);
     const label = document.getElementById('modal-link-label').value.trim();
+    const subtitle = document.getElementById('modal-link-subtitle').value.trim();
     let url = document.getElementById('modal-link-url').value.trim();
     const badge = document.getElementById('modal-link-badge').value.trim();
 
@@ -6952,7 +8647,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       return;
     }
 
-    if (!label || (selectedIconType !== 'construcao' && selectedIconType !== 'carousel' && selectedIconType !== 'pix' && selectedIconType !== 'horario' && selectedIconType !== 'vcard' && selectedIconType !== 'cupom' && !url)) {
+    if (!label || (selectedIconType !== 'divisor' && selectedIconType !== 'construcao' && selectedIconType !== 'carousel' && selectedIconType !== 'pix' && selectedIconType !== 'horario' && selectedIconType !== 'vcard' && selectedIconType !== 'cupom' && !url)) {
       showAlert("Campos Incompletos", "Por favor, preencha o título e a URL do link.");
       return;
     }
@@ -6965,6 +8660,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const scheduleStart = document.getElementById('modal-link-schedule-start').value.trim();
     const scheduleEnd = document.getElementById('modal-link-schedule-end').value.trim();
     const highlight = document.getElementById('modal-link-highlight').checked;
+    const active = document.getElementById('modal-link-active') ? document.getElementById('modal-link-active').checked : true;
 
     let existingId = null;
     if (index !== -1 && storeConfig.links && storeConfig.links[index] && storeConfig.links[index].id) {
@@ -6975,16 +8671,21 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     const linkData = {
       id: linkId,
       label: label,
+      subtitle: subtitle,
       url: url || '#',
       image: selectedIconType,
       badge: badge,
-      highlight: highlight
+      highlight: highlight,
+      active: active
     };
 
     if (scheduleStart) linkData.scheduleStart = scheduleStart;
     if (scheduleEnd) linkData.scheduleEnd = scheduleEnd;
 
-    if (selectedIconType === 'pix') {
+    if (selectedIconType === 'divisor') {
+      linkData.type = 'section';
+      linkData.url = '#';
+    } else if (selectedIconType === 'pix') {
       linkData.type = 'pix';
       linkData.pixKeyType = document.getElementById('pix-key-type').value;
       linkData.pixKey = document.getElementById('pix-key-input').value.trim();
@@ -7032,6 +8733,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     } else {
       storeConfig.links[index] = linkData;
     }
+
+    syncLinkToSocialBar(selectedIconType, url, linkData);
 
     closeLinkModal();
     renderLinksList();
@@ -7113,7 +8816,10 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         const infoEl = document.getElementById('backup-preview-info');
         const numLinks = (configToRestore.links && configToRestore.links.length) || 0;
         infoEl.innerHTML = `
-          <strong>✅ Backup Carregado:</strong><br>
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>Backup Carregado</span>
+          </div>
           • Título da Loja: <strong>${escapeHtml(configToRestore.title || activeStore)}</strong><br>
           • Total de Links: <strong>${numLinks} link(s)</strong><br>
           ${originalStore ? `• Loja Original: <code>${escapeHtml(originalStore)}</code><br>` : ''}

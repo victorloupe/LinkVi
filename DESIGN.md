@@ -2,10 +2,11 @@
 name: LinkVi Design System
 description: Sistema visual moderno, responsivo e de alta conversão para criação e gestão de páginas bio de links e cardápios digitais.
 colors:
-  primary: "#6366f1"
-  primary-deep: "#4f46e5"
-  brand-purple: "#372f6b"
-  brand-purple-hover: "#453c85"
+  primary: "#5e17eb"
+  primary-deep: "#4e12c7"
+  brand-purple: "#5e17eb"
+  brand-purple-hover: "#4e12c7"
+  brand-indigo: "#0066ff"
   neutral-bg: "#f8fafc"
   panel-white: "#ffffff"
   text-main: "#0f172a"
@@ -85,8 +86,9 @@ A interface rejeita o visual genérico e saturado de painéis de IA padrão em f
 A paleta equilibra um fundo neutro suave com tons profundos de azul/índigo para autoridade e acentos de destaque para conversão.
 
 ### Primary
-- **Brand Purple** (`#372f6b`): Cor primária de identidade do painel, botões de ação e estados ativos.
-- **Brand Indigo** (`#6366f1`): Acento vibrante para gradientes de destaque e badges.
+- **Brand Violet/Purple** (`#5e17eb`): Cor primária de identidade do painel, botões de ação e estados ativos.
+- **Brand Royal Blue** (`#0066ff`): Acento vibrante para gradientes de destaque e badges.
+- **Gradient Brand** (`linear-gradient(135deg, #6a01fc 0%, #0066ff 100%)`): Gradiente característico da logo LinksVi.
 
 ### Neutral
 - **Background Light** (`#f8fafc`): Fundo geral suave que evita fadiga ocular.
@@ -148,8 +150,8 @@ Utiliza sombras multicamadas em tons neutros de slate/preto (`rgba(15, 23, 42, .
 
 ### Buttons
 - **Shape:** Raio de 10px (`--radius-md`).
-- **Primary:** Fundo `#372f6b`, texto branco, padding `10px 18px`, transição suave de escala (`scale(0.98)` no clique).
-- **Hover:** Transição para `#453c85` com elevação sutil.
+- **Primary:** Fundo `#5e17eb`, texto branco, padding `10px 18px`, transição suave de escala (`scale(0.98)` no clique).
+- **Hover:** Transição para `#4e12c7` com elevação sutil.
 - **Ghost / Outline:** Fundo transparente com borda de 1px sutil e texto em slate-700.
 
 ### Link Buttons (Página Pública)
@@ -165,10 +167,12 @@ Utiliza sombras multicamadas em tons neutros de slate/preto (`rgba(15, 23, 42, .
 ### Do:
 - **Do** usar curvas de aceleração exponencial (`cubic-bezier(0.16, 1, 0.3, 1)`) para transições suaves.
 - **Do** manter a hierarquia de fontes com Plus Jakarta Sans nos títulos e Inter no corpo.
+- **Do** sempre utilizar **ícones vetoriais minimalistas (SVG)** com traço fino e consistente em botões, abas, badges e modais.
 - **Do** garantir que qualquer elemento interativo tenha estado de hover, foco visível e feedback de clique.
 - **Do** tratar safe areas em dispositivos móveis.
 
 ### Don't:
+- **Don't** utilizar emojis coloridos de sistema operacional em botões, pílulas de filtro ou componentes de UI (use ícones SVG minimalistas para visual profissional e limpo).
 - **Don't** animar `width`, `height`, `margin` ou `padding` diretamente (use `transform` e `opacity`).
 - **Don't** utilizar glow neon roxo sem offset (`box-shadow: 0 0 15px #7c3aed`).
 - **Don't** deixar tags `<img>` com `src=""` que renderizam caixas de imagem quebradas.

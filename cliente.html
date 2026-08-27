@@ -219,9 +219,30 @@
     font-size: 15.5px;
     letter-spacing: -0.01em;
     text-decoration: none;
-    transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out), border-color 0.2s ease, background 0.2s ease;
+    transition: transform 0.15s var(--ease-out), box-shadow 0.2s var(--ease-out), border-color 0.2s ease, background 0.2s ease;
     opacity: 0;
     animation: fadeUp 0.6s var(--ease-out) forwards;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active, .social-bar-btn:active {
+    transform: scale(0.978);
+  }
+  .touch-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.38);
+    transform: scale(0);
+    animation: touchRippleAnim 0.55s ease-out;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes touchRippleAnim {
+    to {
+      transform: scale(3.5);
+      opacity: 0;
+    }
   }
 
   .btn-icon {
@@ -235,7 +256,19 @@
   }
   .btn-icon svg { width: 100%; height: 100%; }
 
-  .btn-label { flex: 1; text-align: left; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn-label { flex: 1; text-align: left; min-width: 0; }
+  .btn-text-wrap { display: flex; flex-direction: column; gap: 2px; width: 100%; min-width: 0; }
+  .btn-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .btn-subtitle {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.72;
+    line-height: 1.35;
+    color: inherit;
+    margin-top: 1px;
+    word-break: break-word;
+  }
 
   .btn-badge {
     display: inline-flex;
@@ -304,6 +337,100 @@
     }
   }
 
+  /* Divisor de Seção / Título de Categoria */
+  .link-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0 4px;
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--navy-soft, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    animation: fadeUp 0.6s var(--ease-out) forwards;
+    user-select: none;
+  }
+  .link-section-header::before,
+  .link-section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line, #e2e8f0);
+    opacity: 0.8;
+  }
+
+  /* Pílula de Status em Tempo Real no Topo (Live Header Status) */
+  .store-live-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    margin: -10px auto 20px auto;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    user-select: none;
+    opacity: 0;
+    animation: fadeUp 0.5s var(--ease-out) forwards 0.2s;
+  }
+  .store-live-status-pill.open {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.25);
+  }
+  .store-live-status-pill.closing-soon {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.35);
+  }
+  .store-live-status-pill.closed {
+    background: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+  }
+  .store-live-status-pill:hover {
+    transform: scale(1.03);
+  }
+  .store-live-status-pill:active {
+    transform: scale(0.96);
+  }
+  .live-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .store-live-status-pill.open .live-status-dot {
+    background: #10b981;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: livePulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+  .store-live-status-pill.closing-soon .live-status-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    animation: livePulseAmber 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+  .store-live-status-pill.closed .live-status-dot {
+    background: #ef4444;
+  }
+  @keyframes livePulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+  @keyframes livePulseAmber {
+    0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  }
+
   /* Barra de Redes Sociais Compacta (Social Bar) */
   .social-bar-container {
     display: flex;
@@ -356,17 +483,29 @@
     -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
     border: 1.5px dashed var(--gold-deep, #e11d48);
     border-radius: var(--btn-radius, 12px);
-    padding: 14px 16px;
+    padding: 14px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
     opacity: 0;
     animation: fadeUp 0.6s var(--ease-out) forwards;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     position: relative;
     overflow: hidden;
   }
+  .coupon-notch-left, .coupon-notch-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--bg, #ffffff);
+    border-radius: 50%;
+    border: 1.5px dashed var(--gold-deep, #e11d48);
+  }
+  .coupon-notch-left { left: -7px; }
+  .coupon-notch-right { right: -7px; }
   .coupon-info {
     display: flex;
     flex-direction: column;
@@ -459,8 +598,11 @@
     width: 100%;
   }
   .purple-vi {
-    color: #7C3AED !important; /* Developed by LinksVi always has Vi in purple */
-    font-weight: 750;
+    background: linear-gradient(135deg, #6a01fc 0%, #0066ff 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 800;
+    display: inline-block;
   }
 
   /* Custom modern scrollbars */
@@ -1488,7 +1630,9 @@
 
 <!-- Error Screen -->
 <div id="error-screen">
-  <div class="error-icon">⚠️</div>
+  <div class="error-icon">
+    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+  </div>
   <h1>Link não encontrado</h1>
   <p>Não encontramos a página solicitada. Verifique se o endereço foi digitado corretamente ou fale com o administrador.</p>
 </div>
@@ -1505,6 +1649,12 @@
   <span class="pill" id="store-pill">Nossos Links</span>
   <h1 class="brand-title" id="store-title">Carregando...</h1>
   <p class="brand-desc" id="store-desc"></p>
+
+  <div id="store-live-status-pill" class="store-live-status-pill" style="display: none;" onclick="handleLiveStatusClick()">
+    <span class="live-status-dot"></span>
+    <span id="store-live-status-text">Aberto Agora</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </div>
 
   <div id="social-bar-top" class="social-bar-container" style="display: none;"></div>
   
@@ -1525,7 +1675,9 @@
   <div class="pdf-modal-container">
     <div class="pdf-modal-header">
       <div class="pdf-title-container">
-        <span class="pdf-icon">📖</span>
+        <span class="pdf-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+        </span>
         <span id="pdf-modal-title" class="pdf-modal-title">Visualizar Catálogo</span>
       </div>
       <button class="pdf-modal-close" onclick="closePdfModal()">&times;</button>
@@ -1559,7 +1711,7 @@
         <p>Carregando catálogo...</p>
       </div>
       <div id="pdf-error-container" class="pdf-error-container" style="display: none;">
-        <p>⚠️ Não foi possível carregar a pré-visualização.</p>
+        <p style="display: flex; align-items: center; justify-content: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Não foi possível carregar a pré-visualização.</p>
         <a id="pdf-fallback-link" href="#" target="_blank" class="pdf-fallback-btn">Abrir PDF em nova aba</a>
       </div>
       <canvas id="pdf-render-canvas"></canvas>
@@ -1843,7 +1995,7 @@
   const ENTRANCE_SHELL = ['#navbar', '#share-btn', '#footer'];
   const ENTRANCE_CONTENT = [
     '#store-logo', '#store-pill', '#store-title', '#store-desc',
-    '#social-bar-top', '#store-cta', '#store-sub',
+    '#store-live-status-pill', '#social-bar-top', '#store-cta', '#store-sub',
     '#links-container > *', '#social-bar-bottom'
   ];
   const ENTRANCE_TARGETS = ENTRANCE_SHELL.concat(ENTRANCE_CONTENT);
@@ -1997,6 +2149,14 @@
       );
     }
 
+    // 3.1 Live status pill
+    if (visible('#store-live-status-pill')) {
+      tl.fromTo('#store-live-status-pill',
+        { opacity: 0, y: 10, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: 'back.out(1.2)' },
+        "-=0.25"
+      );
+    }
     // 4. Social bar rendered above the links
     if (visible('#social-bar-top')) {
       tl.fromTo('#social-bar-top',
@@ -2534,6 +2694,8 @@
     // 9. Render Links
     if (config.links && Array.isArray(config.links)) {
       renderLinks(config.links);
+    } else {
+      initLiveStatusPill([]);
     }
 
     isSilentConfigUpdate = false;
@@ -2836,14 +2998,124 @@
     }
   }
 
+  function triggerHaptic(type = 'light') {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try {
+        if (type === 'light') navigator.vibrate(12);
+        else if (type === 'medium') navigator.vibrate(24);
+        else if (type === 'success') navigator.vibrate([12, 40, 18]);
+        else if (type === 'warning') navigator.vibrate([20, 30, 20]);
+      } catch (e) {}
+    }
+  }
+
+  // Global Touch Ripple Dispatcher for Native App Feel
+  document.addEventListener('pointerdown', (e) => {
+    const target = e.target.closest('.btn, .social-icon-btn, .store-live-status-pill, .coupon-copy-btn, .vcard-btn-action, .modal-close');
+    if (!target) return;
+
+    triggerHaptic('light');
+
+    const rect = target.getBoundingClientRect();
+    const circle = document.createElement('span');
+    const diameter = Math.max(rect.width, rect.height);
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${e.clientX - rect.left - radius}px`;
+    circle.style.top = `${e.clientY - rect.top - radius}px`;
+    circle.classList.add('touch-ripple');
+
+    const existing = target.querySelector('.touch-ripple');
+    if (existing) existing.remove();
+
+    target.appendChild(circle);
+    setTimeout(() => {
+      if (circle && circle.parentNode) circle.remove();
+    }, 600);
+  });
+
+  let activeStoreScheduleLink = null;
+
+  function initLiveStatusPill(links) {
+    const pillEl = document.getElementById('store-live-status-pill');
+    const textEl = document.getElementById('store-live-status-text');
+    if (!pillEl || !textEl) return;
+
+    if (currentConfigCache && currentConfigCache.showLiveStatus === false) {
+      pillEl.style.display = 'none';
+      activeStoreScheduleLink = null;
+      if (window._liveStatusTimer) {
+        clearInterval(window._liveStatusTimer);
+        window._liveStatusTimer = null;
+      }
+      return;
+    }
+
+    const scheduleLink = (links || []).find(l => (l.image === 'horario' || l.type === 'horario') && l.scheduleData);
+    const effectiveScheduleData = (currentConfigCache && currentConfigCache.scheduleData) || (scheduleLink ? scheduleLink.scheduleData : null);
+
+    if (!effectiveScheduleData) {
+      pillEl.style.display = 'none';
+      activeStoreScheduleLink = null;
+      if (window._liveStatusTimer) {
+        clearInterval(window._liveStatusTimer);
+        window._liveStatusTimer = null;
+      }
+      return;
+    }
+
+    activeStoreScheduleLink = scheduleLink || { scheduleData: effectiveScheduleData, label: 'Horários de Atendimento' };
+
+    function updatePill() {
+      if (currentConfigCache && currentConfigCache.showLiveStatus === false) {
+        pillEl.style.display = 'none';
+        return;
+      }
+      const sched = (currentConfigCache && currentConfigCache.scheduleData) || (activeStoreScheduleLink ? activeStoreScheduleLink.scheduleData : null);
+      if (!sched) {
+        pillEl.style.display = 'none';
+        return;
+      }
+      const statusInfo = calculateOpeningStatus(sched);
+      if (statusInfo.isOpen) {
+        if (statusInfo.isClosingSoon) {
+          pillEl.className = 'store-live-status-pill closing-soon';
+          const minText = statusInfo.minutesUntilClose === 1 ? '1 minuto' : `${statusInfo.minutesUntilClose} min`;
+          textEl.textContent = `Aberto • Fecha em ${minText}`;
+        } else {
+          pillEl.className = 'store-live-status-pill open';
+          textEl.textContent = `Aberto Agora • fecha às ${statusInfo.closeTime}`;
+        }
+      } else {
+        pillEl.className = 'store-live-status-pill closed';
+        textEl.textContent = `Fechado${statusInfo.nextOpen ? ' • abre ' + statusInfo.nextOpen : ' no momento'}`;
+      }
+      pillEl.style.display = 'inline-flex';
+    }
+
+    updatePill();
+
+    if (window._liveStatusTimer) clearInterval(window._liveStatusTimer);
+    window._liveStatusTimer = setInterval(updatePill, 30000);
+  }
+
+  function handleLiveStatusClick() {
+    triggerHaptic('medium');
+    const sched = (currentConfigCache && currentConfigCache.scheduleData) || (activeStoreScheduleLink ? activeStoreScheduleLink.scheduleData : null);
+    if (sched) {
+      openScheduleModal(sched, (activeStoreScheduleLink && activeStoreScheduleLink.label) || 'Horários de Atendimento');
+    }
+  }
+
   function copyCouponCode(code, btnEl) {
     if (!code) return;
     navigator.clipboard.writeText(code).then(() => {
       showToast(`Cupom ${code} copiado!`);
-      if (navigator.vibrate) navigator.vibrate(50);
+      triggerHaptic('success');
       if (btnEl) {
         const origHtml = btnEl.innerHTML;
-        btnEl.innerHTML = `<span>✓ Copiado!</span>`;
+        btnEl.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copiado!</span>`;
         btnEl.style.background = '#10b981';
         setTimeout(() => {
           btnEl.innerHTML = origHtml;
@@ -2859,6 +3131,8 @@
     const container = document.getElementById('links-container');
     if (!container || !links || links.length === 0) return;
     
+    initLiveStatusPill(links);
+
     const isPreview = window.location.search.includes('preview=true') || (window.self !== window.top);
     const now = new Date();
 
@@ -2866,6 +3140,11 @@
     let renderedCount = 0;
 
     links.forEach((link, index) => {
+      const isLinkActive = link.active !== false;
+      if (!isLinkActive && !isPreview) {
+        return; // Inactive link is completely hidden on public page
+      }
+
       let isScheduledFuture = false;
       let isScheduledExpired = false;
 
@@ -2884,7 +3163,19 @@
         }
       }
 
-      // 1. Coupon Card
+      // Section header / Category Divider
+      if (link.type === 'section' || link.type === 'divider' || link.image === 'divisor') {
+        const sectionEl = document.createElement('div');
+        sectionEl.className = 'link-section-header';
+        sectionEl.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+        sectionEl.textContent = link.label;
+        if (!isLinkActive) sectionEl.style.opacity = '0.5';
+        container.appendChild(sectionEl);
+        renderedCount++;
+        return;
+      }
+
+      // 1. Coupon Card (Voucher style)
       if (link.type === 'cupom' || link.image === 'cupom') {
         const cdata = link.cupomData || {};
         const code = cdata.code || 'PROMO10';
@@ -2894,12 +3185,18 @@
         const card = document.createElement('div');
         card.className = 'coupon-card';
         card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+        if (!isLinkActive) {
+          card.style.opacity = '0.5';
+          card.style.filter = 'grayscale(0.7)';
+        }
 
         card.innerHTML = `
+          <div class="coupon-notch-left"></div>
+          <div class="coupon-notch-right"></div>
           <div class="coupon-info">
             <div class="coupon-title">
               <span style="color: var(--gold-deep, #ef4444); display: inline-flex;">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
               </span>
               <span>${escapeHtml(title)}</span>
             </div>
@@ -2933,6 +3230,10 @@
         const card = document.createElement('div');
         card.className = 'map-card';
         card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+        if (!isLinkActive) {
+          card.style.opacity = '0.5';
+          card.style.filter = 'grayscale(0.7)';
+        }
         
         card.innerHTML = `
           <div class="map-card-title">${escapeHtml(link.label)}</div>
@@ -2948,6 +3249,10 @@
       if (link.type === 'carousel' && Array.isArray(link.images) && link.images.length > 0) {
         const card = buildCarouselCard(link, index);
         card.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+        if (!isLinkActive) {
+          card.style.opacity = '0.5';
+          card.style.filter = 'grayscale(0.7)';
+        }
         container.appendChild(card);
         renderedCount++;
         return;
@@ -2956,6 +3261,10 @@
       const a = document.createElement('a');
       a.className = 'btn btn-outline' + (link.highlight ? ' btn-highlighted' : '');
       a.style.animationDelay = `${0.38 + renderedCount * 0.08}s`;
+      if (!isLinkActive) {
+        a.style.opacity = '0.5';
+        a.style.filter = 'grayscale(0.7)';
+      }
 
       const linkTrackerId = link.id || index;
 
@@ -2963,6 +3272,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('medium');
           trackStoreClick(linkTrackerId, 'pix');
           openPixModal(link);
         });
@@ -2970,6 +3280,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('medium');
           trackStoreClick(linkTrackerId, 'horario');
           openScheduleModal(link.scheduleData, link.label);
         });
@@ -2977,6 +3288,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('success');
           trackStoreClick(linkTrackerId, 'vcard');
           downloadVCard(link.vcardData || link);
         });
@@ -2984,6 +3296,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('medium');
           trackStoreClick(linkTrackerId, 'mapa');
           openRouteModal(link.address || link.url, link.label);
         });
@@ -2991,6 +3304,7 @@
         a.href = '#';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('medium');
           trackStoreClick(linkTrackerId, link.url);
           openPdfModal(link.url, link.label);
         });
@@ -3000,12 +3314,14 @@
         a.style.filter = 'opacity(0.85)';
         a.addEventListener('click', (e) => {
           e.preventDefault();
+          triggerHaptic('warning');
         });
       } else {
         a.href = link.url;
         a.target = '_blank';
         a.rel = 'noopener';
         a.addEventListener('click', (e) => {
+          triggerHaptic('light');
           trackStoreClick(linkTrackerId, link.url);
         });
       }
@@ -3016,13 +3332,26 @@
       
       const labelSpan = document.createElement('span');
       labelSpan.className = 'btn-label';
+
+      const textWrap = document.createElement('div');
+      textWrap.className = 'btn-text-wrap';
+
+      const titleRow = document.createElement('div');
+      titleRow.className = 'btn-title-row';
       
       const labelText = document.createElement('span');
       labelText.textContent = link.label;
-      labelSpan.appendChild(labelText);
+      titleRow.appendChild(labelText);
       
-      // Dynamic live badge for Business Hours (Horário de Atendimento)
-      if (link.image === 'horario' || link.type === 'horario') {
+      if (isPreview && !isLinkActive) {
+        const badgeSpan = document.createElement('span');
+        badgeSpan.className = 'btn-badge';
+        badgeSpan.textContent = 'Inativo';
+        badgeSpan.style.background = '#f1f5f9';
+        badgeSpan.style.color = '#64748b';
+        badgeSpan.style.border = '1px solid #cbd5e1';
+        titleRow.appendChild(badgeSpan);
+      } else if (link.image === 'horario' || link.type === 'horario') {
         const statusInfo = calculateOpeningStatus(link.scheduleData);
         const statusBadge = document.createElement('span');
         statusBadge.className = `status-badge ${statusInfo.isOpen ? 'open' : 'closed'}`;
@@ -3035,28 +3364,39 @@
             : `Fechado${statusInfo.nextOpen ? ' • abre ' + statusInfo.nextOpen : ''}`
         );
         statusBadge.appendChild(statusText);
-        labelSpan.appendChild(statusBadge);
+        titleRow.appendChild(statusBadge);
       } else if (link.badge) {
         const badgeSpan = document.createElement('span');
         badgeSpan.className = 'btn-badge';
         badgeSpan.textContent = link.badge;
-        labelSpan.appendChild(badgeSpan);
+        titleRow.appendChild(badgeSpan);
       } else if (isPreview && isScheduledFuture) {
         const badgeSpan = document.createElement('span');
         badgeSpan.className = 'btn-badge';
-        badgeSpan.textContent = '⏳ Agendado';
+        badgeSpan.textContent = 'Agendado';
         badgeSpan.style.background = '#fef3c7';
         badgeSpan.style.color = '#92400e';
-        labelSpan.appendChild(badgeSpan);
+        titleRow.appendChild(badgeSpan);
       } else if (isPreview && isScheduledExpired) {
         const badgeSpan = document.createElement('span');
         badgeSpan.className = 'btn-badge';
-        badgeSpan.textContent = '⛔ Expirado';
+        badgeSpan.textContent = 'Expirado';
         badgeSpan.style.background = '#fee2e2';
         badgeSpan.style.color = '#b91c1c';
-        labelSpan.appendChild(badgeSpan);
+        titleRow.appendChild(badgeSpan);
       }
       
+      textWrap.appendChild(titleRow);
+
+      if (link.subtitle && link.subtitle.trim()) {
+        const subtitleEl = document.createElement('div');
+        subtitleEl.className = 'btn-subtitle';
+        subtitleEl.textContent = link.subtitle.trim();
+        textWrap.appendChild(subtitleEl);
+      }
+
+      labelSpan.appendChild(textWrap);
+
       const arrowSpan = document.createElement('span');
       arrowSpan.className = 'btn-arrow';
       if (link.image === 'construcao' && !link.url) {
@@ -3085,7 +3425,7 @@
 
         a.addEventListener('pointerdown', () => {
           gsap.to(a, { scale: 0.97, duration: 0.1, ease: 'power1.inOut' });
-          triggerHaptic();
+          triggerHaptic('light');
         });
 
         a.addEventListener('pointerup', () => {
@@ -3242,7 +3582,7 @@
 
   function calculateOpeningStatus(schedule) {
     if (!schedule || typeof schedule !== 'object') {
-      return { isOpen: true, closeTime: '18:00', nextOpen: '', schedule: {} };
+      return { isOpen: true, closeTime: '18:00', nextOpen: '', isClosingSoon: false, minutesUntilClose: 0, schedule: {} };
     }
 
     const now = new Date();
@@ -3255,6 +3595,8 @@
     let isOpen = false;
     let closeTime = '';
     let nextOpen = '';
+    let isClosingSoon = false;
+    let minutesUntilClose = 0;
 
     if (todaySched.enabled) {
       for (let interval of todayIntervals) {
@@ -3271,6 +3613,10 @@
         if (currentMinutes >= openMin && currentMinutes < closeMin) {
           isOpen = true;
           closeTime = interval.close || '18:00';
+          minutesUntilClose = closeMin - currentMinutes;
+          if (minutesUntilClose > 0 && minutesUntilClose <= 60) {
+            isClosingSoon = true;
+          }
           break;
         }
       }
@@ -3306,7 +3652,7 @@
       }
     }
 
-    return { isOpen, closeTime, nextOpen, todaySched };
+    return { isOpen, closeTime, nextOpen, isClosingSoon, minutesUntilClose, todaySched };
   }
 
   // Schedule Modal Controller
@@ -3322,11 +3668,20 @@
 
     const statusInfo = calculateOpeningStatus(schedule);
     if (statusInfo.isOpen) {
-      statusEl.className = 'schedule-status-banner open';
-      statusEl.innerHTML = `
-        <span class="status-dot" style="background-color: #10b981; box-shadow: 0 0 10px #10b981; animation: statusPulse 2s infinite; flex-shrink: 0;"></span> 
-        <span>Aberto Agora • fecha às ${statusInfo.closeTime}</span>
-      `;
+      if (statusInfo.isClosingSoon) {
+        statusEl.className = 'schedule-status-banner closing-soon';
+        const minText = statusInfo.minutesUntilClose === 1 ? '1 minuto' : `${statusInfo.minutesUntilClose} min`;
+        statusEl.innerHTML = `
+          <span class="status-dot" style="background-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; animation: livePulseAmber 1.5s infinite; flex-shrink: 0;"></span> 
+          <span>Aberto Agora • Fecha em ${minText} (às ${statusInfo.closeTime})</span>
+        `;
+      } else {
+        statusEl.className = 'schedule-status-banner open';
+        statusEl.innerHTML = `
+          <span class="status-dot" style="background-color: #10b981; box-shadow: 0 0 10px #10b981; animation: statusPulse 2s infinite; flex-shrink: 0;"></span> 
+          <span>Aberto Agora • fecha às ${statusInfo.closeTime}</span>
+        `;
+      }
     } else {
       statusEl.className = 'schedule-status-banner closed';
       statusEl.innerHTML = `
