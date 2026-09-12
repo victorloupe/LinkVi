@@ -322,23 +322,47 @@
   }
   .btn-outline .btn-icon { color: var(--gold-deep); }
 
-  /* Efeito Link em Destaque (Glow / Pulse Neon) */
+  /* Efeito Link em Destaque (Glow / Breathing Shimmer) */
   .btn.btn-highlighted {
     border-color: var(--gold-deep, #e11d48) !important;
     position: relative;
-    box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.6)), 0 4px 14px rgba(0, 0, 0, 0.15);
-    animation: buttonPulseGlow 2.4s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    overflow: hidden;
+    box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.5)), 0 4px 16px rgba(0, 0, 0, 0.12);
+    animation: buttonPulseGlow 3s infinite cubic-bezier(0.4, 0, 0.6, 1);
+  }
+  .btn.btn-highlighted::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -70%;
+    width: 45%;
+    height: 200%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.38),
+      transparent
+    );
+    transform: rotate(25deg);
+    pointer-events: none;
+    z-index: 3;
+    animation: buttonShimmerSweep 3.4s infinite cubic-bezier(0.4, 0, 0.2, 1);
   }
   @keyframes buttonPulseGlow {
     0% {
-      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.6)), 0 4px 14px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0.55)), 0 4px 14px rgba(0, 0, 0, 0.12);
     }
     50% {
-      box-shadow: 0 0 0 7px rgba(225, 29, 72, 0), 0 6px 22px var(--theme-glow, rgba(225, 29, 72, 0.45));
+      box-shadow: 0 0 0 8px rgba(225, 29, 72, 0), 0 6px 24px var(--theme-glow, rgba(225, 29, 72, 0.4));
     }
     100% {
-      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0)), 0 4px 14px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 0 0 0 var(--theme-glow, rgba(225, 29, 72, 0)), 0 4px 14px rgba(0, 0, 0, 0.12);
     }
+  }
+  @keyframes buttonShimmerSweep {
+    0%, 25% { left: -70%; opacity: 0; }
+    35% { opacity: 1; }
+    65%, 100% { left: 160%; opacity: 0; }
   }
 
   /* Divisor de Seção / Título de Categoria */
@@ -410,16 +434,32 @@
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    position: relative;
+  }
+  .live-status-dot::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    pointer-events: none;
   }
   .store-live-status-pill.open .live-status-dot {
     background: #10b981;
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    animation: livePulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: livePulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+  .store-live-status-pill.open .live-status-dot::before {
+    border: 1.5px solid #10b981;
+    animation: sonarWave 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .store-live-status-pill.closing-soon .live-status-dot {
     background: #f59e0b;
     box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
-    animation: livePulseAmber 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+    animation: livePulseAmber 1.6s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+  .store-live-status-pill.closing-soon .live-status-dot::before {
+    border: 1.5px solid #f59e0b;
+    animation: sonarWave 1.6s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
   }
   .store-live-status-pill.closed .live-status-dot {
     background: #ef4444;
@@ -433,6 +473,19 @@
     0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
     70% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0); }
     100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  }
+  @keyframes sonarWave {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    50% { opacity: 0.45; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+
+  /* Micro-Partículas para PIX / Cupom */
+  .burst-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform, opacity;
   }
 
   /* Barra de Redes Sociais Compacta (Social Bar) */
@@ -1432,6 +1485,16 @@
     border-radius: 50%;
     display: inline-block;
     flex-shrink: 0;
+    position: relative;
+  }
+  .status-badge.open .status-dot::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.2px solid #10b981;
+    animation: sonarWave 2s infinite cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
   }
   .status-badge.open .status-dot {
     background-color: #10b981;
@@ -1989,7 +2052,17 @@
       if (ref.includes('kwai.')) return 'kwai';
       
       const urlObj = new URL(ref);
-      return urlObj.hostname.replace('www.', '').slice(0, 30);
+      const hostname = urlObj.hostname.replace('www.', '').toLowerCase();
+      if (
+        hostname === '127.0.0.1' || 
+        hostname === 'localhost' || 
+        hostname.startsWith('192.168.') || 
+        hostname.startsWith('10.') || 
+        hostname.endsWith('.local')
+      ) {
+        return 'direto';
+      }
+      return hostname.slice(0, 30);
     } catch(e) {
       return 'direto';
     }
@@ -2244,6 +2317,11 @@
       "-=0.3"
     );
 
+    tl.eventCallback('onComplete', () => {
+      // Clear inline transforms so native mobile scroll and positioning remain at 60fps
+      gsap.set(resolveEntranceTargets(), { clearProps: 'transform' });
+    });
+
     pageEntranceAnimated = true;
   }
 
@@ -2303,6 +2381,47 @@
         else if (type === 'success') navigator.vibrate([12, 40, 18]);
         else if (type === 'warning') navigator.vibrate([20, 30, 20]);
       } catch (e) {}
+    }
+  }
+
+  function spawnParticleBurst(x, y, color = null) {
+    if (prefersReducedMotion() || typeof gsap === 'undefined') return;
+    const colors = color ? [color, '#ffffff', '#10b981', '#38bdf8'] : ['#10b981', '#6366f1', '#f59e0b', '#ec4899', '#ffffff'];
+    const count = 16;
+    const container = document.body;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'burst-particle';
+      const size = Math.floor(Math.random() * 5) + 4;
+      const pColor = colors[Math.floor(Math.random() * colors.length)];
+      const isSpark = Math.random() > 0.5;
+
+      p.style.width = `${size}px`;
+      p.style.height = isSpark ? `${size * 1.5}px` : `${size}px`;
+      p.style.borderRadius = isSpark ? '2px' : '50%';
+      p.style.backgroundColor = pColor;
+      p.style.left = `${x}px`;
+      p.style.top = `${y}px`;
+      p.style.boxShadow = `0 0 8px ${pColor}80`;
+
+      container.appendChild(p);
+
+      const angle = (i / count) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+      const distance = 35 + Math.random() * 50;
+      const targetX = Math.cos(angle) * distance;
+      const targetY = Math.sin(angle) * distance;
+
+      gsap.to(p, {
+        x: targetX,
+        y: targetY,
+        rotation: (Math.random() - 0.5) * 360,
+        scale: Math.random() * 0.4 + 0.2,
+        opacity: 0,
+        duration: 0.55 + Math.random() * 0.25,
+        ease: 'power3.out',
+        onComplete: () => p.remove()
+      });
     }
   }
 
@@ -2367,7 +2486,43 @@
 
   document.getElementById('share-btn').addEventListener('click', handleShareClick);
 
+  // Identifica se a sessão atual é de teste, simulador do painel ou ambiente de desenvolvimento local
+  function isTestingOrPreview() {
+    // 1. Dentro de iframe (simulador do painel admin)
+    if (window.self !== window.top) return true;
+    
+    // 2. Parâmetro na URL indicando preview ou teste
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('preview') === 'true' || urlParams.get('test') === 'true') return true;
+
+    // 3. Localhost, loopback ou rede local de desenvolvimento
+    const host = window.location.hostname;
+    if (
+      !host ||
+      host === 'localhost' || 
+      host === '127.0.0.1' || 
+      host === '::1' || 
+      host.startsWith('192.168.') || 
+      host.startsWith('10.') || 
+      host.startsWith('172.16.') || 
+      host.endsWith('.local') || 
+      window.location.protocol === 'file:'
+    ) {
+      return true;
+    }
+
+    // 4. Lojista ou administrador logado no mesmo navegador testando sua própria página
+    try {
+      if (sessionStorage.getItem('linksvi_user') || localStorage.getItem('linksvi_user')) {
+        return true;
+      }
+    } catch(e) {}
+
+    return false;
+  }
+
   async function trackStoreView(storeName, currentConfig) {
+    if (isTestingOrPreview()) return; // Não registra visualizações vindas de testes ou preview
     try {
       if (!supabaseClient) return;
       const now = new Date();
@@ -2389,8 +2544,7 @@
 
   async function trackStoreClick(linkIdOrIndex, linkUrl) {
     triggerHaptic();
-    const isPreview = window.location.search.includes('preview=true');
-    if (isPreview) return;
+    if (isTestingOrPreview()) return; // Não registra cliques vindos de testes ou preview
     
     const storeName = getStoreName();
     if (!storeName || !supabaseClient) return;
@@ -2488,8 +2642,7 @@
             localStorage.setItem('cached_config_' + storeName, freshSignature);
           } catch(e) {}
 
-          const isPreview = window.location.search.includes('preview=true');
-          if (!isPreview) {
+          if (!isTestingOrPreview()) {
             trackStoreView(storeName, config);
           }
 
@@ -3182,6 +3335,11 @@
       showToast(`Cupom ${code} copiado!`);
       triggerHaptic('success');
       if (btnEl) {
+        const rect = btnEl.getBoundingClientRect();
+        spawnParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, '#10b981');
+        if (typeof gsap !== 'undefined') {
+          gsap.fromTo(btnEl, { scale: 0.88 }, { scale: 1, duration: 0.4, ease: 'back.out(2)' });
+        }
         const origHtml = btnEl.innerHTML;
         btnEl.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Copiado!</span>`;
         btnEl.style.background = '#10b981';
@@ -3480,25 +3638,26 @@
       // GSAP Micro-interactions
       if (typeof gsap !== 'undefined') {
         a.addEventListener('mouseenter', () => {
-          gsap.to(a, { y: -3, scale: 1.015, duration: 0.22, ease: 'power2.out' });
+          gsap.to(a, { y: -3, scale: 1.012, duration: 0.22, ease: 'power2.out' });
           gsap.to(arrowSpan, { x: 3, duration: 0.2, ease: 'power2.out' });
           gsap.to(iconSpan, { scale: 1.08, duration: 0.2, ease: 'power2.out' });
         });
 
         a.addEventListener('mouseleave', () => {
-          gsap.to(a, { y: 0, scale: 1, duration: 0.28, ease: 'power2.out' });
+          gsap.to(a, { y: 0, scale: 1, duration: 0.32, ease: 'power2.out', overwrite: 'auto' });
           gsap.to(arrowSpan, { x: 0, duration: 0.25, ease: 'power2.out' });
           gsap.to(iconSpan, { scale: 1, duration: 0.25, ease: 'power2.out' });
         });
 
         a.addEventListener('pointerdown', () => {
-          gsap.to(a, { scale: 0.97, duration: 0.1, ease: 'power1.inOut' });
-          triggerHaptic('light');
+          gsap.to(a, { scale: 0.965, duration: 0.12, ease: 'power2.out' });
         });
 
-        a.addEventListener('pointerup', () => {
-          gsap.to(a, { scale: 1.015, duration: 0.2, ease: 'back.out(2)' });
-        });
+        const resetSpring = () => {
+          gsap.to(a, { scale: 1, duration: 0.35, ease: 'back.out(2)', overwrite: 'auto' });
+        };
+        a.addEventListener('pointerup', resetSpring);
+        a.addEventListener('pointercancel', resetSpring);
       }
 
       container.appendChild(a);
@@ -3602,8 +3761,11 @@
     const btn = document.getElementById('pix-copy-action-btn');
     const originalContent = btn.innerHTML;
 
+    const rect = btn.getBoundingClientRect();
+    spawnParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, '#10b981');
+
     if (typeof gsap !== 'undefined') {
-      gsap.fromTo(btn, { scale: 0.92 }, { scale: 1, duration: 0.45, ease: 'elastic.out(1.2, 0.4)' });
+      gsap.fromTo(btn, { scale: 0.88 }, { scale: 1, duration: 0.45, ease: 'back.out(2)' });
     }
 
     try {
@@ -3921,6 +4083,15 @@
   async function copyRouteAddress() {
     triggerHaptic();
     if (!currentRouteAddress) return;
+
+    const btn = document.getElementById('route-copy-btn');
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      spawnParticleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, '#0066ff');
+      if (typeof gsap !== 'undefined') {
+        gsap.fromTo(btn, { scale: 0.88 }, { scale: 1, duration: 0.45, ease: 'back.out(2)' });
+      }
+    }
 
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {

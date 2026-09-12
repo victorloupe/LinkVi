@@ -3047,18 +3047,18 @@
             <input type="date" id="stats-end-date" onchange="renderFilteredStats()" style="width: 100%; padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; font-size: 11px;">
           </div>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center; margin-bottom: 16px;">
-          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+        <div class="stats-overview-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center; margin-bottom: 16px;">
+          <div class="stats-kpi-card" style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
             <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Visualizações</div>
             <div id="stats-views" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
             <div id="stats-views-delta" style="font-size: 9.5px; font-weight: 700; margin-top: 3px; min-height: 12px;"></div>
           </div>
-          <div style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
+          <div class="stats-kpi-card" style="background-color: var(--bg-light); padding: 12px 8px; border-radius: 6px; border: 1px solid var(--border-color);">
             <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Cliques Totais</div>
             <div id="stats-clicks" style="font-size: 18px; font-weight: 800; color: var(--text-main); margin-top: 4px;">0</div>
             <div id="stats-clicks-delta" style="font-size: 9.5px; font-weight: 700; margin-top: 3px; min-height: 12px;"></div>
           </div>
-          <div style="background-color: #f2effc; padding: 12px 8px; border-radius: 6px; border: 1px solid #ddd3f8;">
+          <div class="stats-kpi-card" style="background-color: #f2effc; padding: 12px 8px; border-radius: 6px; border: 1px solid #ddd3f8;">
             <div style="font-size: 10px; font-weight: 700; color: #7c5cd6; text-transform: uppercase; letter-spacing: 0.5px;">Taxa (CTR)</div>
             <div id="stats-ctr" style="font-size: 18px; font-weight: 800; color: var(--brand-purple); margin-top: 4px;">0%</div>
           </div>
@@ -4009,9 +4009,14 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
 
 <!-- Supabase Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- GSAP 3 Animation Library -->
+<!-- GSAP 3 Animation Library & Flip Plugin -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
 <script>
+  if (typeof gsap !== 'undefined' && typeof Flip !== 'undefined') {
+    gsap.registerPlugin(Flip);
+  }
+
   // SUPABASE CONFIG
   const supabaseUrl = "https://lujsstahllhcrkfgjmcw.supabase.co";
   const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1anNzdGFobGxoY3JrZmdqbWN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4OTk2NzMsImV4cCI6MjEwMDQ3NTY3M30.Hz5792fPykt248SHcQBhxKb0yxfZsBLxXUKvXNKuppc";
@@ -4421,6 +4426,9 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
             { opacity: 0, y: 12 }, 
             { opacity: 1, y: 0, duration: 0.32, ease: 'power2.out', clearProps: 'transform' }
           );
+        }
+        if (t === 'stats') {
+          loadAnalyticsData();
         }
       } else {
         panel.classList.add('tab-panel-hidden');
@@ -5805,6 +5813,7 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       item.className = `link-item ${isLinkActive ? '' : 'is-inactive'}`;
       item.draggable = true;
       item.dataset.index = index;
+      item.dataset.flipId = link.id || ('link-item-' + (link.label || 'sem-nome') + '-' + index);
 
       // Drag and Drop Event Listeners
       item.addEventListener('dragstart', (e) => {
@@ -5847,10 +5856,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         
         const fromIdx = draggedLinkIndex;
         const toIdx = index;
+
+        let flipState = null;
+        if (typeof Flip !== 'undefined') {
+          flipState = Flip.getState('#links-container .link-item');
+        }
+
         const movedItem = storeConfig.links.splice(fromIdx, 1)[0];
         storeConfig.links.splice(toIdx, 0, movedItem);
         draggedLinkIndex = null;
         renderLinksList();
+
+        if (flipState && typeof Flip !== 'undefined') {
+          Flip.from(flipState, {
+            duration: 0.35,
+            ease: 'power2.out'
+          });
+        }
+
         triggerAutosave(true);
         showToast("Links reordenados com sucesso!");
       });
@@ -6092,10 +6115,24 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function moveLink(index, direction) {
     const targetIndex = index + direction;
     if (targetIndex < 0 || targetIndex >= storeConfig.links.length) return;
+
+    let flipState = null;
+    if (typeof Flip !== 'undefined') {
+      flipState = Flip.getState('#links-container .link-item');
+    }
+
     const temp = storeConfig.links[index];
     storeConfig.links[index] = storeConfig.links[targetIndex];
     storeConfig.links[targetIndex] = temp;
     renderLinksList();
+
+    if (flipState && typeof Flip !== 'undefined') {
+      Flip.from(flipState, {
+        duration: 0.35,
+        ease: 'power2.out'
+      });
+    }
+
     triggerAutosave(true); // Instant save on reorder
   }
 
@@ -6181,6 +6218,16 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
         config: currentConfig
       }, '*');
     }
+
+    // Live sync feedback pulse on device mockup frame
+    const smartphone = document.querySelector('.device-smartphone');
+    if (smartphone && typeof gsap !== 'undefined') {
+      gsap.killTweensOf(smartphone);
+      gsap.fromTo(smartphone,
+        { boxShadow: '0 0 0 3.5px rgba(94, 23, 235, 0.45), 0 20px 32px rgba(94, 23, 235, 0.16)' },
+        { boxShadow: '0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 10px 10px -5px rgba(15, 23, 42, 0.04)', duration: 0.65, ease: 'power2.out' }
+      );
+    }
   }
 
   function openMobilePreviewModal() {
@@ -6256,6 +6303,44 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     renderFilteredStats();
   }
 
+  // Helper para identificar fontes de tráfego de teste/desenvolvimento
+  function isTestSource(sourceKey) {
+    if (!sourceKey) return true;
+    const s = String(sourceKey).toLowerCase().trim();
+    return s === '127.0.0.1' || 
+           s === 'localhost' || 
+           s === '::1' || 
+           s.startsWith('192.168.') || 
+           s.startsWith('10.') || 
+           s.startsWith('172.16.') || 
+           s.includes('preview') || 
+           s.includes('test') || 
+           s.endsWith('.local');
+  }
+
+  // Devolve as estatísticas limpas de um dia, subtraindo visualizações de teste
+  function getCleanDayStats(dayData) {
+    if (!dayData) return { views: 0, clicks: {}, sources: {} };
+    const rawViews = parseInt(dayData.views) || 0;
+    const sources = dayData.sources || {};
+    let testViews = 0;
+    const cleanSources = {};
+    Object.keys(sources).forEach(src => {
+      const count = parseInt(sources[src]) || 0;
+      if (isTestSource(src)) {
+        testViews += count;
+      } else {
+        cleanSources[src] = count;
+      }
+    });
+    const cleanViews = Math.max(0, rawViews - testViews);
+    return {
+      views: cleanViews,
+      clicks: dayData.clicks || {},
+      sources: cleanSources
+    };
+  }
+
   function renderFilteredStats() {
     if (!storeConfig) return;
     
@@ -6293,21 +6378,31 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     let filteredSources = {};
 
     if (filterSelect === 'all') {
-      filteredViews = stats.views || 0;
+      let totalTestViews = 0;
+      filteredSources = {};
+      Object.entries(stats.sources || {}).forEach(([src, count]) => {
+        const c = parseInt(count) || 0;
+        if (isTestSource(src)) {
+          totalTestViews += c;
+        } else {
+          filteredSources[src] = c;
+        }
+      });
+      filteredViews = Math.max(0, (parseInt(stats.views) || 0) - totalTestViews);
       filteredClicks = Object.assign({}, stats.clicks || {});
-      filteredSources = Object.assign({}, stats.sources || {});
     } else {
       Object.keys(daily).forEach(dateKey => {
         if ((!startDateStr || dateKey >= startDateStr) && (!endDateStr || dateKey <= endDateStr)) {
           const dayData = daily[dateKey];
-          filteredViews += parseInt(dayData.views) || 0;
+          const clean = getCleanDayStats(dayData);
+          filteredViews += clean.views;
           
-          const dayClicks = dayData.clicks || {};
+          const dayClicks = clean.clicks;
           Object.keys(dayClicks).forEach(linkIdx => {
             filteredClicks[linkIdx] = (filteredClicks[linkIdx] || 0) + (parseInt(dayClicks[linkIdx]) || 0);
           });
 
-          const daySources = dayData.sources || {};
+          const daySources = clean.sources;
           Object.keys(daySources).forEach(src => {
             filteredSources[src] = (filteredSources[src] || 0) + (parseInt(daySources[src]) || 0);
           });
@@ -6399,7 +6494,8 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     }
     card.style.display = 'block';
 
-    const entries = Object.entries(sources || {}).filter(([_, count]) => count > 0);
+    // Exclui completamente fontes de teste (127.0.0.1, localhost, preview, etc.)
+    const entries = Object.entries(sources || {}).filter(([src, count]) => count > 0 && !isTestSource(src));
     entries.sort((a, b) => b[1] - a[1]);
 
     container.innerHTML = '';
@@ -6506,6 +6602,16 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     renderMonthlyClicksChart();
     renderMonthOverMonthDelta();
     renderWeekdayChart();
+
+    if (typeof gsap !== 'undefined') {
+      const kpis = statsCard.querySelectorAll('.stats-kpi-card');
+      if (kpis.length) {
+        gsap.fromTo(kpis,
+          { opacity: 0, y: 10, scale: 0.97 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.35, stagger: 0.06, ease: 'back.out(1.4)', clearProps: 'transform' }
+        );
+      }
+    }
   }
 
   // MONTH-OVER-MONTH DELTA (next to the Visualizações / Cliques Totais cards)
@@ -6526,12 +6632,13 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
       const month = dateKey.slice(0, 7);
       if (month !== currentMonthKey && month !== prevMonthKey) return;
       const day = daily[dateKey] || {};
-      const dayClicksTotal = Object.values(day.clicks || {}).reduce((sum, v) => sum + (parseInt(v) || 0), 0);
+      const clean = getCleanDayStats(day);
+      const dayClicksTotal = Object.values(clean.clicks || {}).reduce((sum, v) => sum + (parseInt(v) || 0), 0);
       if (month === currentMonthKey) {
-        currentViews += parseInt(day.views) || 0;
+        currentViews += clean.views;
         currentClicks += dayClicksTotal;
       } else {
-        prevViews += parseInt(day.views) || 0;
+        prevViews += clean.views;
         prevClicks += dayClicksTotal;
       }
     });
@@ -6656,11 +6763,12 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
     
     dates.forEach(date => {
       const dayData = daily[date];
-      const views = dayData.views || 0;
+      const clean = getCleanDayStats(dayData);
+      const views = clean.views || 0;
       let row = `${date},${views}`;
       
       links.forEach((_, idx) => {
-        const clicks = (dayData.clicks && dayData.clicks[idx]) || 0;
+        const clicks = (clean.clicks && clean.clicks[idx]) || 0;
         row += `,${clicks}`;
       });
       csvContent += row + "\r\n";
@@ -6794,15 +6902,34 @@ CREATE POLICY "Permitir update público" ON storage.objects FOR UPDATE USING (bu
   function updateSaveStatus(status) {
     const dot = document.getElementById('save-status-dot');
     const text = document.getElementById('save-status-text');
+    const container = document.getElementById('save-status');
     if (!dot || !text) return;
     
     if (status === 'saving') {
       dot.style.backgroundColor = '#eab308'; // Yellow
       text.textContent = 'Salvando...';
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(dot);
+        gsap.to(dot, { scale: 1.35, duration: 0.45, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+      }
     } else if (status === 'saved') {
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(dot);
+        gsap.fromTo(dot, { scale: 0.6 }, { scale: 1, duration: 0.4, ease: 'back.out(2.5)' });
+        if (container) {
+          gsap.fromTo(container, { opacity: 0.8 }, { opacity: 1, duration: 0.3 });
+        }
+      }
       dot.style.backgroundColor = 'var(--success)'; // Green
       text.textContent = 'Salvo';
     } else if (status === 'error') {
+      if (typeof gsap !== 'undefined') {
+        gsap.killTweensOf(dot);
+        gsap.set(dot, { scale: 1 });
+        if (container) {
+          gsap.fromTo(container, { x: -3 }, { x: 3, duration: 0.08, repeat: 3, yoyo: true, ease: 'power1.inOut', onComplete: () => gsap.set(container, { x: 0 }) });
+        }
+      }
       dot.style.backgroundColor = 'var(--danger)'; // Red
       text.textContent = 'Erro ao salvar';
     }

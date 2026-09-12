@@ -235,6 +235,17 @@ declare
   v_daily jsonb;
   v_ref_clean text;
 begin
+  -- Ignora rastreamento em testes, localhost e endereços locais
+  if p_referrer is not null and (
+    lower(p_referrer) like '%127.0.0.1%' or
+    lower(p_referrer) like '%localhost%' or
+    lower(p_referrer) like '192.168.%' or
+    lower(p_referrer) like '10.%' or
+    lower(p_referrer) in ('test', 'preview')
+  ) then
+    return true; -- Silenciosamente ignora o teste sem inflar métricas
+  end if;
+
   -- Busca a configuração atual da loja
   select config into v_config from public.stores where id = p_store_id;
   if v_config is null then
@@ -345,20 +356,91 @@ $$;
 revoke all on function public.track_view_or_click(text, text, text, text, text) from public;
 grant execute on function public.track_view_or_click(text, text, text, text, text) to anon, authenticated;
 
+-- 11) Função utilitária para expurgar acessos de teste (127.0.0.1 / localhost) do banco
+create or replace function public.clean_store_test_data(p_store_id text, p_password text)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_authorized boolean;
+  v_config jsonb;
+  v_stats jsonb;
+  v_daily jsonb;
+  v_sources jsonb;
+  v_test_views int := 0;
+begin
+  select exists(
+    select 1 from public.stores s
+    where s.id = p_store_id and s.password = p_password
+  ) or exists(
+    select 1 from public.stores admin_row
+    where admin_row.id in ('contato@linksvi.com.br', 'contato@linkvi.com.br')
+      and admin_row.password = p_password
+  ) into v_authorized;
+
+  if not v_authorized then
+    return false;
+  end if;
+
+  select config into v_config from public.stores where id = p_store_id;
+  if v_config is null or v_config -> 'stats' is null then
+    return true;
+  end if;
+
+  v_stats = v_config -> 'stats';
+
+  -- Remove fontes de teste do consolidado
+  if v_stats -> 'sources' is not null then
+    v_sources = v_stats -> 'sources';
+    v_test_views = coalesce((v_sources ->> '127.0.0.1')::int, 0) 
+                 + coalesce((v_sources ->> 'localhost')::int, 0);
+    v_sources = v_sources - '127.0.0.1' - 'localhost' - 'test';
+    v_stats = jsonb_set(v_stats, '{sources}', v_sources);
+    
+    if v_test_views > 0 then
+      v_stats = jsonb_set(v_stats, '{views}', to_jsonb(greatest(0, coalesce((v_stats ->> 'views')::int, 0) - v_test_views)));
+    end if;
+  end if;
+
+  -- Limpa fontes de teste do diário
+  if v_stats -> 'daily' is not null then
+    select jsonb_object_agg(d_key, d_val) into v_daily
+    from (
+      select 
+        day_key as d_key,
+        case 
+          when day_val -> 'sources' is not null and ((day_val -> 'sources' ? '127.0.0.1') or (day_val -> 'sources' ? 'localhost')) then
+            jsonb_set(
+              jsonb_set(
+                day_val, 
+                '{views}', 
+                to_jsonb(greatest(0, coalesce((day_val ->> 'views')::int, 0) - coalesce((day_val -> 'sources' ->> '127.0.0.1')::int, 0) - coalesce((day_val -> 'sources' ->> 'localhost')::int, 0)))
+              ),
+              '{sources}',
+              (day_val -> 'sources') - '127.0.0.1' - 'localhost' - 'test'
+            )
+          else day_val
+        end as d_val
+      from jsonb_each(v_stats -> 'daily') as t(day_key, day_val)
+    ) s;
+    v_stats = jsonb_set(v_stats, '{daily}', coalesce(v_daily, '{}'::jsonb));
+  end if;
+
+  v_config = jsonb_set(v_config, '{stats}', v_stats);
+  update public.stores set config = v_config where id = p_store_id;
+  return true;
+end;
+$$;
+
+revoke all on function public.clean_store_test_data(text, text) from public;
+grant execute on function public.clean_store_test_data(text, text) to anon, authenticated;
+
 -- ============================================================================
 -- Depois de rodar este script, teste:
 --   1. Login normal (admin e de uma loja) ainda deve funcionar.
---   2. Editar textos/cores de uma loja e ver o autosave salvar normalmente
---      (tanto logado como a própria loja quanto como admin editando ela).
---   3. No painel admin > Gerenciar Lojas: revelar senha, trocar senha,
---      criar loja nova e excluir loja — todos devem continuar funcionando
---      (cada um vai pedir sua senha de admin uma vez, se a sessão tiver
---      sido restaurada por um F5 e a senha não estiver mais em memória).
---   4. Rodando isto (com a chave anon, fora do app) o resultado deve ser
---      um erro de permissão — a escrita direta não deve mais funcionar:
---        update stores set config = '{}' where id = 'algum-id';
---   5. A visualização das páginas públicas de links de uma loja e os cliques
---      devem atualizar os contadores na base atomicamente através da RPC:
---        select track_view_or_click('loja-id', 'view', '2026-08-11');
+--   2. Editar textos/cores de uma loja e ver o autosave salvar normalmente.
+--   3. Visualizações em 127.0.0.1 / localhost / preview não são registradas.
 -- ============================================================================
 
